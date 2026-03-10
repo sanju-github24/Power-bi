@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pulse BI</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080b;--s1:#0e1016;--s2:#13161e;--s3:#1a1e28;
+  --border:#21262f;--border2:#2a3040;
+  --accent:#e8ff47;--accent2:#00d4ff;--accent3:#ff6b6b;--accent4:#b48eff;
+  --text:#dde2ec;--muted:#4a5468;--muted2:#6b7a94;
+  --success:#4ade80;--warning:#fbbf24;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;display:flex;flex-direction:column}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 12% 12%,rgba(232,255,71,.035),transparent 50%),
+             radial-gradient(circle at 88% 88%,rgba(0,212,255,.035),transparent 50%)}
+
+/* ── Topbar ─────────────────────────────────────────────────────────────── */
+.topbar{height:50px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.25rem;background:var(--s1);border-bottom:1px solid var(--border);z-index:10}
+.brand{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-right{display:flex;align-items:center;gap:.6rem}
+.file-pill{display:none;align-items:center;gap:.35rem;font-size:.68rem;
+  font-family:'JetBrains Mono',monospace;color:var(--muted2);
+  background:var(--s2);border:1px solid var(--border);border-radius:999px;padding:.25rem .7rem}
+.status-pill{display:flex;align-items:center;gap:.35rem;font-size:.68rem;
+  font-family:'JetBrains Mono',monospace;color:var(--muted2);
+  background:var(--s2);border:1px solid var(--border);border-radius:999px;padding:.25rem .7rem}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:all .3s}
+.dot.on{background:var(--success);box-shadow:0 0 5px var(--success)}
+.dot.err{background:var(--accent3)}
+.dot.busy{background:var(--accent);animation:blink 1s infinite}
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.layout{display:flex;flex:1;overflow:hidden;position:relative;z-index:1}
+
+/* ── Sidebar ────────────────────────────────────────────────────────────── */
+.sidebar{width:280px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden}
+.sb-section{padding:.85rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-label{font-size:.59rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;
+  letter-spacing:.13em;color:var(--muted);margin-bottom:.6rem}
+
+/* Upload zone */
+.upload-zone{border:1.5px dashed var(--border2);border-radius:10px;padding:.85rem;
+  text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(232,255,71,.04)}
+.upload-zone input{display:none}
+.uz-icon{font-size:1.5rem;line-height:1;margin-bottom:.35rem}
+.uz-main{font-size:.78rem;color:var(--text)}
+.uz-sub{font-size:.66rem;color:var(--muted);margin-top:.18rem}
+.uz-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--accent);
+  width:0%;transition:width .25s;border-radius:1px}
+
+.csv-loaded{margin-top:.6rem;background:rgba(74,222,128,.06);
+  border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:.6rem .75rem;display:none}
+.csv-name{font-size:.74rem;font-family:'JetBrains Mono',monospace;color:var(--success);
+  font-weight:600;margin-bottom:.15rem;word-break:break-all}
+.csv-meta{font-size:.65rem;color:var(--muted2)}
+.csv-swap{font-size:.61rem;color:var(--muted);text-decoration:underline dotted;
+  cursor:pointer;margin-top:.25rem;display:inline-block}
+.csv-swap:hover{color:var(--accent)}
+
+/* Column pills */
+.col-pills{display:flex;flex-wrap:wrap;gap:.28rem;max-height:100px;overflow-y:auto}
+.cp{font-size:.62rem;font-family:'JetBrains Mono',monospace;background:var(--s3);
+  border:1px solid var(--border2);border-radius:4px;padding:.16rem .45rem;
+  color:var(--muted2);white-space:nowrap}
+.cp.num{border-color:rgba(0,212,255,.35);color:var(--accent2)}
+.cp.date{border-color:rgba(180,142,255,.35);color:var(--accent4)}
+
+/* ── Chat history ───────────────────────────────────────────────────────── */
+.chat-header{display:flex;align-items:center;justify-content:space-between;
+  padding:.7rem 1rem .2rem;flex-shrink:0}
+.chat-scroll{flex:1;overflow-y:auto;padding:.5rem .65rem;
+  display:flex;flex-direction:column;gap:.3rem}
+
+/* Each turn — clickable to reload */
+.turn{padding:.5rem .65rem;border-radius:7px;font-size:.74rem;line-height:1.5;
+  word-break:break-word;position:relative}
+.turn.user{background:rgba(232,255,71,.07);border:1px solid rgba(232,255,71,.14);
+  color:var(--text);cursor:pointer;transition:background .15s,border-color .15s}
+.turn.user:hover{background:rgba(232,255,71,.13);border-color:rgba(232,255,71,.35)}
+.turn.user:hover .turn-replay{opacity:1}
+.turn.user.active-turn{border-color:var(--accent);background:rgba(232,255,71,.12)}
+.turn.ai{background:var(--s2);border:1px solid var(--border);color:var(--muted2)}
+.turn.ai.followup{background:rgba(180,142,255,.07);border-color:rgba(180,142,255,.2)}
+.turn-label{font-size:.57rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:.22rem;
+  display:flex;align-items:center;justify-content:space-between}
+.turn-label-left{display:flex;align-items:center;gap:.4rem}
+.fu-tag{font-size:.57rem;background:rgba(180,142,255,.15);color:var(--accent4);
+  border:1px solid rgba(180,142,255,.25);border-radius:3px;padding:.05rem .3rem}
+/* Replay icon — shows on user turn hover */
+.turn-replay{font-size:.65rem;color:var(--accent);opacity:0;transition:opacity .15s;
+  font-family:'JetBrains Mono',monospace}
+
+.chat-empty{font-size:.73rem;color:var(--muted);text-align:center;margin-top:1.2rem;
+  font-family:'JetBrains Mono',monospace}
+.sb-foot{display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem .85rem;border-top:1px solid var(--border);flex-shrink:0}
+.turn-count{font-size:.62rem;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.clear-btn{font-size:.65rem;font-family:'JetBrains Mono',monospace;background:none;
+  border:1px solid var(--border);border-radius:5px;color:var(--muted);
+  padding:.25rem .55rem;cursor:pointer;transition:all .15s}
+.clear-btn:hover{color:var(--accent3);border-color:var(--accent3)}
+
+/* ── Main panel ─────────────────────────────────────────────────────────── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* Input bar */
+.input-bar{padding:.85rem 1.1rem;background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0}
+.input-row{display:flex;gap:.6rem;align-items:center}
+.inp-wrap{flex:1;position:relative}
+.inp-wrap::before{content:'⌘';position:absolute;left:.85rem;top:50%;transform:translateY(-50%);
+  color:var(--accent);font-size:.8rem;pointer-events:none}
+.q-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:9px;
+  color:var(--text);font-family:'Figtree',sans-serif;font-size:.88rem;
+  padding:.72rem 1rem .72rem 2.2rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.q-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,255,71,.07)}
+.q-input::placeholder{color:var(--muted)}
+.q-input:disabled,.ask-btn:disabled{opacity:.4;cursor:not-allowed}
+.ask-btn{background:var(--accent);color:#000;font-family:'Syne',sans-serif;font-weight:700;
+  font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;height:39px;
+  padding:0 1.25rem;border:none;border-radius:9px;cursor:pointer;white-space:nowrap;
+  transition:background .15s,transform .1s}
+.ask-btn:hover:not(:disabled){background:#f5ff6e}
+.ask-btn:active:not(:disabled){transform:scale(.97)}
+
+/* Suggestion chips */
+.chips{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.6rem}
+.chip{font-size:.67rem;font-family:'JetBrains Mono',monospace;
+  background:var(--s2);border:1px solid var(--border2);border-radius:999px;
+  padding:.2rem .62rem;color:var(--muted2);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.fu{border-color:rgba(180,142,255,.3);color:var(--accent4)}
+.chip.fu:hover{border-color:var(--accent4)}
+
+.progress{height:2px;margin-top:.6rem;display:none;
+  background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent4),var(--accent));
+  background-size:300%;animation:sweep 1.4s linear infinite}
+.progress.on{display:block}
+
+/* ── Runtime error toast ─────────────────────────────────────────────────── */
+.err-toast{
+  position:fixed;bottom:1.25rem;right:1.25rem;z-index:999;
+  max-width:360px;padding:.65rem 1rem;
+  background:#13161e;border:1px solid rgba(255,107,107,.4);border-radius:10px;
+  font-size:.76rem;font-family:'JetBrains Mono',monospace;color:var(--accent3);
+  display:flex;align-items:flex-start;gap:.6rem;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+  transform:translateY(8px);opacity:0;pointer-events:none;
+  transition:transform .25s ease,opacity .25s ease}
+.err-toast.on{transform:translateY(0);opacity:1;pointer-events:auto}
+.err-toast-icon{font-size:1rem;flex-shrink:0;margin-top:.05rem}
+.err-toast-body{flex:1}
+.err-toast-title{font-weight:600;color:#ff8a8a;margin-bottom:.2rem;font-size:.74rem}
+.err-toast-msg{color:var(--muted2);font-size:.69rem;line-height:1.5}
+.err-toast-close{font-size:.8rem;color:var(--muted);cursor:pointer;
+  padding:.1rem .2rem;margin-left:.2rem;flex-shrink:0;line-height:1}
+.err-toast-close:hover{color:var(--accent3)}
+
+/* ── Dashboard ──────────────────────────────────────────────────────────── */
+.dashboard{flex:1;overflow-y:auto;padding:1.1rem}
+
+.cannot-answer{display:none;align-items:flex-start;gap:.65rem;
+  padding:1.1rem;margin-bottom:1rem;background:rgba(255,107,107,.05);
+  border:1px solid rgba(255,107,107,.18);border-radius:11px}
+.cannot-answer.on{display:flex}
+.ca-title{font-family:'Syne',sans-serif;font-weight:700;color:var(--accent3);margin-bottom:.25rem}
+.ca-reason{font-size:.78rem;color:var(--muted2);line-height:1.55}
+
+/* Follow-up banner */
+.fu-banner{display:none;align-items:center;gap:.45rem;margin-bottom:.75rem;
+  font-size:.69rem;font-family:'JetBrains Mono',monospace;
+  background:rgba(180,142,255,.07);color:var(--accent4);
+  border:1px solid rgba(180,142,255,.18);border-radius:999px;
+  padding:.28rem .75rem;width:fit-content}
+.fu-banner.on{display:flex}
+
+.dash-header{margin-bottom:.9rem;animation:fadeUp .4s ease both}
+.dash-title{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;
+  letter-spacing:-.02em;margin-bottom:.25rem}
+.dash-summary{font-size:.77rem;color:var(--muted2);line-height:1.5}
+
+.grid{display:grid;gap:.9rem}
+.grid.g1{grid-template-columns:1fr}
+.grid.g2{grid-template-columns:1fr 1fr}
+.grid.g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:1020px){.grid.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.grid.g2,.grid.g3{grid-template-columns:1fr}}
+
+/* Panel */
+.panel{background:var(--s1);border:1px solid var(--border);border-radius:13px;
+  overflow:hidden;animation:fadeUp .4s ease both}
+.panel:nth-child(2){animation-delay:.07s}
+.panel:nth-child(3){animation-delay:.14s}
+@keyframes panelFlash{0%{box-shadow:0 0 0 0 rgba(180,142,255,.5)}
+  60%{box-shadow:0 0 0 10px rgba(180,142,255,0)}100%{box-shadow:none}}
+.panel.updated{animation:panelFlash .7s ease}
+
+.panel-head{display:flex;align-items:center;justify-content:space-between;
+  padding:.65rem .9rem;background:var(--s2);border-bottom:1px solid var(--border)}
+.panel-title{font-family:'Syne',sans-serif;font-size:.76rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em}
+.chart-tag{font-size:.59rem;font-family:'JetBrains Mono',monospace;
+  background:rgba(232,255,71,.07);color:var(--accent);
+  border:1px solid rgba(232,255,71,.18);border-radius:4px;padding:.12rem .45rem}
+.panel-insight{padding:.42rem .9rem;font-size:.71rem;color:var(--muted2);font-style:italic;
+  background:rgba(0,212,255,.02);border-bottom:1px solid var(--border)}
+.panel-reasoning{padding:.3rem .9rem;font-size:.65rem;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;background:rgba(180,142,255,.03);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:help}
+.panel-body{padding:.9rem}
+.chart-wrap{position:relative;height:235px}
+
+/* Table */
+.tbl-scroll{overflow-x:auto;max-height:280px;overflow-y:auto}
+table{width:100%;border-collapse:collapse}
+thead th{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
+  padding:.45rem .7rem;background:var(--s2);position:sticky;top:0;
+  border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+tbody td{padding:.45rem .7rem;border-bottom:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.015)}
+
+.panel-foot{display:flex;justify-content:space-between;align-items:center;
+  padding:.4rem .9rem;background:var(--s2);border-top:1px solid var(--border);
+  font-size:.61rem;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.panel-foot .rows{color:var(--accent2)}
+
+.sql-err{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.18);
+  border-radius:7px;padding:.7rem .9rem;font-size:.74rem;
+  font-family:'JetBrains Mono',monospace;color:var(--accent3)}
+
+/* Empty state */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:.7rem;color:var(--muted);text-align:center;padding:2rem}
+.empty .icon{font-size:2.8rem;opacity:.2}
+.empty h3{font-family:'Syne',sans-serif;color:var(--muted2);font-size:.95rem}
+.empty p{font-size:.78rem;line-height:1.65;max-width:280px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sweep{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--s1)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:9px}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="brand">Runtime Error</div>
+  <div class="topbar-right">
+    <div class="file-pill" id="filePill">📄 <span id="filePillName"></span></div>
+    <div class="status-pill">
+      <div class="dot" id="statusDot"></div>
+      <span id="statusTxt">connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- Runtime error toast -->
+<div class="err-toast" id="errToast">
+  <div class="err-toast-icon">⚠</div>
+  <div class="err-toast-body">
+    <div class="err-toast-title" id="errToastTitle">Error</div>
+    <div class="err-toast-msg" id="errToastMsg"></div>
+  </div>
+  <div class="err-toast-close" onclick="closeErr()">✕</div>
+</div>
+
+<div class="layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+
+    <!-- Upload -->
+    <div class="sb-section">
+      <div class="sb-label">Data Source</div>
+      <div class="upload-zone" id="uploadZone"
+           onclick="document.getElementById('fileInput').click()"
+           ondragover="ev(event)"
+           ondragleave="document.getElementById('uploadZone').classList.remove('drag')"
+           ondrop="onDrop(event)">
+        <input type="file" id="fileInput" accept=".csv" onchange="onFilePick(event)">
+        <div class="uz-icon">📂</div>
+        <div class="uz-main"><strong>Click</strong> or drag a CSV</div>
+        <div class="uz-sub">Any schema — no hardcoding</div>
+        <div class="uz-bar" id="uzBar"></div>
+      </div>
+      <div class="csv-loaded" id="csvLoaded">
+        <div class="csv-name" id="csvName"></div>
+        <div class="csv-meta" id="csvMeta"></div>
+        <span class="csv-swap" onclick="document.getElementById('fileInput').click()">↑ Upload different file</span>
+      </div>
+    </div>
+
+    <!-- Columns -->
+    <div class="sb-section" id="colSection" style="display:none">
+      <div class="sb-label">Columns</div>
+      <div class="col-pills" id="colPills"></div>
+    </div>
+
+    <!-- Chat history — clickable to replay -->
+    <div class="chat-header">
+      <div class="sb-label" style="margin:0">Chat History</div>
+      <span class="turn-count" id="turnCount"></span>
+    </div>
+    <div class="chat-scroll" id="chatScroll">
+      <div class="chat-empty" id="chatEmpty">Ask your first question</div>
+    </div>
+    <div class="sb-foot">
+      <span style="font-size:.62rem;font-family:'JetBrains Mono',monospace;color:var(--muted)">
+        click a question to replay
+      </span>
+      <button class="clear-btn" onclick="clearChat()">✕ Clear</button>
+    </div>
+
+  </aside>
+
+  <!-- ── Main ─────────────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Input bar -->
+    <div class="input-bar">
+      <div class="input-row">
+        <div class="inp-wrap">
+          <input class="q-input" id="qInput" type="text"
+                 placeholder="Ask anything about your data…"
+                 onkeydown="if(event.key==='Enter')ask()">
+        </div>
+        <button class="ask-btn" id="askBtn" onclick="ask()">Generate</button>
+      </div>
+
+      <div class="chips" id="chips">
+        <span class="chip" onclick="fill('Show total sales by category')">Sales by category</span>
+        <span class="chip" onclick="fill('Monthly revenue trend over time')">Revenue trend</span>
+        <span class="chip" onclick="fill('Top 10 products by quantity sold')">Top products</span>
+        <span class="chip" onclick="fill('Full overview — monthly trend, top regions, category split')">Full overview</span>
+      </div>
+
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+      <div class="empty" id="emptyState">
+        <div class="icon">📊</div>
+        <h3>Upload a CSV to begin</h3>
+        <p>Drag any CSV onto the sidebar, then ask questions in plain English to build your dashboard.</p>
+      </div>
+      <div id="cannotAnswer" class="cannot-answer">
+        <span style="font-size:1.1rem">🤔</span>
+        <div><div class="ca-title">Cannot answer</div><div class="ca-reason" id="caReason"></div></div>
+      </div>
+      <div id="dashWrap" style="display:none">
+        <div class="fu-banner" id="fuBanner">↩ follow-up — dashboard updated</div>
+        <div class="dash-header">
+          <div class="dash-title" id="dashTitle"></div>
+          <div class="dash-summary" id="dashSummary"></div>
+        </div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const API      = 'http://127.0.0.1:8000';
+const SESSION  = 's_' + Math.random().toString(36).slice(2, 9);
+let charts     = {};
+let turns      = 0;
+let hasHistory = false;
+
+// Store full question history for replay
+// [{question, isFollowup, response}]
+const questionHistory = [];
+
+// ── Error toast ──────────────────────────────────────────────────────────────
+let errTimer = null;
+function showErr(title, msg, autoDismiss = true) {
+  document.getElementById('errToastTitle').textContent = title;
+  document.getElementById('errToastMsg').textContent   = msg;
+  document.getElementById('errToast').classList.add('on');
+  if (errTimer) clearTimeout(errTimer);
+  if (autoDismiss) errTimer = setTimeout(closeErr, 6000);
+}
+function closeErr() {
+  document.getElementById('errToast').classList.remove('on');
+}
+
+// ── Health polling ────────────────────────────────────────────────────────────
+async function ping() {
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusTxt');
+  try {
+    const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(3000) });
+    const d = await r.json();
+    dot.className = 'dot on';
+    txt.textContent = d.csv_loaded
+      ? `online · ${Number(d.row_count).toLocaleString()} rows`
+      : 'online · no data';
+    if (d.csv_loaded && d.filename) showCsvLoaded(d.filename, d.row_count, d.columns);
+  } catch {
+    dot.className = 'dot err';
+    txt.textContent = 'offline';
+  }
+}
+ping(); setInterval(ping, 15000);
+
+// ── Upload CSV ────────────────────────────────────────────────────────────────
+function ev(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) uploadFile(f);
+}
+function onFilePick(e) { if (e.target.files[0]) uploadFile(e.target.files[0]); }
+
+async function uploadFile(file) {
+  if (!file.name.toLowerCase().endsWith('.csv')) {
+    showErr('Invalid file', 'Only .csv files are supported.');
+    return;
+  }
+  busy(true, 'Parsing CSV…');
+  const bar = document.getElementById('uzBar');
+  bar.style.width = '35%';
+
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    bar.style.width = '65%';
+    const r = await fetch(`${API}/upload`, { method: 'POST', body: fd });
+    bar.style.width = '95%';
+    const d = await r.json();
+    bar.style.width = '100%';
+    setTimeout(() => bar.style.width = '0%', 450);
+
+    if (!r.ok) {
+      showErr('Upload failed', d.detail || 'Could not parse this CSV.');
+      return;
+    }
+
+    showCsvLoaded(file.name, d.row_count, d.columns);
+    buildChips(d.columns);
+
+    // Reset chat — new data, old context is invalid
+    turns = 0; hasHistory = false;
+    questionHistory.length = 0;
+    document.getElementById('chatScroll').innerHTML =
+      '<div class="chat-empty" id="chatEmpty">Ask your first question</div>';
+    document.getElementById('turnCount').textContent = '';
+    ping();
+  } catch (err) {
+    showErr('Connection error', 'Cannot reach server. Run: uvicorn main:app --reload');
+    bar.style.width = '0%';
+  } finally { busy(false); }
+}
+
+function showCsvLoaded(name, rows, cols) {
+  document.getElementById('filePill').style.display = 'flex';
+  document.getElementById('filePillName').textContent = name;
+  document.getElementById('csvLoaded').style.display = 'block';
+  document.getElementById('csvName').textContent = '✓ ' + name;
+  document.getElementById('csvMeta').textContent =
+    `${Number(rows).toLocaleString()} rows · ${(cols||[]).length} cols`;
+  if (cols?.length) buildColPills(cols);
+}
+
+function buildColPills(cols) {
+  document.getElementById('colSection').style.display = 'block';
+  const el = document.getElementById('colPills');
+  el.innerHTML = '';
+  cols.forEach(c => {
+    const d = document.createElement('div');
+    const lower = c.toLowerCase();
+    d.className = 'cp'
+      + (lower.includes('date')||lower.includes('month')||lower.includes('year') ? ' date'
+       : lower.includes('amount')||lower.includes('revenue')||lower.includes('qty')||lower.includes('price') ? ' num'
+       : '');
+    d.textContent = c.replace(/_/g,' ');
+    d.title = c;
+    el.appendChild(d);
+  });
+}
+
+function buildChips(cols) {
+  const lower = cols.join(',').toLowerCase();
+  const base = [];
+  if (/region|area|zone|territory/.test(lower)) base.push(['By region','Show total revenue by region']);
+  if (/date|month|year/.test(lower))            base.push(['Monthly trend','Monthly revenue trend over time']);
+  if (/category|segment|type/.test(lower))      base.push(['By category','Revenue breakdown by category']);
+  if (/product|item|sku/.test(lower))           base.push(['Top products','Top 10 products by sales']);
+  if (!base.length) {
+    base.push(['Summary','Show me a summary of the data']);
+    base.push(['All records','Show all records as a table']);
+  }
+  const fuChips = [
+    ['Filter top 5 ↩','Now show only the top 5'],
+    ['As pie chart ↩','Show this as a pie chart instead'],
+    ['Filter region ↩','Now filter to only East region'],
+  ];
+  document.getElementById('chips').innerHTML = [
+    ...base.map(([l,q]) => `<span class="chip" onclick="fill('${q.replace(/'/g,"\\'")}')"> ${l}</span>`),
+    ...fuChips.map(([l,q]) => `<span class="chip fu" onclick="fill('${q.replace(/'/g,"\\'")}')"> ${l}</span>`),
+  ].join('');
+}
+
+// ── Ask ───────────────────────────────────────────────────────────────────────
+async function ask(overrideQ) {
+  const inp = document.getElementById('qInput');
+  const q   = overrideQ || inp.value.trim();
+  if (!q) { showErr('Empty question', 'Type a question first.'); return; }
+
+  hideCannot();
+  busy(true, 'Analyzing your data…');
+
+  // Mark active turn
+  markActiveTurn(null);
+  addTurn('user', q, false, true); // pending — no response yet
+
+  try {
+    const r = await fetch(`${API}/ask`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q, session_id: SESSION }),
+      signal: AbortSignal.timeout(90000),
+    });
+
+    if (r.status === 429) {
+      showErr('Rate limit hit', 'Please wait ~60 seconds before trying again.', false);
+      removeLastUserTurn();
+      return;
+    }
+
+    const d = await r.json();
+
+    if (!r.ok) {
+      showErr(`Server error ${r.status}`, d.detail || 'An unexpected error occurred.');
+      removeLastUserTurn();
+      return;
+    }
+
+    if (d.cannot_answer) {
+      showCannot(d.cannot_answer_reason);
+      addAiTurn('⚠ ' + (d.cannot_answer_reason || 'Cannot answer with available data.'), false);
+      // Save to history anyway so user can see what was asked
+      questionHistory.push({ question: q, isFollowup: false, response: null });
+      return;
+    }
+
+    renderDashboard(d);
+    addAiTurn('📊 ' + d.dashboard_title, d.is_followup);
+
+    // Save full response for replay
+    questionHistory.push({ question: q, isFollowup: d.is_followup, response: d });
+    if (!overrideQ) inp.value = '';
+    hasHistory = true;
+
+  } catch (err) {
+    removeLastUserTurn();
+    if (err.name === 'TimeoutError')
+      showErr('Request timed out', 'No response after 90s. Check the server is running.', false);
+    else if (err.name === 'TypeError')
+      showErr('Cannot connect', 'Run: uvicorn main:app --reload', false);
+    else
+      showErr('Unexpected error', err.message || 'Something went wrong.');
+  } finally {
+    busy(false);
+    ping();
+  }
+}
+
+// ── Replay a past question by clicking it in the sidebar ──────────────────────
+function replayQuestion(idx) {
+  const item = questionHistory[idx];
+  if (!item) return;
+
+  // If we have the cached response, render it instantly (no API call)
+  if (item.response) {
+    markActiveTurn(idx);
+    renderDashboard(item.response);
+    document.getElementById('qInput').value = item.question;
+  } else {
+    // Re-ask (for cannot_answer entries or failed ones)
+    fill(item.question);
+    ask(item.question);
+  }
+}
+
+function markActiveTurn(idx) {
+  document.querySelectorAll('.turn.user').forEach((el, i) => {
+    el.classList.toggle('active-turn', i === idx);
+  });
+}
+
+// ── Render dashboard ──────────────────────────────────────────────────────────
+function renderDashboard(res) {
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('dashWrap').style.display   = 'block';
+  document.getElementById('dashTitle').textContent    = res.dashboard_title || 'Dashboard';
+  document.getElementById('dashSummary').textContent  = res.summary || '';
+
+  const fuBanner = document.getElementById('fuBanner');
+  fuBanner.className = 'fu-banner' + (res.is_followup ? ' on' : '');
+
+  const grid = document.getElementById('grid');
+  const n    = (res.panels || []).length;
+  grid.className = 'grid g' + Math.min(n, 3);
+  grid.innerHTML = '';
+
+  (res.panels || []).forEach((p, i) => grid.appendChild(buildPanel(p, i, res.is_followup)));
+}
+
+function buildPanel(panel, idx, isFollowup) {
+  const div  = document.createElement('div');
+  div.className = 'panel' + (isFollowup ? ' updated' : '');
+
+  const type  = panel.chart_type || 'Bar';
+  const isTbl = type.toLowerCase() === 'table';
+  const isKpi = type.toLowerCase() === 'kpi';
+  const data  = panel.data || [];
+  const rows  = panel.row_count ?? data.length;
+
+  div.innerHTML = `
+    <div class="panel-head">
+      <div class="panel-title">${panel.title || 'Panel '+(idx+1)}</div>
+      <span class="chart-tag">${type}</span>
+    </div>
+    ${panel.insight        ? `<div class="panel-insight">💡 ${panel.insight}</div>` : ''}
+    ${panel.chart_reasoning? `<div class="panel-reasoning" title="${panel.chart_reasoning}">🧠 ${panel.chart_reasoning}</div>` : ''}
+    <div class="panel-body" id="pb${idx}">
+      ${panel.error ? `<div class="sql-err">SQL Error: ${panel.error}</div>`
+        : isTbl     ? `<div class="tbl-scroll">${mkTable(data)}</div>`
+        : isKpi     ? `<div id="chart${idx}"></div>`
+        :             `<div class="chart-wrap"><canvas id="chart${idx}"></canvas></div>`}
+    </div>
+    <div class="panel-foot">
+      <span class="rows">${Number(rows).toLocaleString()} rows</span>
+      <span title="${panel.sql||''}">${(panel.sql||'').slice(0,52)}${(panel.sql||'').length>52?'…':''}</span>
+    </div>`;
+
+  if (!panel.error && data.length)
+    requestAnimationFrame(() =>
+      renderChart(`chart${idx}`, data, type, panel.x_axis, panel.y_axis));
+
+  return div;
+}
+
+function mkTable(data) {
+  if (!data?.length) return '<p style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.8rem">No rows</p>';
+  const cols = Object.keys(data[0]);
+  const head = cols.map(c => `<th>${c.replace(/_/g,' ')}</th>`).join('');
+  const body = data.slice(0,50).map(row =>
+    `<tr>${cols.map(c => {
+      const v = row[c];
+      return `<td>${v===null||v===''?'<span style="color:var(--muted);font-style:italic">—</span>':v}</td>`;
+    }).join('')}</tr>`
+  ).join('');
+  return `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+// ── Chart renderer ────────────────────────────────────────────────────────────
+const PAL = ['#e8ff47','#00d4ff','#ff6b6b','#b48eff','#4ade80','#fb923c','#38bdf8','#f472b6','#a3e635','#34d399'];
+
+function renderChart(id, data, chartType, xCol, yCol) {
+  const ct = (chartType||'bar').toLowerCase().trim();
+
+  if (ct === 'kpi') {
+    const keys = Object.keys(data[0]||{});
+    const val  = data[0][keys[keys.length-1]];
+    const lbl  = (keys[keys.length-1]||'').replace(/_/g,' ');
+    document.getElementById(id).innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:190px;gap:.4rem">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:2.6rem;font-weight:700;color:var(--accent);letter-spacing:-.03em">
+          ${isNaN(Number(val)) ? val : Number(val).toLocaleString()}</div>
+        <div style="font-size:.75rem;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em">${lbl}</div>
+      </div>`;
+    return;
+  }
+
+  const canvas = document.getElementById(id);
+  if (!canvas || !data.length) return;
+  const keys = Object.keys(data[0]);
+  const xKey = (xCol && keys.includes(xCol)) ? xCol : keys[0];
+  const yKey = (yCol && keys.includes(yCol)) ? yCol : (keys[1] || keys[0]);
+
+  if (ct === 'scatter') {
+    charts[id] = new Chart(canvas.getContext('2d'), {
+      type: 'scatter',
+      data: { datasets: [{ label: `${xKey} vs ${yKey}`,
+        data: data.map(d => ({ x: Number(d[xKey])||0, y: Number(d[yKey])||0 })),
+        backgroundColor: PAL[0]+'99', borderColor: PAL[0], pointRadius: 5, pointHoverRadius: 7 }] },
+      options: {
+        responsive:true, maintainAspectRatio:false, animation:{duration:500},
+        plugins:{ legend:{display:false},
+          tooltip:{backgroundColor:'#13161e',borderColor:'#21262f',borderWidth:1,
+            callbacks:{label:c=>`(${c.parsed.x.toLocaleString()}, ${c.parsed.y.toLocaleString()})`}},
+          zoom:{zoom:{wheel:{enabled:true},pinch:{enabled:true},mode:'xy'},pan:{enabled:true,mode:'xy'}}},
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4a5468',font:{family:'JetBrains Mono',size:10}},
+             title:{display:true,text:xKey.replace(/_/g,' '),color:'#6b7a94'}},
+          y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4a5468',font:{family:'JetBrains Mono',size:10},callback:v=>Number(v).toLocaleString()},
+             title:{display:true,text:yKey.replace(/_/g,' '),color:'#6b7a94'}}
+        }
+      }
+    });
+    return;
+  }
+
+  const labels = data.map(d => String(d[xKey]??''));
+  const values = data.map(d => { const n=Number(d[yKey]); return isNaN(n)?0:n; });
+  const isHBar = ct==='horizontalbar'||ct==='hbar';
+  const isPie  = ct==='pie'||ct==='doughnut';
+  const isArea = ct==='area';
+  const isLine = ct==='line'||isArea;
+  const jsType = isHBar?'bar':isPie?ct:isLine?'line':'bar';
+
+  Chart.defaults.color = '#4a5468';
+  charts[id] = new Chart(canvas.getContext('2d'), {
+    type: jsType,
+    data: { labels, datasets: [{
+      label: yKey.replace(/_/g,' '), data: values,
+      backgroundColor: isPie ? PAL.slice(0,labels.length) : isArea ? PAL[0]+'22' : PAL[0]+'cc',
+      borderColor: isPie?'transparent':PAL[0], borderWidth:isPie?0:1.5,
+      borderRadius:(!isPie&&!isLine)?6:0, tension:isLine?0.4:0, fill:isArea,
+      pointBackgroundColor:PAL[0], pointRadius:isLine?3:0, pointHoverRadius:isLine?6:0,
+    }]},
+    options:{
+      indexAxis:isHBar?'y':'x', responsive:true, maintainAspectRatio:false,
+      animation:{duration:500,easing:'easeOutQuart'},
+      interaction:{mode:isPie?'nearest':'index',intersect:isPie},
+      plugins:{
+        legend:{display:isPie,labels:{color:'#6b7a94',font:{family:'Figtree',size:11},padding:12}},
+        tooltip:{backgroundColor:'#13161e',borderColor:'#21262f',borderWidth:1,
+          titleColor:'#dde2ec',bodyColor:'#6b7a94',padding:10,
+          titleFont:{family:'Syne',size:12},bodyFont:{family:'JetBrains Mono',size:11},
+          callbacks:{label:c=>` ${c.dataset.label}: ${Number(c.raw).toLocaleString()}`}},
+        zoom:{zoom:{wheel:{enabled:!isPie},pinch:{enabled:!isPie},mode:'x'},pan:{enabled:!isPie,mode:'x'}}
+      },
+      scales:isPie?{}:{
+        x:{grid:{display:isHBar},ticks:{color:'#4a5468',font:{family:'JetBrains Mono',size:10},maxRotation:isHBar?0:35,
+          callback(v){
+            if(isHBar) return Number(this.getLabelForValue(v)).toLocaleString();
+            const l=this.getLabelForValue(v); return l?.length>14?l.slice(0,13)+'…':l;
+          }}},
+        y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.04)',display:!isHBar},
+          ticks:{color:'#4a5468',font:{family:'JetBrains Mono',size:10},
+            callback:isHBar
+              ?function(v){const l=this.getLabelForValue(v);return l?.length>18?l.slice(0,17)+'…':l;}
+              :v=>Number(v).toLocaleString()}}
+      }
+    }
+  });
+}
+
+// ── Chat history helpers ──────────────────────────────────────────────────────
+let pendingTurnEl = null;
+
+function addTurn(role, content, isFollowup=false, isPending=false) {
+  const box = document.getElementById('chatScroll');
+  document.getElementById('chatEmpty')?.remove();
+
+  const el = document.createElement('div');
+  el.className = `turn ${role}${role==='ai'&&isFollowup?' followup':''}`;
+
+  const histIdx = role === 'user' ? questionHistory.length : -1;
+
+  el.innerHTML = `
+    <div class="turn-label">
+      <div class="turn-label-left">
+        ${role==='user'?'You':'Pulse BI'}
+        ${isFollowup?'<span class="fu-tag">follow-up</span>':''}
+      </div>
+      ${role==='user'?'<span class="turn-replay">↺ replay</span>':''}
+    </div>
+    <div>${content}</div>`;
+
+  // Clicking a user turn replays that question
+  if (role === 'user') {
+    el.addEventListener('click', () => replayQuestion(histIdx));
+    pendingTurnEl = el;
+  }
+
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+
+  if (role === 'user') {
+    turns++;
+    document.getElementById('turnCount').textContent = `${turns} turn${turns!==1?'s':''}`;
+  }
+}
+
+function addAiTurn(content, isFollowup=false) {
+  addTurn('ai', content, isFollowup);
+  pendingTurnEl = null;
+}
+
+function removeLastUserTurn() {
+  if (pendingTurnEl) {
+    pendingTurnEl.remove();
+    pendingTurnEl = null;
+    turns = Math.max(0, turns-1);
+    const tc = document.getElementById('turnCount');
+    tc.textContent = turns > 0 ? `${turns} turn${turns!==1?'s':''}` : '';
+  }
+}
+
+async function clearChat() {
+  try { await fetch(`${API}/history/${SESSION}`, {method:'DELETE'}); } catch{}
+  turns=0; hasHistory=false;
+  questionHistory.length=0;
+  document.getElementById('chatScroll').innerHTML =
+    '<div class="chat-empty" id="chatEmpty">Ask your first question</div>';
+  document.getElementById('turnCount').textContent='';
+  document.getElementById('qInput').placeholder='Ask anything about your data…';
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function fill(q) {
+  document.getElementById('qInput').value=q;
+  document.getElementById('qInput').focus();
+}
+function busy(on, msg='') {
+  document.getElementById('progress').classList.toggle('on',on);
+  document.getElementById('askBtn').disabled=on;
+  document.getElementById('qInput').disabled=on;
+  const dot=document.getElementById('statusDot'), txt=document.getElementById('statusTxt');
+  if(on){dot.className='dot busy';txt.textContent=msg;}
+}
+function showCannot(r){
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('dashWrap').style.display='none';
+  document.getElementById('caReason').textContent=r;
+  document.getElementById('cannotAnswer').classList.add('on');
+}
+function hideCannot(){document.getElementById('cannotAnswer').classList.remove('on');}
+</script>
+</body>
+</html>

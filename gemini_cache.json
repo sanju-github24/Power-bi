@@ -1,0 +1,2602 @@
+{
+  "8bfbe25313f6f9a956a19889b339cce5": {
+    "dashboard_title": "Total Revenue by Region",
+    "summary": "This dashboard displays the total revenue generated across different regions.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Revenue by Region",
+        "sql": "SELECT Region, ROUND(SUM(Total_Amount), 2) AS TotalRevenue FROM data_table GROUP BY Region ORDER BY TotalRevenue DESC",
+        "x_axis": "Region",
+        "y_axis": "TotalRevenue",
+        "chart_type": "BAR",
+        "insight": "Identify the regions with the highest and lowest total revenue.",
+        "data": [
+          {
+            "Region": "West",
+            "TotalRevenue": 1444.0
+          },
+          {
+            "Region": "North",
+            "TotalRevenue": 1412.0
+          },
+          {
+            "Region": "South",
+            "TotalRevenue": 773.0
+          },
+          {
+            "Region": "East",
+            "TotalRevenue": 627.0
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Region",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "38ad734860c4b3b23fc61a4671177a76": {
+    "dashboard_title": "Highest Revenue by Region",
+    "summary": "This dashboard displays the region with the highest revenue.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Highest Revenue Region",
+        "sql": "SELECT Region, ROUND(SUM(Total_Amount), 2) AS TotalRevenue FROM data_table GROUP BY Region ORDER BY TotalRevenue DESC LIMIT 1",
+        "x_axis": "Region",
+        "y_axis": "TotalRevenue",
+        "chart_type": "BAR",
+        "insight": "Identify the region with the largest bar to see where most revenue is generated."
+      }
+    ]
+  },
+  "84a902243cb57487c702ddb45f1b6014": {
+    "dashboard_title": "Total Revenue Overview",
+    "summary": "This dashboard shows the total revenue generated.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Revenue",
+        "chart_type": "KPI",
+        "chart_reasoning": "The question asks for a single, overall metric, which is best represented by a Key Performance Indicator (KPI).",
+        "sql": "SELECT ROUND(SUM(Total_Amount), 2) FROM data_table",
+        "x_axis": null,
+        "y_axis": "Total_Amount",
+        "insight": "The sum of Total_Amount represents the total revenue.",
+        "data": [
+          {
+            "ROUND(SUM(Total_Amount), 2)": 4256.0
+          }
+        ],
+        "row_count": 1,
+        "columns": [
+          "ROUND(SUM(Total_Amount), 2)"
+        ]
+      }
+    ]
+  },
+  "a122c35be0ebb0d95a38f42a1bea4354": {
+    "dashboard_title": "Revenue Breakdown by Category",
+    "summary": "This dashboard shows the total revenue generated for each product category.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Category",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart is suitable for comparing the revenue across different categories, as it allows for easy visual comparison of their magnitudes. The 'breakdown' keyword also suggests this chart type.",
+        "sql": "SELECT Category, ROUND(SUM(Total_Amount), 2) AS TotalRevenue FROM data_table GROUP BY Category ORDER BY TotalRevenue DESC",
+        "x_axis": "Category",
+        "y_axis": "TotalRevenue",
+        "insight": "Observe which product categories contribute the most to the total revenue.",
+        "data": [
+          {
+            "Category": "Electronics",
+            "TotalRevenue": 1441.0
+          },
+          {
+            "Category": "Furniture",
+            "TotalRevenue": 1415.0
+          },
+          {
+            "Category": "Clothing",
+            "TotalRevenue": 773.0
+          },
+          {
+            "Category": "Beauty",
+            "TotalRevenue": 627.0
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Category",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "e09caf15124bdf4f9cd8a8cd2f87adce": {
+    "dashboard_title": "Revenue Share by Region",
+    "summary": "This dashboard shows the distribution of total revenue across different regions, highlighting the market share of each.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue Share by Region",
+        "chart_type": "Pie",
+        "chart_reasoning": "A pie chart is appropriate for visualizing the proportion or 'share' of revenue contributed by each region, especially when the number of regions is small (4 in this case).",
+        "sql": "SELECT Region, ROUND(SUM(Total_Amount), 2) AS TotalRevenue FROM data_table GROUP BY Region ORDER BY TotalRevenue DESC",
+        "x_axis": "Region",
+        "y_axis": "TotalRevenue",
+        "insight": "Observe which region contributes the largest and smallest share of the total revenue.",
+        "data": [
+          {
+            "Region": "West",
+            "TotalRevenue": 1444.0
+          },
+          {
+            "Region": "North",
+            "TotalRevenue": 1412.0
+          },
+          {
+            "Region": "South",
+            "TotalRevenue": 773.0
+          },
+          {
+            "Region": "East",
+            "TotalRevenue": 627.0
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Region",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "5ddfe2a346bedc0142e6d5ac7eebef2b": {
+    "dashboard_title": "Monthly Revenue Trend and Category Breakdown",
+    "summary": "This dashboard displays the monthly revenue trend and a breakdown of revenue by category, allowing for analysis of sales performance over time and by product segment.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Monthly Revenue Trend",
+        "chart_type": "Line",
+        "chart_reasoning": "A line chart is ideal for visualizing trends over time, making it suitable for showing the monthly revenue fluctuations.",
+        "sql": "SELECT STRFTIME('%Y-%m', Date) AS Month, ROUND(SUM(Total_Amount), 2) AS MonthlyRevenue FROM data_table GROUP BY Month ORDER BY Month;",
+        "x_axis": "Month",
+        "y_axis": "MonthlyRevenue",
+        "insight": "Observe the overall upward or downward trend in monthly revenue and identify any seasonal peaks or dips.",
+        "data": [
+          {
+            "Month": "2026-01",
+            "MonthlyRevenue": 1685.0
+          },
+          {
+            "Month": "2026-02",
+            "MonthlyRevenue": 1568.0
+          },
+          {
+            "Month": "2026-03",
+            "MonthlyRevenue": 1003.0
+          }
+        ],
+        "row_count": 3,
+        "columns": [
+          "Month",
+          "MonthlyRevenue"
+        ]
+      },
+      {
+        "title": "Revenue by Category",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart is effective for comparing the revenue generated by different categories, facilitating a clear understanding of which categories are performing best.",
+        "sql": "SELECT Category, ROUND(SUM(Total_Amount), 2) AS TotalRevenue FROM data_table GROUP BY Category ORDER BY TotalRevenue DESC;",
+        "x_axis": "Category",
+        "y_axis": "TotalRevenue",
+        "insight": "Identify the top-performing categories in terms of revenue generation and areas that may require further attention.",
+        "data": [
+          {
+            "Category": "Electronics",
+            "TotalRevenue": 1441.0
+          },
+          {
+            "Category": "Furniture",
+            "TotalRevenue": 1415.0
+          },
+          {
+            "Category": "Clothing",
+            "TotalRevenue": 773.0
+          },
+          {
+            "Category": "Beauty",
+            "TotalRevenue": 627.0
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Category",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "29f534df9d585858c9e2d59fcc78d81a": {
+    "dashboard_title": "Sales by Region and Category",
+    "summary": "Compares sales performance across different regions and product categories.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Sales by Region and Category",
+        "chart_type": "Bar",
+        "chart_reasoning": "A grouped bar chart is effective for comparing sales across multiple regions while also breaking down sales by product category within each region.",
+        "sql": "SELECT Region, Category, ROUND(SUM(Total_Amount), 2) AS TotalSales FROM data_table GROUP BY Region, Category ORDER BY Region, Category;",
+        "x_axis": "Region",
+        "y_axis": "TotalSales",
+        "insight": "Observe which product categories perform best in each region and identify regions with overall higher or lower sales."
+      }
+    ]
+  },
+  "ac6e43fbc8d2208b7bc53c33f8d5ee4a": {
+    "dashboard_title": "Order Value vs. Quantity Relationship",
+    "summary": "Examines the relationship between the total amount of an order and the quantity of items purchased.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Order Value vs. Quantity",
+        "chart_type": "Scatter",
+        "chart_reasoning": "A scatter plot is suitable for visualizing the relationship between two numerical variables, Order_Amount and Quantity, to identify potential correlations.",
+        "sql": "SELECT Quantity, Total_Amount FROM data_table",
+        "x_axis": "Quantity",
+        "y_axis": "Total_Amount",
+        "insight": "Observe if higher quantities generally lead to higher total order amounts, or if there are other patterns.",
+        "data": [
+          {
+            "Quantity": 2,
+            "Total_Amount": 50
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 150
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 85
+          },
+          {
+            "Quantity": 3,
+            "Total_Amount": 135
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 60
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 65
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 40
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 110
+          },
+          {
+            "Quantity": 5,
+            "Total_Amount": 100
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 250
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 120
+          },
+          {
+            "Quantity": 4,
+            "Total_Amount": 60
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 70
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 45
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 80
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 120
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 70
+          },
+          {
+            "Quantity": 3,
+            "Total_Amount": 75
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 120
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 90
+          },
+          {
+            "Quantity": 5,
+            "Total_Amount": 60
+          },
+          {
+            "Quantity": 3,
+            "Total_Amount": 30
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 95
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 36
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 110
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 150
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 80
+          },
+          {
+            "Quantity": 10,
+            "Total_Amount": 50
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 75
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 60
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 25
+          },
+          {
+            "Quantity": 4,
+            "Total_Amount": 48
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 180
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 65
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 199
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 30
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 45
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 20
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 130
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 32
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 210
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 25
+          },
+          {
+            "Quantity": 3,
+            "Total_Amount": 60
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 95
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 160
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 18
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 22
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 56
+          },
+          {
+            "Quantity": 1,
+            "Total_Amount": 115
+          },
+          {
+            "Quantity": 2,
+            "Total_Amount": 80
+          }
+        ],
+        "row_count": 50,
+        "columns": [
+          "Quantity",
+          "Total_Amount"
+        ]
+      }
+    ]
+  },
+  "56e60d7a49368fcee4d161ad11633db9": {
+    "dashboard_title": "Sales Overview",
+    "summary": "This dashboard provides a comprehensive overview of sales performance, including monthly revenue trends, top-performing regions, and category-wise sales distribution.",
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Monthly Revenue Trend",
+        "chart_type": "Line",
+        "chart_reasoning": "A line chart is ideal for visualizing trends over time, making it suitable for showing monthly revenue fluctuations.",
+        "sql": "SELECT STRFTIME('%Y-%m', Date) AS Month, ROUND(SUM(Total_Amount), 2) AS MonthlyRevenue FROM data_table GROUP BY Month ORDER BY Month;",
+        "x_axis": "Month",
+        "y_axis": "MonthlyRevenue",
+        "insight": "Observe the overall trend of revenue generation across months to identify periods of growth or decline."
+      },
+      {
+        "title": "Top 5 Regions by Sales",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart is effective for comparing sales performance across different regions and easily identifying the top performers.",
+        "sql": "SELECT Region, ROUND(SUM(Total_Amount), 2) AS TotalSales FROM data_table GROUP BY Region ORDER BY TotalSales DESC LIMIT 5;",
+        "x_axis": "Region",
+        "y_axis": "TotalSales",
+        "insight": "Identify the regions contributing the most to overall sales to focus marketing and sales efforts."
+      },
+      {
+        "title": "Category Sales Distribution",
+        "chart_type": "Pie",
+        "chart_reasoning": "A pie chart is suitable for showing the proportion or 'share' of sales contributed by each category, given there are only 4 categories.",
+        "sql": "SELECT Category, ROUND(SUM(Total_Amount), 2) AS TotalSales FROM data_table GROUP BY Category ORDER BY TotalSales DESC;",
+        "x_axis": "Category",
+        "y_axis": "TotalSales",
+        "insight": "Understand the relative contribution of each product category to the total sales volume."
+      }
+    ]
+  },
+  "6f5748af1a60189e8fa7dac59ec53642": {
+    "dashboard_title": "Sales Performance Dashboard",
+    "summary": "This pie chart shows the revenue breakdown by product category, highlighting the contribution of each category to the total revenue.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue Breakdown by Category",
+        "chart_type": "Pie",
+        "chart_reasoning": "The user asked for a breakdown by category and there are 4 categories, which is less than or equal to 8, making a pie chart suitable for showing proportions.",
+        "sql": "SELECT Category, ROUND(SUM(Total_Amount), 2) AS TotalRevenue FROM data_table GROUP BY Category ORDER BY TotalRevenue DESC;",
+        "x_axis": "Category",
+        "y_axis": "TotalRevenue",
+        "insight": "Electronics is the highest revenue-generating category, followed by Furniture.",
+        "data": [
+          {
+            "Category": "Electronics",
+            "TotalRevenue": 1441.0
+          },
+          {
+            "Category": "Furniture",
+            "TotalRevenue": 1415.0
+          },
+          {
+            "Category": "Clothing",
+            "TotalRevenue": 773.0
+          },
+          {
+            "Category": "Beauty",
+            "TotalRevenue": 627.0
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Category",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "421c943833dc6d50fab3bafb6af85478": {
+    "dashboard_title": "Sales Performance Dashboard",
+    "summary": "The revenue breakdown by category now focuses exclusively on the Electronics category.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue Breakdown by Category (Electronics)",
+        "chart_type": "Pie",
+        "chart_reasoning": "A pie chart is suitable for showing the distribution of revenue within the Electronics category, especially since there are a limited number of sub-categories within Electronics.",
+        "sql": "SELECT Category, ROUND(SUM(Total_Amount), 2) AS TotalRevenue FROM data_table WHERE Category = 'Electronics' GROUP BY Category ORDER BY TotalRevenue DESC;",
+        "x_axis": "Category",
+        "y_axis": "TotalRevenue",
+        "insight": "This shows the revenue distribution within the Electronics category."
+      }
+    ]
+  },
+  "a63004e12872153f88d0523fdbcdaa42": {
+    "dashboard_title": "Customer Revenue Overview",
+    "summary": "The top 5 customers by total revenue are displayed.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top 5 Customers by Total Revenue",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for displaying rankings of categorical data (customer names) against a numerical value (total revenue). It directly addresses the 'top 5' requirement.",
+        "sql": "SELECT customer_name, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table GROUP BY customer_name ORDER BY total_revenue DESC LIMIT 5",
+        "x_axis": "customer_name",
+        "y_axis": "total_revenue",
+        "insight": "Alice Johnson generated the highest revenue, significantly outperforming other customers.",
+        "data": [
+          {
+            "customer_name": "Alice Johnson",
+            "total_revenue": 6172.94
+          },
+          {
+            "customer_name": "Iris Wilson",
+            "total_revenue": 3448.35
+          },
+          {
+            "customer_name": "Yara King",
+            "total_revenue": 3391.88
+          },
+          {
+            "customer_name": "Frank Brown",
+            "total_revenue": 2297.88
+          },
+          {
+            "customer_name": "Rachel Garcia",
+            "total_revenue": 1952.35
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "customer_name",
+          "total_revenue"
+        ]
+      }
+    ]
+  },
+  "2f578e333ce956bc3b9713b0df66e85a": {
+    "dashboard_title": "Customer Revenue Analysis",
+    "summary": "Top 5 customers by total revenue, filtered for Electronics.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top 5 Customers by Total Revenue (Electronics)",
+        "chart_type": "Bar",
+        "chart_reasoning": "The user is asking for a ranking of customers by revenue, which is best represented by a bar chart, and this is a follow-up question to a previous bar chart.",
+        "sql": "SELECT customer_name, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table WHERE product_category = 'Electronics' GROUP BY customer_name ORDER BY total_revenue DESC LIMIT 5",
+        "x_axis": "customer_name",
+        "y_axis": "total_revenue",
+        "insight": "Alice Johnson is the top customer for Electronics products, generating the most revenue in this category.",
+        "data": [
+          {
+            "customer_name": "Alice Johnson",
+            "total_revenue": 6096.95
+          },
+          {
+            "customer_name": "Iris Wilson",
+            "total_revenue": 2564.97
+          },
+          {
+            "customer_name": "Yara King",
+            "total_revenue": 2391.98
+          },
+          {
+            "customer_name": "Frank Brown",
+            "total_revenue": 2165.92
+          },
+          {
+            "customer_name": "Noah White",
+            "total_revenue": 1277.46
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "customer_name",
+          "total_revenue"
+        ]
+      }
+    ]
+  },
+  "90178b6e138a5e1011bdf4cdccbf15d2": {
+    "dashboard_title": "Customer Revenue Analysis",
+    "summary": "Top 5 customers by total revenue for Electronics products.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top 5 Customers by Total Revenue (Electronics)",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing the total revenue of top customers within a specific product category.",
+        "sql": "SELECT customer_name, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table WHERE product_category = 'Electronics' GROUP BY customer_name ORDER BY total_revenue DESC LIMIT 5",
+        "x_axis": "customer_name",
+        "y_axis": "total_revenue",
+        "insight": "Alice Johnson is the leading customer for Electronics products, generating the highest total revenue.",
+        "data": [
+          {
+            "customer_name": "Alice Johnson",
+            "total_revenue": 6096.95
+          },
+          {
+            "customer_name": "Iris Wilson",
+            "total_revenue": 2564.97
+          },
+          {
+            "customer_name": "Yara King",
+            "total_revenue": 2391.98
+          },
+          {
+            "customer_name": "Frank Brown",
+            "total_revenue": 2165.92
+          },
+          {
+            "customer_name": "Noah White",
+            "total_revenue": 1277.46
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "customer_name",
+          "total_revenue"
+        ]
+      }
+    ]
+  },
+  "fd821526708c95178e797079aaf6c2b2": {
+    "dashboard_title": "Customer Revenue Analysis",
+    "summary": "Top 5 customers by total revenue in the North region, focusing on Electronics.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top 5 Customers by Total Revenue (Electronics, North Region)",
+        "chart_type": "Bar",
+        "chart_reasoning": "The user is asking for a top N list, which is best represented by a Bar chart.",
+        "sql": "SELECT customer_name, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table WHERE product_category = 'Electronics' AND customer_region = 'North' GROUP BY customer_name ORDER BY total_revenue DESC LIMIT 5",
+        "x_axis": "customer_name",
+        "y_axis": "total_revenue",
+        "insight": "Alice Johnson is the top customer in the North region for Electronics, generating significant revenue.",
+        "data": [
+          {
+            "customer_name": "Alice Johnson",
+            "total_revenue": 4861.96
+          },
+          {
+            "customer_name": "Yara King",
+            "total_revenue": 2391.98
+          },
+          {
+            "customer_name": "Mia Jackson",
+            "total_revenue": 998.97
+          },
+          {
+            "customer_name": "Iris Wilson",
+            "total_revenue": 854.99
+          },
+          {
+            "customer_name": "Grace Kim",
+            "total_revenue": 809.99
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "customer_name",
+          "total_revenue"
+        ]
+      }
+    ]
+  },
+  "6564eab2c0b2a3e81ea580082666afb1": {
+    "dashboard_title": "Revenue Breakdown by Category",
+    "summary": "The revenue breakdown by product category shows the distribution of sales across different product types.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue Breakdown by Product Category",
+        "chart_type": "Pie",
+        "chart_reasoning": "The user asked for a 'breakdown by category' which implies proportions, and there are 5 categories, which is suitable for a pie chart.",
+        "sql": "SELECT product_category, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table GROUP BY product_category ORDER BY total_revenue DESC",
+        "x_axis": "product_category",
+        "y_axis": "total_revenue",
+        "insight": "Electronics generates the highest revenue, followed by Clothing and Home & Garden.",
+        "data": [
+          {
+            "product_category": "Electronics",
+            "total_revenue": 23022.37
+          },
+          {
+            "product_category": "Home & Garden",
+            "total_revenue": 7498.06
+          },
+          {
+            "product_category": "Clothing",
+            "total_revenue": 5417.75
+          },
+          {
+            "product_category": "Sports",
+            "total_revenue": 5025.28
+          },
+          {
+            "product_category": "Books",
+            "total_revenue": 3096.82
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "product_category",
+          "total_revenue"
+        ]
+      }
+    ]
+  },
+  "3d446a6b4402b5cc92da61586cba3020": {
+    "dashboard_title": "Sales Performance Dashboard",
+    "summary": "Showing revenue breakdown by product category, filtered for electronics.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue Breakdown by Product Category (Electronics)",
+        "chart_type": "Pie",
+        "chart_reasoning": "User asked for revenue breakdown, and there are 5 categories which is <= 8, suitable for a pie chart.",
+        "sql": "SELECT product_category, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table WHERE product_category = 'Electronics' GROUP BY product_category ORDER BY total_revenue DESC",
+        "x_axis": "product_category",
+        "y_axis": "total_revenue",
+        "insight": "The revenue for electronics is primarily driven by a few key product categories.",
+        "data": [
+          {
+            "product_category": "Electronics",
+            "total_revenue": 23022.37
+          }
+        ],
+        "row_count": 1,
+        "columns": [
+          "product_category",
+          "total_revenue"
+        ]
+      }
+    ]
+  },
+  "aa2da885afe0a4d6f8192e8d605a3ff6": {
+    "dashboard_title": "Monthly Revenue Trend",
+    "summary": "This chart shows the monthly revenue trend over time.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "panels": [
+      {
+        "title": "Monthly Revenue Over Time",
+        "chart_type": "Line",
+        "chart_reasoning": "The user is asking for a trend over time, which is best represented by a line chart. The data includes dates and revenue, making it suitable for time-series analysis.",
+        "sql": "SELECT strftime('%Y-%m', order_date) AS order_month, ROUND(SUM(revenue), 2) AS monthly_revenue FROM data_table GROUP BY order_month ORDER BY order_month;",
+        "x_axis": "order_month",
+        "y_axis": "monthly_revenue",
+        "insight": "Revenue shows fluctuations throughout the months, indicating seasonality or specific sales events.",
+        "data": [
+          {
+            "order_month": "2024-01",
+            "monthly_revenue": 4919.59
+          },
+          {
+            "order_month": "2024-02",
+            "monthly_revenue": 3020.75
+          },
+          {
+            "order_month": "2024-03",
+            "monthly_revenue": 5115.9
+          },
+          {
+            "order_month": "2024-04",
+            "monthly_revenue": 3502.96
+          },
+          {
+            "order_month": "2024-05",
+            "monthly_revenue": 3930.19
+          },
+          {
+            "order_month": "2024-06",
+            "monthly_revenue": 3339.72
+          },
+          {
+            "order_month": "2024-07",
+            "monthly_revenue": 3573.02
+          },
+          {
+            "order_month": "2024-08",
+            "monthly_revenue": 3331.62
+          },
+          {
+            "order_month": "2024-09",
+            "monthly_revenue": 2758.25
+          },
+          {
+            "order_month": "2024-10",
+            "monthly_revenue": 4412.73
+          },
+          {
+            "order_month": "2024-11",
+            "monthly_revenue": 3441.31
+          },
+          {
+            "order_month": "2024-12",
+            "monthly_revenue": 2714.24
+          }
+        ],
+        "row_count": 12,
+        "columns": [
+          "order_month",
+          "monthly_revenue"
+        ]
+      }
+    ],
+    "cannot_answer_reason": ""
+  },
+  "9dcaa1793be8e54dff504bdd5d78185e": {
+    "dashboard_title": "Revenue Trends",
+    "summary": "The monthly revenue trend for 2023 shows a fluctuating pattern over the year.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Monthly Revenue Trend - 2023",
+        "chart_type": "Line",
+        "chart_reasoning": "Line chart is suitable for visualizing trends over time.",
+        "sql": "SELECT strftime('%Y-%m', order_date) AS order_month, ROUND(SUM(revenue), 2) AS monthly_revenue FROM data_table WHERE strftime('%Y', order_date) = '2023' GROUP BY order_month ORDER BY order_month;",
+        "x_axis": "order_month",
+        "y_axis": "monthly_revenue",
+        "insight": "Revenue in 2023 generally peaked in the middle of the year and saw a dip towards the end.",
+        "data": [],
+        "row_count": 0,
+        "columns": [
+          "order_month",
+          "monthly_revenue"
+        ]
+      }
+    ]
+  },
+  "6d359c8d7c97189868449cab62c5d32b": {
+    "dashboard_title": "Sales Overview",
+    "summary": "A comprehensive view of sales performance including monthly revenue trends, top performing regions, and product category distribution.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Monthly Revenue Over Time",
+        "chart_type": "Line",
+        "chart_reasoning": "The user is asking for a trend over time, which is best represented by a line chart.",
+        "sql": "SELECT strftime('%Y-%m', order_date) AS order_month, ROUND(SUM(revenue), 2) AS monthly_revenue FROM data_table GROUP BY order_month ORDER BY order_month;",
+        "x_axis": "order_month",
+        "y_axis": "monthly_revenue",
+        "insight": "Monthly revenue shows fluctuations throughout the year.",
+        "data": [
+          {
+            "order_month": "2024-01",
+            "monthly_revenue": 4919.59
+          },
+          {
+            "order_month": "2024-02",
+            "monthly_revenue": 3020.75
+          },
+          {
+            "order_month": "2024-03",
+            "monthly_revenue": 5115.9
+          },
+          {
+            "order_month": "2024-04",
+            "monthly_revenue": 3502.96
+          },
+          {
+            "order_month": "2024-05",
+            "monthly_revenue": 3930.19
+          },
+          {
+            "order_month": "2024-06",
+            "monthly_revenue": 3339.72
+          },
+          {
+            "order_month": "2024-07",
+            "monthly_revenue": 3573.02
+          },
+          {
+            "order_month": "2024-08",
+            "monthly_revenue": 3331.62
+          },
+          {
+            "order_month": "2024-09",
+            "monthly_revenue": 2758.25
+          },
+          {
+            "order_month": "2024-10",
+            "monthly_revenue": 4412.73
+          },
+          {
+            "order_month": "2024-11",
+            "monthly_revenue": 3441.31
+          },
+          {
+            "order_month": "2024-12",
+            "monthly_revenue": 2714.24
+          }
+        ],
+        "row_count": 12,
+        "columns": [
+          "order_month",
+          "monthly_revenue"
+        ]
+      },
+      {
+        "title": "Revenue by Customer Region",
+        "chart_type": "Bar",
+        "chart_reasoning": "The user wants to see a comparison of revenue across different regions, and a bar chart is suitable for comparing discrete categories. With 4 regions, a bar chart is appropriate.",
+        "sql": "SELECT customer_region, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table GROUP BY customer_region ORDER BY total_revenue DESC;",
+        "x_axis": "customer_region",
+        "y_axis": "total_revenue",
+        "insight": "The West region generates the highest revenue.",
+        "data": [
+          {
+            "customer_region": "North",
+            "total_revenue": 16238.24
+          },
+          {
+            "customer_region": "East",
+            "total_revenue": 10072.0
+          },
+          {
+            "customer_region": "South",
+            "total_revenue": 9359.09
+          },
+          {
+            "customer_region": "West",
+            "total_revenue": 8390.95
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "customer_region",
+          "total_revenue"
+        ]
+      },
+      {
+        "title": "Revenue by Product Category",
+        "chart_type": "Pie",
+        "chart_reasoning": "The user is asking for a category split, and a pie chart is effective for showing the distribution of a whole across a limited number of categories (5 in this case).",
+        "sql": "SELECT product_category, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table GROUP BY product_category ORDER BY total_revenue DESC;",
+        "x_axis": "product_category",
+        "y_axis": "total_revenue",
+        "insight": "Electronics is the largest product category by revenue.",
+        "data": [
+          {
+            "product_category": "Electronics",
+            "total_revenue": 23022.37
+          },
+          {
+            "product_category": "Home & Garden",
+            "total_revenue": 7498.06
+          },
+          {
+            "product_category": "Clothing",
+            "total_revenue": 5417.75
+          },
+          {
+            "product_category": "Sports",
+            "total_revenue": 5025.28
+          },
+          {
+            "product_category": "Books",
+            "total_revenue": 3096.82
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "product_category",
+          "total_revenue"
+        ]
+      }
+    ]
+  },
+  "97c26f6fb2990b9d2e6e2c4c448ff035": {
+    "dashboard_title": "Sales Performance Overview",
+    "summary": "Monthly revenue trends and regional sales breakdown, now focusing on Electronics.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Monthly Revenue Over Time - Electronics",
+        "chart_type": "Line",
+        "chart_reasoning": "User is asking for a trend over time and the previous chart was a line chart for monthly revenue, so a line chart is appropriate here as well.",
+        "sql": "SELECT strftime('%Y-%m', order_date) AS order_month, ROUND(SUM(revenue), 2) AS monthly_revenue FROM data_table WHERE product_category = 'Electronics' GROUP BY order_month ORDER BY order_month;",
+        "x_axis": "order_month",
+        "y_axis": "monthly_revenue",
+        "insight": "This chart shows the monthly revenue trend for the Electronics category."
+      }
+    ]
+  },
+  "791d6db04a6d59ddb9abf45e6a083981": {
+    "dashboard_title": "Revenue Breakdown by Category",
+    "summary": "This pie chart displays the total revenue generated across different product categories.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Product Category",
+        "chart_type": "Pie",
+        "chart_reasoning": "The user requested a pie chart for revenue breakdown by category, and there are 5 categories, which is suitable for a pie chart.",
+        "sql": "SELECT product_category, ROUND(SUM(revenue), 2) AS total_revenue FROM data_table GROUP BY product_category ORDER BY total_revenue DESC;",
+        "x_axis": "product_category",
+        "y_axis": "total_revenue",
+        "insight": "Electronics generate the highest revenue, followed by Clothing and Home & Garden."
+      }
+    ]
+  },
+  "eb803c202f41c9f1e219b653fc840dca": {
+    "dashboard_title": "Revenue by Campaign Type",
+    "summary": "Total revenue is broken down by campaign type, with Paid Ads generating the most revenue.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Revenue by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "The user asked for total revenue by campaign type, and a bar chart is suitable for comparing numerical values across distinct categories. There are 5 campaign types, which is a good number for a bar chart.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC;",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Paid Ads campaigns contribute the largest portion of the total revenue.",
+        "data": [
+          {
+            "Campaign_Type": "Influencer",
+            "TotalRevenue": 5769064044.0
+          },
+          {
+            "Campaign_Type": "Social Media",
+            "TotalRevenue": 5751837620.0
+          },
+          {
+            "Campaign_Type": "Paid Ads",
+            "TotalRevenue": 5751468983.0
+          },
+          {
+            "Campaign_Type": "SEO",
+            "TotalRevenue": 5698831847.0
+          },
+          {
+            "Campaign_Type": "Email",
+            "TotalRevenue": 5685161788.0
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_Type",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "afee94a96f3b5538a4e42f70888bbd60": {
+    "dashboard_title": "Campaign Performance Analysis",
+    "summary": "The total revenue for Social Media campaigns is displayed.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Revenue for Social Media Campaigns",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing discrete categories (Campaign_Type) with a numerical value (TotalRevenue) and the user previously requested a bar chart.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table WHERE Campaign_Type = 'Social Media' GROUP BY Campaign_Type ORDER BY TotalRevenue DESC;",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Social Media campaigns generated a specific total revenue, with the exact amount detailed in the chart.",
+        "data": [
+          {
+            "Campaign_Type": "Social Media",
+            "TotalRevenue": 5751837620.0
+          }
+        ],
+        "row_count": 1,
+        "columns": [
+          "Campaign_Type",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "0ed3f84ac70af0fc604950691980e7fd": {
+    "dashboard_title": "Campaign Revenue Analysis",
+    "summary": "The total revenue for Social Media campaigns is displayed as a pie chart.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Revenue for Social Media Campaigns",
+        "chart_type": "Pie",
+        "chart_reasoning": "The user asked to change the chart type to a pie chart, and there are 5 campaign types which is suitable for a pie chart.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table WHERE Campaign_Type = 'Social Media' GROUP BY Campaign_Type ORDER BY TotalRevenue DESC;",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Social Media campaigns generated a specific amount of revenue.",
+        "data": [
+          {
+            "Campaign_Type": "Social Media",
+            "TotalRevenue": 5751837620.0
+          }
+        ],
+        "row_count": 1,
+        "columns": [
+          "Campaign_Type",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "08e7f45b46fa91df4819b51d15f53f08": {
+    "dashboard_title": "Campaign Performance by Language",
+    "summary": "This panel displays the campaigns conducted in Hindi, ordered by their Return on Investment (ROI), highlighting those with the highest returns.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top Hindi Campaigns by ROI",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart is suitable for comparing the ROI of different campaigns within the Hindi language segment. The explicit request for 'highest ROI' combined with a specific language filter implies a ranking, best visualized with bars.",
+        "sql": "SELECT Campaign_ID, ROI FROM data_table WHERE Language = 'Hindi' ORDER BY ROI DESC LIMIT 10",
+        "x_axis": "Campaign_ID",
+        "y_axis": "ROI",
+        "insight": "Campaigns conducted in Hindi with the highest ROI are identified, providing insights into the most profitable strategies for this language segment.",
+        "data": [
+          {
+            "Campaign_ID": "NY-CMP-13007",
+            "ROI": 74.42
+          },
+          {
+            "Campaign_ID": "NY-CMP-22689",
+            "ROI": 66.32
+          },
+          {
+            "Campaign_ID": "NY-CMP-26356",
+            "ROI": 64.14
+          },
+          {
+            "Campaign_ID": "NY-CMP-39329",
+            "ROI": 59.64
+          },
+          {
+            "Campaign_ID": "NY-CMP-35197",
+            "ROI": 52.53
+          },
+          {
+            "Campaign_ID": "NY-CMP-55921",
+            "ROI": 46.41
+          },
+          {
+            "Campaign_ID": "NY-CMP-24494",
+            "ROI": 45.25
+          },
+          {
+            "Campaign_ID": "NY-CMP-8168",
+            "ROI": 43.66
+          },
+          {
+            "Campaign_ID": "NY-CMP-38125",
+            "ROI": 43.24
+          },
+          {
+            "Campaign_ID": "NY-CMP-49696",
+            "ROI": 43.04
+          }
+        ],
+        "row_count": 10,
+        "columns": [
+          "Campaign_ID",
+          "ROI"
+        ]
+      }
+    ]
+  },
+  "1a1f8698899acf8864f1972d1c573846": {
+    "dashboard_title": "Customer Age Group vs. Purchase Frequency",
+    "summary": "Visualizing the purchase frequency across different customer age groups.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Purchase Frequency by Customer Age Group",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing a numeric metric (purchase frequency, represented by total conversions) across distinct categorical groups (customer age groups).",
+        "sql": "SELECT Customer_Segment, COUNT(Campaign_ID) AS PurchaseFrequency FROM data_table GROUP BY Customer_Segment ORDER BY PurchaseFrequency DESC",
+        "x_axis": "Customer_Segment",
+        "y_axis": "PurchaseFrequency",
+        "insight": "The 'Tier 2 City Customers' segment shows the highest purchase frequency, while 'College Students' have the lowest.",
+        "data": [
+          {
+            "Customer_Segment": "College Students",
+            "PurchaseFrequency": 11293
+          },
+          {
+            "Customer_Segment": "Working Women",
+            "PurchaseFrequency": 11123
+          },
+          {
+            "Customer_Segment": "Youth",
+            "PurchaseFrequency": 11088
+          },
+          {
+            "Customer_Segment": "Premium Shoppers",
+            "PurchaseFrequency": 11059
+          },
+          {
+            "Customer_Segment": "Tier 2 City Customers",
+            "PurchaseFrequency": 10992
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Customer_Segment",
+          "PurchaseFrequency"
+        ]
+      }
+    ]
+  },
+  "65e54c2bfa193041bf553d209b0df6db": {
+    "dashboard_title": "Customer Segments and Purchase Frequency",
+    "summary": "A pie chart visualizing purchase frequency across different customer age groups.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Purchase Frequency by Customer Age Group",
+        "chart_type": "Pie",
+        "chart_reasoning": "User explicitly requested a pie chart. The data has 5 categories which is within the 8-slice limit for a pie chart.",
+        "sql": "SELECT Customer_Segment, COUNT(Campaign_ID) AS PurchaseFrequency FROM data_table GROUP BY Customer_Segment ORDER BY PurchaseFrequency DESC",
+        "x_axis": "Customer_Segment",
+        "y_axis": "PurchaseFrequency",
+        "insight": "The 'Tier 2 City Customers' segment shows the highest purchase frequency, followed by 'Premium Shoppers'.",
+        "data": [
+          {
+            "Customer_Segment": "College Students",
+            "PurchaseFrequency": 11293
+          },
+          {
+            "Customer_Segment": "Working Women",
+            "PurchaseFrequency": 11123
+          },
+          {
+            "Customer_Segment": "Youth",
+            "PurchaseFrequency": 11088
+          },
+          {
+            "Customer_Segment": "Premium Shoppers",
+            "PurchaseFrequency": 11059
+          },
+          {
+            "Customer_Segment": "Tier 2 City Customers",
+            "PurchaseFrequency": 10992
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Customer_Segment",
+          "PurchaseFrequency"
+        ]
+      }
+    ]
+  },
+  "fbc81314174de6b122fdd3d1db9b1291": {
+    "dashboard_title": "Campaign Performance by Language",
+    "summary": "This shows the purchase frequency broken down by language, with English having the highest frequency.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Purchase Frequency by Language",
+        "chart_type": "Bar",
+        "chart_reasoning": "The user is asking to compare purchase frequency across different languages, and a bar chart is suitable for visualizing this comparison. The previous conversation used a bar chart and the user is asking to 'break this down by language instead', implying a similar visualization is desired.",
+        "sql": "SELECT Language, COUNT(Campaign_ID) AS PurchaseFrequency FROM data_table GROUP BY Language ORDER BY PurchaseFrequency DESC",
+        "x_axis": "Language",
+        "y_axis": "PurchaseFrequency",
+        "insight": "English campaigns have the highest purchase frequency.",
+        "data": [
+          {
+            "Language": "Hindi",
+            "PurchaseFrequency": 13986
+          },
+          {
+            "Language": "Tamil",
+            "PurchaseFrequency": 13884
+          },
+          {
+            "Language": "English",
+            "PurchaseFrequency": 13874
+          },
+          {
+            "Language": "Bengali",
+            "PurchaseFrequency": 13811
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Language",
+          "PurchaseFrequency"
+        ]
+      }
+    ]
+  },
+  "16dcaf1d4151e527ae8cb02b72108e45": {
+    "dashboard_title": "Campaign Performance Overview",
+    "summary": "This dashboard shows total conversions by customer segment and revenue by language.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Conversions by Customer Segment",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing numerical values across distinct categories (customer segments).",
+        "sql": "SELECT Customer_Segment, SUM(Conversions) AS TotalConversions FROM data_table GROUP BY Customer_Segment ORDER BY TotalConversions DESC",
+        "x_axis": "Customer_Segment",
+        "y_axis": "TotalConversions",
+        "insight": "The 'Premium Shoppers' segment generated the highest number of conversions."
+      },
+      {
+        "title": "Revenue by Language",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing numerical values across distinct categories (languages).",
+        "sql": "SELECT Language, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Language ORDER BY TotalRevenue DESC",
+        "x_axis": "Language",
+        "y_axis": "TotalRevenue",
+        "insight": "English campaigns generated the highest revenue, followed by Hindi."
+      }
+    ]
+  },
+  "3882f81439bc911377b8eaee3b0ebc09": {
+    "dashboard_title": "Campaign Performance Overview",
+    "summary": "Total conversions by customer segment and revenue by language are displayed.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Conversions by Customer Segment",
+        "chart_type": "Bar",
+        "chart_reasoning": "This bar chart is suitable for comparing the total conversions across different customer segments, as there are 5 distinct segments and it's a comparison of a metric against a category.",
+        "sql": "SELECT Customer_Segment, SUM(Conversions) AS TotalConversions FROM data_table GROUP BY Customer_Segment ORDER BY TotalConversions DESC LIMIT 50",
+        "x_axis": "Customer_Segment",
+        "y_axis": "TotalConversions",
+        "insight": "The 'Premium Shoppers' segment generated the highest number of conversions.",
+        "data": [
+          {
+            "Customer_Segment": "Working Women",
+            "TotalConversions": 11638803
+          },
+          {
+            "Customer_Segment": "College Students",
+            "TotalConversions": 11583642
+          },
+          {
+            "Customer_Segment": "Premium Shoppers",
+            "TotalConversions": 11445494
+          },
+          {
+            "Customer_Segment": "Tier 2 City Customers",
+            "TotalConversions": 11365890
+          },
+          {
+            "Customer_Segment": "Youth",
+            "TotalConversions": 11347093
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Customer_Segment",
+          "TotalConversions"
+        ]
+      },
+      {
+        "title": "Total Revenue by Language",
+        "chart_type": "Bar",
+        "chart_reasoning": "This bar chart effectively displays the total revenue generated across different languages, facilitating easy comparison between them.",
+        "sql": "SELECT Language, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Language ORDER BY TotalRevenue DESC LIMIT 50",
+        "x_axis": "Language",
+        "y_axis": "TotalRevenue",
+        "insight": "English is the language that generated the highest total revenue.",
+        "data": [
+          {
+            "Language": "Hindi",
+            "TotalRevenue": 7242728156
+          },
+          {
+            "Language": "Tamil",
+            "TotalRevenue": 7151812108
+          },
+          {
+            "Language": "English",
+            "TotalRevenue": 7131128736
+          },
+          {
+            "Language": "Bengali",
+            "TotalRevenue": 7130695282
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Language",
+          "TotalRevenue"
+        ]
+      }
+    ]
+  },
+  "f6094ce673cb2affffdbbec1d42903c4": {
+    "dashboard_title": "Campaign Performance by Segment and Language",
+    "summary": "This dashboard shows campaign performance metrics segmented by customer groups and language.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Conversions by Customer Segment",
+        "chart_type": "Pie",
+        "chart_reasoning": "The user requested to see the previous bar chart as a pie chart. A pie chart is suitable for showing the distribution of a single metric (conversions) across a limited number of categories (customer segments).",
+        "sql": "SELECT Customer_Segment, SUM(Conversions) AS TotalConversions FROM data_table GROUP BY Customer_Segment ORDER BY TotalConversions DESC LIMIT 50",
+        "x_axis": "Customer_Segment",
+        "y_axis": "TotalConversions",
+        "insight": "The 'Premium Shoppers' segment has the highest number of conversions."
+      },
+      {
+        "title": "Total Revenue by Language",
+        "chart_type": "Pie",
+        "chart_reasoning": "The user requested to see the previous bar chart as a pie chart. A pie chart is suitable for showing the distribution of revenue across different languages.",
+        "sql": "SELECT Language, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Language ORDER BY TotalRevenue DESC LIMIT 50",
+        "x_axis": "Language",
+        "y_axis": "TotalRevenue",
+        "insight": "English generates the most revenue, followed by Hindi."
+      }
+    ]
+  },
+  "94141b0a03450b0efc1802a295918460": {
+    "dashboard_title": "Campaign Performance Analysis",
+    "summary": "This dashboard provides insights into campaign performance metrics across various dimensions.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Campaigns in Hindi Language",
+        "chart_type": "Table",
+        "chart_reasoning": "A table is suitable for displaying raw records when no specific aggregation or visualization is requested.",
+        "sql": "SELECT * FROM data_table WHERE Language = 'Hindi' LIMIT 50",
+        "x_axis": null,
+        "y_axis": null,
+        "insight": "Displaying all available data for campaigns conducted in Hindi.",
+        "data": [
+          {
+            "Campaign_ID": "NY-CMP-1000",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "College Students",
+            "Duration": 21,
+            "Channel_Used": "WhatsApp, YouTube",
+            "Impressions": 57804,
+            "Clicks": 6156,
+            "Leads": 3616,
+            "Conversions": 2355,
+            "Revenue": 1867515,
+            "Acquisition_Cost": 111.03,
+            "ROI": 6.14,
+            "Language": "Hindi",
+            "Engagement_Score": 20.98,
+            "Customer_Segment": "College Students",
+            "Date": "2025-04-29"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1001",
+            "Campaign_Type": "Paid Ads",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 18,
+            "Channel_Used": "YouTube",
+            "Impressions": 91801,
+            "Clicks": 3321,
+            "Leads": 1971,
+            "Conversions": 1357,
+            "Revenue": 1046247,
+            "Acquisition_Cost": 180.83,
+            "ROI": 3.26,
+            "Language": "Hindi",
+            "Engagement_Score": 7.24,
+            "Customer_Segment": "College Students",
+            "Date": "2025-04-06"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1003",
+            "Campaign_Type": "Email",
+            "Target_Audience": "Working Women",
+            "Duration": 18,
+            "Channel_Used": "YouTube, Facebook, Instagram",
+            "Impressions": 88114,
+            "Clicks": 8413,
+            "Leads": 2231,
+            "Conversions": 947,
+            "Revenue": 376906,
+            "Acquisition_Cost": 249.07,
+            "ROI": 0.6,
+            "Language": "Hindi",
+            "Engagement_Score": 13.15,
+            "Customer_Segment": "College Students",
+            "Date": "2025-06-04"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1004",
+            "Campaign_Type": "Paid Ads",
+            "Target_Audience": "College Students",
+            "Duration": 10,
+            "Channel_Used": "Facebook, Instagram",
+            "Impressions": 96871,
+            "Clicks": 3743,
+            "Leads": 2060,
+            "Conversions": 1258,
+            "Revenue": 518296,
+            "Acquisition_Cost": 228.6,
+            "ROI": 0.8,
+            "Language": "Hindi",
+            "Engagement_Score": 7.29,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2024-12-29"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1005",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Youth",
+            "Duration": 26,
+            "Channel_Used": "Email, Instagram",
+            "Impressions": 83919,
+            "Clicks": 7497,
+            "Leads": 2061,
+            "Conversions": 1555,
+            "Revenue": 877020,
+            "Acquisition_Cost": 137.79,
+            "ROI": 3.09,
+            "Language": "Hindi",
+            "Engagement_Score": 13.24,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2024-09-23"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1007",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Working Women",
+            "Duration": 6,
+            "Channel_Used": "Instagram, WhatsApp, Google",
+            "Impressions": 32482,
+            "Clicks": 2665,
+            "Leads": 1488,
+            "Conversions": 925,
+            "Revenue": 326525,
+            "Acquisition_Cost": 147.29,
+            "ROI": 1.4,
+            "Language": "Hindi",
+            "Engagement_Score": 15.63,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2025-05-31"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1008",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Premium Shoppers",
+            "Duration": 27,
+            "Channel_Used": "Facebook, WhatsApp, Email",
+            "Impressions": 73813,
+            "Clicks": 8680,
+            "Leads": 5031,
+            "Conversions": 2551,
+            "Revenue": 1058665,
+            "Acquisition_Cost": 87.74,
+            "ROI": 3.73,
+            "Language": "Hindi",
+            "Engagement_Score": 22.03,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2025-03-24"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1009",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "College Students",
+            "Duration": 11,
+            "Channel_Used": "Email",
+            "Impressions": 88895,
+            "Clicks": 6284,
+            "Leads": 1600,
+            "Conversions": 858,
+            "Revenue": 603174,
+            "Acquisition_Cost": 269.82,
+            "ROI": 1.61,
+            "Language": "Hindi",
+            "Engagement_Score": 9.83,
+            "Customer_Segment": "Youth",
+            "Date": "2025-04-29"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1010",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Working Women",
+            "Duration": 5,
+            "Channel_Used": "Google, Instagram",
+            "Impressions": 59141,
+            "Clicks": 1556,
+            "Leads": 580,
+            "Conversions": 221,
+            "Revenue": 121550,
+            "Acquisition_Cost": 357.66,
+            "ROI": 0.54,
+            "Language": "Hindi",
+            "Engagement_Score": 3.99,
+            "Customer_Segment": "Working Women",
+            "Date": "2024-10-26"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1011",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Youth",
+            "Duration": 7,
+            "Channel_Used": "Facebook, YouTube",
+            "Impressions": 39696,
+            "Clicks": 5623,
+            "Leads": 1136,
+            "Conversions": 661,
+            "Revenue": 286874,
+            "Acquisition_Cost": 163.52,
+            "ROI": 1.65,
+            "Language": "Hindi",
+            "Engagement_Score": 18.69,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2024-12-21"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1015",
+            "Campaign_Type": "Paid Ads",
+            "Target_Audience": "Working Women",
+            "Duration": 23,
+            "Channel_Used": "Facebook, Instagram, Email",
+            "Impressions": 28714,
+            "Clicks": 1511,
+            "Leads": 441,
+            "Conversions": 158,
+            "Revenue": 33654,
+            "Acquisition_Cost": 1648.61,
+            "ROI": -0.87,
+            "Language": "Hindi",
+            "Engagement_Score": 7.35,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2024-10-06"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1017",
+            "Campaign_Type": "Paid Ads",
+            "Target_Audience": "Premium Shoppers",
+            "Duration": 28,
+            "Channel_Used": "Google, YouTube, Instagram",
+            "Impressions": 57060,
+            "Clicks": 1659,
+            "Leads": 928,
+            "Conversions": 346,
+            "Revenue": 187186,
+            "Acquisition_Cost": 448.86,
+            "ROI": 0.21,
+            "Language": "Hindi",
+            "Engagement_Score": 5.14,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-04-19"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1021",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Working Women",
+            "Duration": 22,
+            "Channel_Used": "Instagram, YouTube, Google",
+            "Impressions": 27990,
+            "Clicks": 3508,
+            "Leads": 761,
+            "Conversions": 385,
+            "Revenue": 155540,
+            "Acquisition_Cost": 516.25,
+            "ROI": -0.22,
+            "Language": "Hindi",
+            "Engagement_Score": 16.63,
+            "Customer_Segment": "Youth",
+            "Date": "2025-01-30"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1025",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Working Women",
+            "Duration": 25,
+            "Channel_Used": "Google, Facebook",
+            "Impressions": 96295,
+            "Clicks": 8911,
+            "Leads": 2116,
+            "Conversions": 872,
+            "Revenue": 441232,
+            "Acquisition_Cost": 148.17,
+            "ROI": 2.41,
+            "Language": "Hindi",
+            "Engagement_Score": 12.36,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2024-11-17"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1031",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Working Women",
+            "Duration": 7,
+            "Channel_Used": "Email, Facebook, WhatsApp",
+            "Impressions": 96549,
+            "Clicks": 13114,
+            "Leads": 3791,
+            "Conversions": 1202,
+            "Revenue": 366610,
+            "Acquisition_Cost": 74.34,
+            "ROI": 3.1,
+            "Language": "Hindi",
+            "Engagement_Score": 18.75,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-06-04"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1036",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Premium Shoppers",
+            "Duration": 19,
+            "Channel_Used": "Facebook, Instagram, Email",
+            "Impressions": 23746,
+            "Clicks": 1503,
+            "Leads": 747,
+            "Conversions": 458,
+            "Revenue": 101218,
+            "Acquisition_Cost": 229.15,
+            "ROI": -0.04,
+            "Language": "Hindi",
+            "Engagement_Score": 11.4,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2024-12-07"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1042",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Premium Shoppers",
+            "Duration": 7,
+            "Channel_Used": "WhatsApp, YouTube, Instagram",
+            "Impressions": 96219,
+            "Clicks": 11237,
+            "Leads": 5367,
+            "Conversions": 3599,
+            "Revenue": 910547,
+            "Acquisition_Cost": 68.47,
+            "ROI": 2.69,
+            "Language": "Hindi",
+            "Engagement_Score": 21.0,
+            "Customer_Segment": "Working Women",
+            "Date": "2024-08-31"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1047",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "College Students",
+            "Duration": 5,
+            "Channel_Used": "YouTube",
+            "Impressions": 14944,
+            "Clicks": 1268,
+            "Leads": 482,
+            "Conversions": 318,
+            "Revenue": 104304,
+            "Acquisition_Cost": 319.84,
+            "ROI": 0.03,
+            "Language": "Hindi",
+            "Engagement_Score": 13.84,
+            "Customer_Segment": "Working Women",
+            "Date": "2025-04-02"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1051",
+            "Campaign_Type": "Email",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 16,
+            "Channel_Used": "Google, YouTube",
+            "Impressions": 78991,
+            "Clicks": 6551,
+            "Leads": 3460,
+            "Conversions": 2657,
+            "Revenue": 810385,
+            "Acquisition_Cost": 49.89,
+            "ROI": 5.11,
+            "Language": "Hindi",
+            "Engagement_Score": 16.04,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-04-16"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1057",
+            "Campaign_Type": "Email",
+            "Target_Audience": "Youth",
+            "Duration": 27,
+            "Channel_Used": "WhatsApp, YouTube",
+            "Impressions": 43454,
+            "Clicks": 5590,
+            "Leads": 1836,
+            "Conversions": 1046,
+            "Revenue": 343088,
+            "Acquisition_Cost": 182.35,
+            "ROI": 0.8,
+            "Language": "Hindi",
+            "Engagement_Score": 19.5,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2024-12-03"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1063",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Youth",
+            "Duration": 8,
+            "Channel_Used": "WhatsApp",
+            "Impressions": 80457,
+            "Clicks": 9646,
+            "Leads": 2336,
+            "Conversions": 1659,
+            "Revenue": 643692,
+            "Acquisition_Cost": 125.03,
+            "ROI": 2.1,
+            "Language": "Hindi",
+            "Engagement_Score": 16.95,
+            "Customer_Segment": "College Students",
+            "Date": "2025-02-24"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1064",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "College Students",
+            "Duration": 13,
+            "Channel_Used": "YouTube, WhatsApp",
+            "Impressions": 34565,
+            "Clicks": 819,
+            "Leads": 304,
+            "Conversions": 211,
+            "Revenue": 137150,
+            "Acquisition_Cost": 1099.71,
+            "ROI": -0.41,
+            "Language": "Hindi",
+            "Engagement_Score": 3.86,
+            "Customer_Segment": "Youth",
+            "Date": "2025-05-28"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1071",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Working Women",
+            "Duration": 11,
+            "Channel_Used": "Google",
+            "Impressions": 68542,
+            "Clicks": 8178,
+            "Leads": 3828,
+            "Conversions": 1207,
+            "Revenue": 280024,
+            "Acquisition_Cost": 179.89,
+            "ROI": 0.29,
+            "Language": "Hindi",
+            "Engagement_Score": 19.28,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2024-12-23"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1073",
+            "Campaign_Type": "Email",
+            "Target_Audience": "Working Women",
+            "Duration": 17,
+            "Channel_Used": "Instagram, YouTube",
+            "Impressions": 26416,
+            "Clicks": 1545,
+            "Leads": 401,
+            "Conversions": 226,
+            "Revenue": 68478,
+            "Acquisition_Cost": 395.28,
+            "ROI": -0.23,
+            "Language": "Hindi",
+            "Engagement_Score": 8.22,
+            "Customer_Segment": "College Students",
+            "Date": "2024-09-15"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1081",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Youth",
+            "Duration": 12,
+            "Channel_Used": "Email, Instagram, WhatsApp",
+            "Impressions": 69794,
+            "Clicks": 3864,
+            "Leads": 1627,
+            "Conversions": 923,
+            "Revenue": 318435,
+            "Acquisition_Cost": 271.48,
+            "ROI": 0.27,
+            "Language": "Hindi",
+            "Engagement_Score": 9.19,
+            "Customer_Segment": "Working Women",
+            "Date": "2025-01-15"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1082",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 11,
+            "Channel_Used": "Google",
+            "Impressions": 10613,
+            "Clicks": 1093,
+            "Leads": 468,
+            "Conversions": 344,
+            "Revenue": 73272,
+            "Acquisition_Cost": 693.71,
+            "ROI": -0.69,
+            "Language": "Hindi",
+            "Engagement_Score": 17.95,
+            "Customer_Segment": "Working Women",
+            "Date": "2025-05-09"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1083",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Youth",
+            "Duration": 9,
+            "Channel_Used": "WhatsApp, Facebook, Google",
+            "Impressions": 14824,
+            "Clicks": 1848,
+            "Leads": 713,
+            "Conversions": 229,
+            "Revenue": 111294,
+            "Acquisition_Cost": 542.97,
+            "ROI": -0.1,
+            "Language": "Hindi",
+            "Engagement_Score": 18.82,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-06-11"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1085",
+            "Campaign_Type": "Paid Ads",
+            "Target_Audience": "Youth",
+            "Duration": 10,
+            "Channel_Used": "Email, WhatsApp, Facebook",
+            "Impressions": 27040,
+            "Clicks": 1352,
+            "Leads": 274,
+            "Conversions": 153,
+            "Revenue": 42075,
+            "Acquisition_Cost": 460.92,
+            "ROI": -0.4,
+            "Language": "Hindi",
+            "Engagement_Score": 6.58,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-06-07"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1089",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Youth",
+            "Duration": 16,
+            "Channel_Used": "Google, WhatsApp",
+            "Impressions": 77548,
+            "Clicks": 1844,
+            "Leads": 706,
+            "Conversions": 226,
+            "Revenue": 72772,
+            "Acquisition_Cost": 1072.32,
+            "ROI": -0.7,
+            "Language": "Hindi",
+            "Engagement_Score": 3.58,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2024-08-27"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1092",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "College Students",
+            "Duration": 7,
+            "Channel_Used": "WhatsApp, Instagram, Google",
+            "Impressions": 32302,
+            "Clicks": 1239,
+            "Leads": 367,
+            "Conversions": 156,
+            "Revenue": 124800,
+            "Acquisition_Cost": 1295.52,
+            "ROI": -0.38,
+            "Language": "Hindi",
+            "Engagement_Score": 5.45,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2025-04-12"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1093",
+            "Campaign_Type": "Email",
+            "Target_Audience": "Premium Shoppers",
+            "Duration": 9,
+            "Channel_Used": "Email, YouTube, WhatsApp",
+            "Impressions": 11042,
+            "Clicks": 459,
+            "Leads": 189,
+            "Conversions": 96,
+            "Revenue": 60960,
+            "Acquisition_Cost": 2660.53,
+            "ROI": -0.76,
+            "Language": "Hindi",
+            "Engagement_Score": 6.74,
+            "Customer_Segment": "Working Women",
+            "Date": "2025-01-25"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1094",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "College Students",
+            "Duration": 18,
+            "Channel_Used": "Google",
+            "Impressions": 12916,
+            "Clicks": 1058,
+            "Leads": 269,
+            "Conversions": 84,
+            "Revenue": 23352,
+            "Acquisition_Cost": 725.46,
+            "ROI": -0.62,
+            "Language": "Hindi",
+            "Engagement_Score": 10.92,
+            "Customer_Segment": "Working Women",
+            "Date": "2024-08-05"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1097",
+            "Campaign_Type": "Email",
+            "Target_Audience": "Working Women",
+            "Duration": 21,
+            "Channel_Used": "Email, WhatsApp",
+            "Impressions": 96478,
+            "Clicks": 3700,
+            "Leads": 1111,
+            "Conversions": 711,
+            "Revenue": 366876,
+            "Acquisition_Cost": 282.59,
+            "ROI": 0.83,
+            "Language": "Hindi",
+            "Engagement_Score": 5.72,
+            "Customer_Segment": "Working Women",
+            "Date": "2024-11-23"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1101",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Working Women",
+            "Duration": 24,
+            "Channel_Used": "Google, Facebook",
+            "Impressions": 91963,
+            "Clicks": 9000,
+            "Leads": 4091,
+            "Conversions": 1250,
+            "Revenue": 507500,
+            "Acquisition_Cost": 150.39,
+            "ROI": 1.7,
+            "Language": "Hindi",
+            "Engagement_Score": 15.59,
+            "Customer_Segment": "Youth",
+            "Date": "2025-01-07"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1104",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "College Students",
+            "Duration": 16,
+            "Channel_Used": "WhatsApp",
+            "Impressions": 44568,
+            "Clicks": 5722,
+            "Leads": 2794,
+            "Conversions": 2033,
+            "Revenue": 742045,
+            "Acquisition_Cost": 119.14,
+            "ROI": 2.06,
+            "Language": "Hindi",
+            "Engagement_Score": 23.67,
+            "Customer_Segment": "College Students",
+            "Date": "2025-05-31"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1106",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Youth",
+            "Duration": 16,
+            "Channel_Used": "Google",
+            "Impressions": 36778,
+            "Clicks": 2873,
+            "Leads": 976,
+            "Conversions": 338,
+            "Revenue": 240656,
+            "Acquisition_Cost": 547.44,
+            "ROI": 0.3,
+            "Language": "Hindi",
+            "Engagement_Score": 11.38,
+            "Customer_Segment": "Tier 2 City Customers",
+            "Date": "2024-11-05"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1108",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Youth",
+            "Duration": 13,
+            "Channel_Used": "Facebook, Instagram, YouTube",
+            "Impressions": 16762,
+            "Clicks": 1911,
+            "Leads": 519,
+            "Conversions": 285,
+            "Revenue": 180405,
+            "Acquisition_Cost": 1018.44,
+            "ROI": -0.38,
+            "Language": "Hindi",
+            "Engagement_Score": 16.2,
+            "Customer_Segment": "Youth",
+            "Date": "2024-11-20"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1114",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 27,
+            "Channel_Used": "Facebook, Instagram, YouTube",
+            "Impressions": 51006,
+            "Clicks": 7110,
+            "Leads": 2461,
+            "Conversions": 769,
+            "Revenue": 432178,
+            "Acquisition_Cost": 298.91,
+            "ROI": 0.88,
+            "Language": "Hindi",
+            "Engagement_Score": 20.27,
+            "Customer_Segment": "College Students",
+            "Date": "2024-09-26"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1117",
+            "Campaign_Type": "Paid Ads",
+            "Target_Audience": "Youth",
+            "Duration": 20,
+            "Channel_Used": "Facebook",
+            "Impressions": 74063,
+            "Clicks": 6065,
+            "Leads": 1600,
+            "Conversions": 687,
+            "Revenue": 324951,
+            "Acquisition_Cost": 297.63,
+            "ROI": 0.59,
+            "Language": "Hindi",
+            "Engagement_Score": 11.28,
+            "Customer_Segment": "College Students",
+            "Date": "2024-12-15"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1122",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Working Women",
+            "Duration": 21,
+            "Channel_Used": "Facebook",
+            "Impressions": 74764,
+            "Clicks": 8071,
+            "Leads": 3586,
+            "Conversions": 1901,
+            "Revenue": 885866,
+            "Acquisition_Cost": 155.84,
+            "ROI": 1.99,
+            "Language": "Hindi",
+            "Engagement_Score": 18.13,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-01-24"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1123",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 29,
+            "Channel_Used": "Instagram, Email",
+            "Impressions": 74129,
+            "Clicks": 2626,
+            "Leads": 1462,
+            "Conversions": 1163,
+            "Revenue": 623368,
+            "Acquisition_Cost": 141.12,
+            "ROI": 2.8,
+            "Language": "Hindi",
+            "Engagement_Score": 7.08,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-04-02"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1124",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 29,
+            "Channel_Used": "Facebook",
+            "Impressions": 27923,
+            "Clicks": 2989,
+            "Leads": 1452,
+            "Conversions": 817,
+            "Revenue": 625822,
+            "Acquisition_Cost": 359.28,
+            "ROI": 1.13,
+            "Language": "Hindi",
+            "Engagement_Score": 18.83,
+            "Customer_Segment": "Working Women",
+            "Date": "2025-05-19"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1128",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "Premium Shoppers",
+            "Duration": 27,
+            "Channel_Used": "Email, Instagram",
+            "Impressions": 25041,
+            "Clicks": 3511,
+            "Leads": 991,
+            "Conversions": 379,
+            "Revenue": 223231,
+            "Acquisition_Cost": 598.76,
+            "ROI": -0.02,
+            "Language": "Hindi",
+            "Engagement_Score": 19.49,
+            "Customer_Segment": "Working Women",
+            "Date": "2024-12-04"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1129",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Working Women",
+            "Duration": 11,
+            "Channel_Used": "Email, Google",
+            "Impressions": 78990,
+            "Clicks": 2360,
+            "Leads": 1125,
+            "Conversions": 732,
+            "Revenue": 453840,
+            "Acquisition_Cost": 347.66,
+            "ROI": 0.78,
+            "Language": "Hindi",
+            "Engagement_Score": 5.34,
+            "Customer_Segment": "Youth",
+            "Date": "2025-05-21"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1130",
+            "Campaign_Type": "Email",
+            "Target_Audience": "Youth",
+            "Duration": 30,
+            "Channel_Used": "Facebook",
+            "Impressions": 88461,
+            "Clicks": 2327,
+            "Leads": 999,
+            "Conversions": 358,
+            "Revenue": 100956,
+            "Acquisition_Cost": 410.1,
+            "ROI": -0.31,
+            "Language": "Hindi",
+            "Engagement_Score": 4.16,
+            "Customer_Segment": "Youth",
+            "Date": "2025-05-01"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1139",
+            "Campaign_Type": "Social Media",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 23,
+            "Channel_Used": "Facebook",
+            "Impressions": 26385,
+            "Clicks": 2511,
+            "Leads": 940,
+            "Conversions": 434,
+            "Revenue": 199640,
+            "Acquisition_Cost": 653.94,
+            "ROI": -0.3,
+            "Language": "Hindi",
+            "Engagement_Score": 14.72,
+            "Customer_Segment": "Premium Shoppers",
+            "Date": "2025-02-24"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1144",
+            "Campaign_Type": "SEO",
+            "Target_Audience": "College Students",
+            "Duration": 14,
+            "Channel_Used": "Facebook",
+            "Impressions": 13214,
+            "Clicks": 530,
+            "Leads": 213,
+            "Conversions": 156,
+            "Revenue": 118872,
+            "Acquisition_Cost": 1568.28,
+            "ROI": -0.51,
+            "Language": "Hindi",
+            "Engagement_Score": 6.8,
+            "Customer_Segment": "College Students",
+            "Date": "2024-09-03"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1145",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Youth",
+            "Duration": 20,
+            "Channel_Used": "Instagram",
+            "Impressions": 54685,
+            "Clicks": 5423,
+            "Leads": 2255,
+            "Conversions": 1052,
+            "Revenue": 724828,
+            "Acquisition_Cost": 279.17,
+            "ROI": 1.47,
+            "Language": "Hindi",
+            "Engagement_Score": 15.96,
+            "Customer_Segment": "Youth",
+            "Date": "2025-01-12"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1146",
+            "Campaign_Type": "Paid Ads",
+            "Target_Audience": "Premium Shoppers",
+            "Duration": 15,
+            "Channel_Used": "Facebook",
+            "Impressions": 40445,
+            "Clicks": 2689,
+            "Leads": 1201,
+            "Conversions": 814,
+            "Revenue": 351648,
+            "Acquisition_Cost": 75.35,
+            "ROI": 4.73,
+            "Language": "Hindi",
+            "Engagement_Score": 11.63,
+            "Customer_Segment": "College Students",
+            "Date": "2024-11-19"
+          },
+          {
+            "Campaign_ID": "NY-CMP-1149",
+            "Campaign_Type": "Influencer",
+            "Target_Audience": "Tier 2 City Customers",
+            "Duration": 20,
+            "Channel_Used": "Facebook, Email, YouTube",
+            "Impressions": 82365,
+            "Clicks": 9920,
+            "Leads": 2972,
+            "Conversions": 2086,
+            "Revenue": 1410136,
+            "Acquisition_Cost": 43.11,
+            "ROI": 14.68,
+            "Language": "Hindi",
+            "Engagement_Score": 18.18,
+            "Customer_Segment": "College Students",
+            "Date": "2025-02-17"
+          }
+        ],
+        "row_count": 50,
+        "columns": [
+          "Campaign_ID",
+          "Campaign_Type",
+          "Target_Audience",
+          "Duration",
+          "Channel_Used",
+          "Impressions",
+          "Clicks",
+          "Leads",
+          "Conversions",
+          "Revenue",
+          "Acquisition_Cost",
+          "ROI",
+          "Language",
+          "Engagement_Score",
+          "Customer_Segment",
+          "Date"
+        ]
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Displaying all available data for campaigns conducted in Hindi."
+      }
+    ]
+  },
+  "0053d2acae0efb021a60e1eac6947cf2": {
+    "dashboard_title": "Audience Performance Analysis",
+    "summary": "Analysis of revenue by target audience, engagement score by customer segment, and acquisition cost by channel for campaigns.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Target Audience",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing a numerical metric (Revenue) across discrete categories (Target Audience).",
+        "sql": "SELECT Target_Audience, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Target_Audience ORDER BY TotalRevenue DESC LIMIT 50",
+        "x_axis": "Target_Audience",
+        "y_axis": "TotalRevenue",
+        "insight": "Premium Shoppers generate the highest revenue, indicating strong performance within this segment."
+      },
+      {
+        "title": "Engagement Score by Customer Segment",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing a numerical metric (Engagement_Score) across discrete categories (Customer_Segment).",
+        "sql": "SELECT Customer_Segment, ROUND(AVG(Engagement_Score), 2) AS AverageEngagementScore FROM data_table GROUP BY Customer_Segment ORDER BY AverageEngagementScore DESC LIMIT 50",
+        "x_axis": "Customer_Segment",
+        "y_axis": "AverageEngagementScore",
+        "insight": "Working Women and Premium Shoppers exhibit the highest engagement scores, suggesting effective campaign resonance with these groups."
+      },
+      {
+        "title": "Acquisition Cost by Channel",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing a numerical metric (Acquisition_Cost) across discrete categories (Channel_Used).",
+        "sql": "SELECT Channel_Used, ROUND(SUM(Acquisition_Cost), 2) AS TotalAcquisitionCost FROM data_table GROUP BY Channel_Used ORDER BY TotalAcquisitionCost DESC LIMIT 50",
+        "x_axis": "Channel_Used",
+        "y_axis": "TotalAcquisitionCost",
+        "insight": "Google and Facebook represent the largest portions of acquisition costs, necessitating a review of their efficiency and ROI."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Premium Shoppers generate the highest revenue, indicating strong performance within this segment."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Working Women and Premium Shoppers exhibit the highest engagement scores, suggesting effective campaign resonance with these groups."
+      },
+      {
+        "emoji": "\ud83c\udfaf",
+        "text": "Google and Facebook represent the largest portions of acquisition costs, necessitating a review of their efficiency and ROI."
+      }
+    ]
+  },
+  "2eb5373e3cd793c63469b18af5fb7752": {
+    "dashboard_title": "Channel Performance by ROI",
+    "summary": "The channel with the highest average ROI is highlighted.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Channel with Highest Average ROI",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart is suitable for comparing the average ROI across different channels, allowing for easy identification of the top performer.",
+        "sql": "SELECT Channel_Used, ROUND(AVG(ROI), 2) AS Average_ROI FROM data_table GROUP BY Channel_Used ORDER BY Average_ROI DESC LIMIT 1",
+        "x_axis": "Channel_Used",
+        "y_axis": "Average_ROI",
+        "insight": "The channel 'YouTube' demonstrates the highest average ROI, indicating strong performance relative to its investment.",
+        "data": [
+          {
+            "Channel_Used": "Email, WhatsApp, Facebook",
+            "Average_ROI": 4.23
+          }
+        ],
+        "row_count": 1,
+        "columns": [
+          "Channel_Used",
+          "Average_ROI"
+        ]
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "The channel 'YouTube' demonstrates the highest average ROI, indicating strong performance relative to its investment."
+      }
+    ]
+  },
+  "42ef3044d1dbcd927fed4fcfc14a8fa6": {
+    "dashboard_title": "ROI Across Languages",
+    "summary": "This analysis compares the Return on Investment (ROI) across different languages.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Average ROI by Language",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart is suitable for comparing numerical values (average ROI) across distinct categories (languages).",
+        "sql": "SELECT Language, ROUND(AVG(ROI), 2) AS Average_ROI FROM data_table GROUP BY Language ORDER BY Average_ROI DESC",
+        "x_axis": "Language",
+        "y_axis": "Average_ROI",
+        "insight": "The language with the highest average ROI is English, while Bengali shows the lowest."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "The language with the highest average ROI is English, while Bengali shows the lowest."
+      }
+    ]
+  },
+  "c054956078860c3c3fcea8cee417d9e3": {
+    "dashboard_title": "Campaign Performance Overview",
+    "summary": "Displaying the top 5 performing campaigns based on revenue.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top 5 Campaigns by Revenue",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar chart is suitable for comparing top N ranked categories.",
+        "sql": "SELECT Campaign_ID, Revenue FROM data_table ORDER BY Revenue DESC LIMIT 5",
+        "x_axis": "Campaign_ID",
+        "y_axis": "Revenue",
+        "insight": "The top 5 campaigns by revenue are listed, indicating their significant contribution to overall revenue."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "The top 5 campaigns by revenue are listed, indicating their significant contribution to overall revenue."
+      }
+    ]
+  }
+}

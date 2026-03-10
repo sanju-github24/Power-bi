@@ -26,9 +26,9 @@ export default function ColumnPills({ columns }) {
 
 const s = {
   section: { padding: '.85rem 1rem', borderBottom: '1px solid var(--border)', flexShrink: 0 },
-  label:   { fontSize: '.59rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)', marginBottom: '.6rem' },
+  label:   { fontSize: '.72rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)', marginBottom: '.75rem' },
   wrap:    { display: 'flex', flexWrap: 'wrap', gap: '.28rem', maxHeight: 100, overflowY: 'auto' },
-  pill:    { fontSize: '.62rem', fontFamily: "'JetBrains Mono', monospace", background: 'var(--s3)', border: '1px solid var(--border2)', borderRadius: 4, padding: '.16rem .45rem', color: 'var(--muted2)', whiteSpace: 'nowrap' },
+  pill:    { fontSize: '.75rem', fontFamily: "'JetBrains Mono', monospace", background: 'var(--s3)', border: '1px solid var(--border2)', borderRadius: 4, padding: '.16rem .45rem', color: 'var(--muted2)', whiteSpace: 'nowrap' },
   num:     { borderColor: 'rgba(0,212,255,.35)', color: 'var(--accent2)' },
   date:    { borderColor: 'rgba(180,142,255,.35)', color: 'var(--accent4)' },
 }

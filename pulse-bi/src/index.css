@@ -1,19 +1,22 @@
 :root {
-  --bg: #07080b;
-  --s1: #0e1016;
-  --s2: #13161e;
-  --s3: #1a1e28;
-  --border: #21262f;
-  --border2: #2a3040;
-  --accent: #e8ff47;
+  --bg:      #07080b;
+  --s1:      #0e1016;
+  --s2:      #13161e;
+  --s3:      #1a1e28;
+  --border:  #2a3040;
+  --border2: #353d50;
+
+  --accent:  #e8ff47;
   --accent2: #00d4ff;
   --accent3: #ff6b6b;
   --accent4: #b48eff;
-  --text: #dde2ec;
-  --muted: #4a5468;
-  --muted2: #6b7a94;
   --success: #4ade80;
   --warning: #fbbf24;
+
+  /* ── Text — ALL bumped up for laptop readability ── */
+  --text:    #f0f4ff;      /* was #dde2ec — brighter white */
+  --muted:   #8fa0bc;      /* was #4a5468 — 2x brighter */
+  --muted2:  #a8b8d0;      /* was #6b7a94 — 2x brighter */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,6 +30,9 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body::after {
@@ -35,13 +41,24 @@ body::after {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 12% 12%, rgba(232,255,71,.035), transparent 50%),
-    radial-gradient(circle at 88% 88%, rgba(0,212,255,.035), transparent 50%);
+    radial-gradient(circle at 12% 12%, rgba(232,255,71,.03), transparent 50%),
+    radial-gradient(circle at 88% 88%, rgba(0,212,255,.03), transparent 50%);
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: var(--s1); }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 9px; }
+
+/* ── Global text legibility rules ── */
+p, span, div, li, td, th, label {
+  line-height: 1.6;
+}
+
+/* Make sure nothing renders below readable contrast */
+[style*="color: var(--muted)"],
+[style*="color:var(--muted)"] {
+  color: var(--muted) !important;
+}
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
@@ -53,19 +70,17 @@ body::after {
 }
 @keyframes blink {
   0%, 100% { opacity: 1; }
-  50%       { opacity: .25; }
+  50%       { opacity: .3; }
 }
 @keyframes panelFlash {
   0%   { box-shadow: 0 0 0 0   rgba(180,142,255,.5); }
   60%  { box-shadow: 0 0 0 10px rgba(180,142,255,0); }
   100% { box-shadow: none; }
 }
-
 @keyframes voiceBar {
   0%   { transform: scaleY(.35); }
   100% { transform: scaleY(1.0); }
 }
-
 @keyframes rippleOut {
   0%   { opacity: .6; transform: scale(1); }
   100% { opacity: 0;  transform: scale(1.35); }

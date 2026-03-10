@@ -91,7 +91,7 @@ export default function ChartPanel({ panel, idx, isFollowup, queryMs, sessionId 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
       <div style={s.foot}>
         <span style={s.rows}>{Number(panel.row_count ?? (panel.data||[]).length).toLocaleString()} rows</span>
-        <div style={{display:'flex',alignItems:'center',gap:'.6rem'}}>
+        <div style={{display:'flex',alignItems:'center',gap:'.75rem'}}>
           {queryMs != null && (
             <span style={s.speed}>⚡ {queryMs < 1000 ? `${queryMs}ms` : `${(queryMs/1000).toFixed(1)}s`}</span>
           )}
@@ -165,7 +165,7 @@ function DataTable({ data }) {
               {cols.map(c => (
                 <td key={c} style={s.td}>
                   {row[c]===null||row[c]===''
-                    ? <span style={{color:'var(--muted)',fontStyle:'italic'}}>—</span>
+                    ? <span style={{color:'var(--muted2)',fontStyle:'italic'}}>—</span>
                     : String(row[c])}
                 </td>
               ))}
@@ -250,8 +250,8 @@ function ChartRenderer({ panel }) {
           interaction:{mode:isPie?'nearest':'index',intersect:isPie},
           plugins:{
             legend:{display:isPie,labels:{
-              color:'#8896b0',
-              font:{family:'Figtree',size:11},
+              color:'#c8d8f0',
+              font:{family:'Figtree',size:12},
               padding:14,
               usePointStyle:true,
               pointStyleWidth:8,
@@ -261,11 +261,11 @@ function ChartRenderer({ panel }) {
           },
           scales: isPie ? {} : {
             x: {
-              grid:{display:isHBar, color:'rgba(255,255,255,.04)'},
+              grid:{display:isHBar, color:'rgba(255,255,255,.06)'},
               border:{display:false},
               ticks:{
-                color:'#4a5468',
-                font:{family:'JetBrains Mono',size:10},
+                color:'#c0d0e8',
+                font:{family:'JetBrains Mono',size:11},
                 maxRotation:isHBar?0:30,
                 callback(v){
                   if(isHBar) return Number(this.getLabelForValue(v)).toLocaleString()
@@ -276,11 +276,11 @@ function ChartRenderer({ panel }) {
             },
             y: {
               beginAtZero:true,
-              grid:{color:'rgba(255,255,255,.05)', display:!isHBar},
+              grid:{color:'rgba(255,255,255,.06)', display:!isHBar},
               border:{display:false},
               ticks:{
-                color:'#4a5468',
-                font:{family:'JetBrains Mono',size:10},
+                color:'#c0d0e8',
+                font:{family:'JetBrains Mono',size:11},
                 callback:isHBar
                   ?function(v){const l=this.getLabelForValue(v);return l?.length>16?l.slice(0,15)+'…':l}
                   :v=>Number(v).toLocaleString()
@@ -301,29 +301,29 @@ function ChartRenderer({ panel }) {
 function tooltipStyle(labelCb) {
   return {
     backgroundColor:'#0e1016',
-    borderColor:'rgba(255,255,255,.08)',
+    borderColor:'rgba(255,255,255,.15)',
     borderWidth:1,
-    titleColor:'#dde2ec',
-    bodyColor:'#8896b0',
-    padding:10,
+    titleColor:'#f0f4ff',
+    bodyColor:'#c8d8f0',
+    padding:12,
     cornerRadius:8,
-    titleFont:{family:'Syne',size:12,weight:'700'},
-    bodyFont:{family:'JetBrains Mono',size:11},
+    titleFont:{family:'Syne',size:13,weight:'700'},
+    bodyFont:{family:'JetBrains Mono',size:12},
     callbacks:{ label: labelCb }
   }
 }
 function xScale(title) {
   return {
-    grid:{color:'rgba(255,255,255,.04)'},border:{display:false},
-    ticks:{color:'#4a5468',font:{family:'JetBrains Mono',size:10}},
-    title:{display:!!title,text:(title||'').replace(/_/g,' '),color:'#6b7a94',font:{size:10}}
+    grid:{color:'rgba(255,255,255,.06)'},border:{display:false},
+    ticks:{color:'#c0d0e8',font:{family:'JetBrains Mono',size:11}},
+    title:{display:!!title,text:(title||'').replace(/_/g,' '),color:'#c0d0e8',font:{size:11}}
   }
 }
 function yScale(title, isHBar) {
   return {
-    grid:{color:'rgba(255,255,255,.04)',display:!isHBar},border:{display:false},
-    ticks:{color:'#4a5468',font:{family:'JetBrains Mono',size:10},callback:v=>Number(v).toLocaleString()},
-    title:{display:!!title,text:(title||'').replace(/_/g,' '),color:'#6b7a94',font:{size:10}}
+    grid:{color:'rgba(255,255,255,.06)',display:!isHBar},border:{display:false},
+    ticks:{color:'#c0d0e8',font:{family:'JetBrains Mono',size:11},callback:v=>Number(v).toLocaleString()},
+    title:{display:!!title,text:(title||'').replace(/_/g,' '),color:'#c0d0e8',font:{size:11}}
   }
 }
 
@@ -343,73 +343,73 @@ const s = {
   // Header — clean horizontal row
   head: {
     display:'flex', alignItems:'center', justifyContent:'space-between',
-    padding:'.6rem .95rem',
+    padding:'.75rem .95rem',
     background:'rgba(255,255,255,.025)',
     borderBottom:'1px solid rgba(255,255,255,.06)',
     gap:'.5rem',
   },
-  headLeft: { display:'flex', alignItems:'center', gap:'.55rem', minWidth:0 },
+  headLeft: { display:'flex', alignItems:'center', gap:'.72rem', minWidth:0 },
   headActions:{ display:'flex', alignItems:'center', gap:'.4rem' },
   confBadge: {
     display:'flex', alignItems:'center', gap:'.28rem',
-    fontSize:'.58rem', fontFamily:"'JetBrains Mono',monospace",
+    fontSize:'.72rem', fontFamily:"'JetBrains Mono',monospace",
     border:'1px solid', borderRadius:5, padding:'.1rem .38rem', flexShrink:0,
   },
   confDot: { width:5, height:5, borderRadius:'50%', flexShrink:0 },
-  speed: { fontSize:'.58rem', fontFamily:"'JetBrains Mono',monospace", color:'rgba(74,222,128,.7)' },
+  speed: { fontSize:'.8rem', fontFamily:"'JetBrains Mono',monospace", color:'rgba(74,222,128,.9)' },
   title: {
     fontFamily:"'Syne',sans-serif",
-    fontSize:'.78rem', fontWeight:700,
+    fontSize:'.92rem', fontWeight:700,
     color:'var(--text)',
     letterSpacing:'-.01em',
     whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
   },
   tag: {
     flexShrink:0,
-    fontSize:'.57rem', fontFamily:"'JetBrains Mono',monospace",
+    fontSize:'.72rem', fontFamily:"'JetBrains Mono',monospace",
     background:'rgba(232,255,71,.08)',
-    color:'#c8e832',
-    border:'1px solid rgba(232,255,71,.15)',
+    color:'#d8f020',
+    border:'1px solid rgba(232,255,71,.2)',
     borderRadius:5, padding:'.1rem .42rem',
     letterSpacing:'.04em',
   },
 
-  // Download button — icon + label, no heavy border
+  // Download button
   dlBtn: {
     display:'flex', alignItems:'center', gap:'.28rem',
     background:'transparent',
-    border:'1px solid rgba(0,212,255,.2)',
+    border:'1px solid rgba(0,212,255,.3)',
     borderRadius:6,
-    color:'rgba(0,212,255,.7)',
-    fontSize:'.63rem', fontFamily:"'JetBrains Mono',monospace",
-    padding:'.22rem .55rem',
+    color:'rgba(0,212,255,.9)',
+    fontSize:'.75rem', fontFamily:"'JetBrains Mono',monospace",
+    padding:'.22rem .72rem',
     cursor:'pointer',
     flexShrink:0,
     transition:'all .15s',
   },
 
-  // Insight — clean sentence, not a box
+  // Insight — bright and readable
   insight: {
     display:'flex', alignItems:'flex-start', gap:'.5rem',
-    padding:'.5rem .95rem',
-    fontSize:'.75rem',
-    color:'#a8b8d0',
-    lineHeight:1.55,
-    borderBottom:'1px solid rgba(255,255,255,.04)',
+    padding:'.55rem .95rem',
+    fontSize:'.84rem',
+    color:'#c8d8f0',
+    lineHeight:1.6,
+    borderBottom:'1px solid rgba(255,255,255,.06)',
   },
   insightDot: {
-    color:'var(--accent2)', fontSize:'.45rem',
-    flexShrink:0, marginTop:'.38rem',
+    color:'var(--accent2)', fontSize:'.55rem',
+    flexShrink:0, marginTop:'.4rem',
   },
 
-  // Reasoning — tiny muted line, no background block
+  // Reasoning
   reasoning: {
     padding:'.3rem .95rem',
-    fontSize:'.63rem',
-    color:'rgba(107,122,148,.7)',
+    fontSize:'.75rem',
+    color:'rgba(160,180,210,.8)',
     fontFamily:"'JetBrains Mono',monospace",
     fontStyle:'italic',
-    borderBottom:'1px solid rgba(255,255,255,.03)',
+    borderBottom:'1px solid rgba(255,255,255,.04)',
     whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
     cursor:'help',
   },
@@ -420,42 +420,42 @@ const s = {
   // KPI
   kpi:    { display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:185,gap:'.4rem' },
   kpiVal: { fontFamily:"'JetBrains Mono',monospace",fontSize:'2.8rem',fontWeight:700,color:'var(--accent)',letterSpacing:'-.04em',lineHeight:1 },
-  kpiLbl: { fontSize:'.72rem',color:'var(--muted2)',textTransform:'uppercase',letterSpacing:'.12em',marginTop:'.1rem' },
-  trend:  { fontSize:'.7rem',fontFamily:"'JetBrains Mono',monospace",fontWeight:600,marginTop:'.15rem' },
+  kpiLbl: { fontSize:'.84rem',color:'#c0d0e8',textTransform:'uppercase',letterSpacing:'.12em',marginTop:'.1rem' },
+  trend:  { fontSize:'.8rem',fontFamily:"'JetBrains Mono',monospace",fontWeight:600,marginTop:'.15rem' },
 
   // Table
   tblWrap: { overflowX:'auto',maxHeight:270,overflowY:'auto' },
   tbl:     { width:'100%',borderCollapse:'collapse' },
   th: {
-    fontFamily:"'JetBrains Mono',monospace",fontSize:'.58rem',fontWeight:500,
-    textTransform:'uppercase',letterSpacing:'.1em',color:'var(--muted)',
-    padding:'.4rem .65rem',
-    background:'rgba(255,255,255,.025)',
+    fontFamily:"'JetBrains Mono',monospace",fontSize:'.8rem',fontWeight:600,
+    textTransform:'uppercase',letterSpacing:'.08em',color:'#c0d0e8',
+    padding:'.45rem .76rem',
+    background:'rgba(255,255,255,.04)',
     position:'sticky',top:0,
-    borderBottom:'1px solid rgba(255,255,255,.06)',
+    borderBottom:'1px solid rgba(255,255,255,.08)',
     textAlign:'left',whiteSpace:'nowrap',
   },
   td: {
-    padding:'.4rem .65rem',
-    borderBottom:'1px solid rgba(255,255,255,.04)',
+    padding:'.42rem .76rem',
+    borderBottom:'1px solid rgba(255,255,255,.05)',
     fontFamily:"'JetBrains Mono',monospace",
-    fontSize:'.69rem',color:'#a8b8d0',
+    fontSize:'.82rem',color:'#c8d8f0',
   },
   sqlErr: {
     background:'rgba(255,107,107,.06)',
-    border:'1px solid rgba(255,107,107,.15)',
-    borderRadius:8,padding:'.65rem .85rem',
-    fontSize:'.73rem',fontFamily:"'JetBrains Mono',monospace",color:'var(--accent3)',
+    border:'1px solid rgba(255,107,107,.2)',
+    borderRadius:8,padding:'.76rem .85rem',
+    fontSize:'.8rem',fontFamily:"'JetBrains Mono',monospace",color:'var(--accent3)',
   },
-  noRows: { textAlign:'center',padding:'1.5rem',color:'var(--muted)',fontSize:'.78rem' },
+  noRows: { textAlign:'center',padding:'1.5rem',color:'#a8b8d0',fontSize:'.84rem' },
 
   // Footer
   foot: {
     display:'flex',justifyContent:'space-between',alignItems:'center',
     padding:'.35rem .95rem',
-    background:'rgba(255,255,255,.018)',
-    borderTop:'1px solid rgba(255,255,255,.05)',
+    background:'rgba(255,255,255,.02)',
+    borderTop:'1px solid rgba(255,255,255,.06)',
   },
-  rows: { fontSize:'.6rem',fontFamily:"'JetBrains Mono',monospace",color:'rgba(0,212,255,.6)' },
-  sql:  { color:'rgba(107,122,148,.5)',fontSize:'.6rem',fontFamily:"'JetBrains Mono',monospace' " },
+  rows: { fontSize:'.78rem',fontFamily:"'JetBrains Mono',monospace",color:'rgba(0,212,255,.85)' },
+  sql:  { color:'rgba(180,200,230,.5)',fontSize:'.75rem',fontFamily:"'JetBrains Mono',monospace'" },
 }

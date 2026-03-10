@@ -50,7 +50,7 @@ export default function UploadZone({ onFile, csvInfo }) {
 
 const s = {
   section: { padding: '.85rem 1rem', borderBottom: '1px solid var(--border)', flexShrink: 0 },
-  label:   { fontSize: '.59rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)', marginBottom: '.6rem' },
+  label:   { fontSize: '.72rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)', marginBottom: '.75rem' },
   zone: {
     border: '1.5px dashed var(--border2)', borderRadius: 10, padding: '.85rem',
     textAlign: 'center', cursor: 'pointer', transition: 'all .2s',
@@ -62,8 +62,8 @@ const s = {
   accent:{ color: 'var(--accent)', fontWeight: 600 },
   sub:   { fontSize: '.66rem', color: 'var(--muted)', marginTop: '.18rem' },
   bar:   { position: 'absolute', bottom: 0, left: 0, height: 2, background: 'var(--accent)', transition: 'width .25s', borderRadius: 1 },
-  loaded:  { marginTop: '.6rem', background: 'rgba(74,222,128,.06)', border: '1px solid rgba(74,222,128,.2)', borderRadius: 8, padding: '.6rem .75rem' },
+  loaded:  { marginTop: '.75rem', background: 'rgba(74,222,128,.06)', border: '1px solid rgba(74,222,128,.2)', borderRadius: 8, padding: '.75rem .75rem' },
   csvName: { fontSize: '.74rem', fontFamily: "'JetBrains Mono', monospace", color: 'var(--success)', fontWeight: 600, marginBottom: '.15rem', wordBreak: 'break-all' },
-  csvMeta: { fontSize: '.65rem', color: 'var(--muted2)' },
+  csvMeta: { fontSize: '.76rem', color: 'var(--muted2)' },
   swap:    { fontSize: '.61rem', color: 'var(--muted)', textDecoration: 'underline dotted', cursor: 'pointer', marginTop: '.25rem', display: 'inline-block' },
 }

@@ -23,12 +23,12 @@ export default function PinnedDashboards({ pins, onLoad, onDelete }) {
 }
 
 const s = {
-  section: { padding: '.6rem .85rem', borderBottom: '1px solid var(--border)', flexShrink: 0 },
-  label:   { fontSize: '.59rem', fontFamily: "'JetBrains Mono',monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)', marginBottom: '.45rem' },
+  section: { padding: '.75rem .85rem', borderBottom: '1px solid var(--border)', flexShrink: 0 },
+  label:   { fontSize: '.72rem', fontFamily: "'JetBrains Mono',monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)', marginBottom: '.45rem' },
   list:    { display: 'flex', flexDirection: 'column', gap: '.28rem' },
   pin:     { display: 'flex', alignItems: 'center', background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 7, overflow: 'hidden', transition: 'border-color .15s', cursor: 'pointer' },
-  pinInfo: { flex: 1, padding: '.38rem .55rem' },
+  pinInfo: { flex: 1, padding: '.38rem .72rem' },
   pinTitle:{ fontSize: '.71rem', color: 'var(--text)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
-  pinMeta: { fontSize: '.6rem', color: 'var(--muted)', fontFamily: "'JetBrains Mono',monospace", marginTop: '.08rem' },
+  pinMeta: { fontSize: '.75rem', color: 'var(--muted)', fontFamily: "'JetBrains Mono',monospace", marginTop: '.08rem' },
   del:     { background: 'none', border: 'none', borderLeft: '1px solid var(--border)', color: 'var(--muted)', cursor: 'pointer', padding: '.38rem .5rem', fontSize: '.72rem', height: '100%', transition: 'color .15s' },
 }

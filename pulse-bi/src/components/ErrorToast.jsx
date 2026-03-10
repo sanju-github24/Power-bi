@@ -25,16 +25,16 @@ export default function ErrorToast({ error, onClose }) {
 const styles = {
   toast: {
     position: 'fixed', bottom: '1.25rem', right: '1.25rem', zIndex: 999,
-    maxWidth: 360, padding: '.65rem 1rem',
+    maxWidth: 360, padding: '.76rem 1rem',
     background: '#13161e', border: '1px solid rgba(255,107,107,.4)', borderRadius: 10,
     fontSize: '.76rem', fontFamily: "'JetBrains Mono', monospace", color: 'var(--accent3)',
-    display: 'flex', alignItems: 'flex-start', gap: '.6rem',
+    display: 'flex', alignItems: 'flex-start', gap: '.75rem',
     boxShadow: '0 4px 20px rgba(0,0,0,.5)',
     transition: 'transform .25s ease, opacity .25s ease',
   },
   icon:  { fontSize: '1rem', flexShrink: 0, marginTop: '.05rem' },
   body:  { flex: 1 },
   title: { fontWeight: 600, color: '#ff8a8a', marginBottom: '.2rem', fontSize: '.74rem' },
-  msg:   { color: 'var(--muted2)', fontSize: '.69rem', lineHeight: 1.5 },
+  msg:   { color: 'var(--muted2)', fontSize: '.8rem', lineHeight: 1.5 },
   close: { fontSize: '.8rem', color: 'var(--muted)', cursor: 'pointer', flexShrink: 0, lineHeight: 1 },
 }

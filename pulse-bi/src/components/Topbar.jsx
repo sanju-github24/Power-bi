@@ -17,14 +17,14 @@ export default function Topbar({ status, rowCount, filename }) {
         {filename && (
           <div style={styles.pill}>
             <span>📄</span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '.68rem', color: 'var(--muted2)' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '.78rem', color: 'var(--muted2)' }}>
               {filename}
             </span>
           </div>
         )}
         <div style={styles.pill}>
           <div style={{ ...styles.dot, ...(dotClass === 'on' ? styles.dotOn : dotClass === 'err' ? styles.dotErr : dotClass === 'busy' ? styles.dotBusy : {}) }} />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '.68rem', color: 'var(--muted2)' }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '.78rem', color: 'var(--muted2)' }}>
             {statusText}
           </span>
         </div>
@@ -46,7 +46,7 @@ const styles = {
     background: 'linear-gradient(90deg, var(--accent), var(--accent2))',
     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
   },
-  right: { display: 'flex', alignItems: 'center', gap: '.6rem' },
+  right: { display: 'flex', alignItems: 'center', gap: '.75rem' },
   pill: {
     display: 'flex', alignItems: 'center', gap: '.35rem',
     background: 'var(--s2)', border: '1px solid var(--border)',

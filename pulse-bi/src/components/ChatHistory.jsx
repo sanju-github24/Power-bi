@@ -70,11 +70,11 @@ export default function ChatHistory({ history, activeTurnIdx, onReplay, onClear 
 
 const s = {
   header:     { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.7rem 1rem .2rem', flexShrink: 0 },
-  label:      { fontSize: '.59rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)' },
-  count:      { fontSize: '.62rem', fontFamily: "'JetBrains Mono', monospace", color: 'var(--muted)' },
-  scroll:     { flex: 1, overflowY: 'auto', padding: '.5rem .65rem', display: 'flex', flexDirection: 'column', gap: '.3rem' },
+  label:      { fontSize: '.72rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '.13em', color: 'var(--muted)' },
+  count:      { fontSize: '.75rem', fontFamily: "'JetBrains Mono', monospace", color: 'var(--muted)' },
+  scroll:     { flex: 1, overflowY: 'auto', padding: '.5rem .76rem', display: 'flex', flexDirection: 'column', gap: '.3rem' },
   empty:      { fontSize: '.73rem', color: 'var(--muted)', textAlign: 'center', marginTop: '1.2rem', fontFamily: "'JetBrains Mono', monospace" },
-  turn:       { padding: '.5rem .65rem', borderRadius: 7, fontSize: '.74rem', lineHeight: 1.5, wordBreak: 'break-word', position: 'relative' },
+  turn:       { padding: '.5rem .76rem', borderRadius: 7, fontSize: '.74rem', lineHeight: 1.5, wordBreak: 'break-word', position: 'relative' },
   userTurn:   { background: 'rgba(232,255,71,.07)', border: '1px solid rgba(232,255,71,.14)', color: 'var(--text)', cursor: 'pointer', transition: 'background .15s, border-color .15s' },
   aiTurn:     { background: 'var(--s2)', border: '1px solid var(--border)', color: 'var(--muted2)' },
   followupAi: { background: 'rgba(180,142,255,.07)', borderColor: 'rgba(180,142,255,.2)' },
@@ -82,8 +82,8 @@ const s = {
   turnLabel:  { fontSize: '.57rem', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--muted)', marginBottom: '.22rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
   labelLeft:  { display: 'flex', alignItems: 'center', gap: '.4rem' },
   fuTag:      { fontSize: '.57rem', background: 'rgba(180,142,255,.15)', color: 'var(--accent4)', border: '1px solid rgba(180,142,255,.25)', borderRadius: 3, padding: '.05rem .3rem' },
-  replay:     { fontSize: '.65rem', color: 'var(--accent)', opacity: 0.7, fontFamily: "'JetBrains Mono', monospace" },
+  replay:     { fontSize: '.76rem', color: 'var(--accent)', opacity: 0.7, fontFamily: "'JetBrains Mono', monospace" },
   footer:     { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.5rem .85rem', borderTop: '1px solid var(--border)', flexShrink: 0 },
-  hint:       { fontSize: '.62rem', fontFamily: "'JetBrains Mono', monospace", color: 'var(--muted)' },
-  clearBtn:   { fontSize: '.65rem', fontFamily: "'JetBrains Mono', monospace", background: 'none', border: '1px solid var(--border)', borderRadius: 5, color: 'var(--muted)', padding: '.25rem .55rem', cursor: 'pointer' },
+  hint:       { fontSize: '.75rem', fontFamily: "'JetBrains Mono', monospace", color: 'var(--muted)' },
+  clearBtn:   { fontSize: '.76rem', fontFamily: "'JetBrains Mono', monospace", background: 'none', border: '1px solid var(--border)', borderRadius: 5, color: 'var(--muted)', padding: '.25rem .72rem', cursor: 'pointer' },
 }

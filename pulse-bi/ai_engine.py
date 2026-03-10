@@ -16,8 +16,8 @@ if not _api_key:
     raise EnvironmentError("GEMINI_API_KEY not set in .env")
 
 client        = genai.Client(api_key=_api_key)
-WORKING_MODEL = "gemini-2.5-flash-lite-preview-06-17"
-FALLBACK_MODEL= "gemini-2.0-flash"
+WORKING_MODEL = "gemini-2.5-flash-lite"
+FALLBACK_MODEL= "gemini-2.5-flash-lite"
 FORBIDDEN_SQL = ("INSERT","UPDATE","DELETE","DROP","ALTER","CREATE","ATTACH","PRAGMA")
 
 # ── Persistent cache ──────────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ class _Bucket:
                 print(f"[limiter] waiting {wait:.1f}s …")
                 await asyncio.sleep(wait)
 
-_bucket = _Bucket(rpm=13)
+_bucket = _Bucket(rpm=3)   # gemini-2.5-flash-lite free tier = 5 RPM, stay safe at 3
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
 _PROMPT = """\
@@ -130,14 +130,14 @@ Step 4 — Hard guards (always apply):
   Follow-up question               → 1 panel (the changed chart)
 
 ━━━ OUTPUT — raw JSON only, no markdown ━━━
-{{
+{
   "dashboard_title": "max 7 words",
   "summary": "one sentence",
   "is_followup": false,
   "cannot_answer": false,
   "cannot_answer_reason": "",
   "panels": [
-    {{
+    {
       "title": "Panel title",
       "chart_type": "Bar",
       "chart_reasoning": "why this chart fits",
@@ -145,9 +145,9 @@ Step 4 — Hard guards (always apply):
       "x_axis": "col_name",
       "y_axis": "col_name",
       "insight": "one-sentence observation"
-    }}
+    }
   ]
-}}\
+}\
 """
 
 
@@ -177,11 +177,11 @@ async def get_ai_dashboard(
             history_block += f"{role}: {content}\n"
         history_block += "━━━ END HISTORY ━━━\n"
 
-    prompt = _PROMPT.format(
-        schema=schema,
-        history_block=history_block,
-        question=question,
-    )
+    # Use replace() — schema/history may contain { } braces that break .format()
+    prompt = _PROMPT \
+        .replace("{schema}",        schema) \
+        .replace("{history_block}", history_block) \
+        .replace("{question}",      question)
 
     await _bucket.acquire()
 
@@ -256,7 +256,7 @@ async def get_ai_dashboard(
                 print(f"[gemini] switching to {FALLBACK_MODEL}")
                 model = FALLBACK_MODEL; continue
             if "429" in msg and attempt < 2:
-                wait = 45 * (attempt + 1)
+                wait = 65 * (attempt + 1)
                 print(f"[gemini] 429 — waiting {wait}s …")
                 await asyncio.sleep(wait)
                 await _bucket.acquire(); continue
@@ -286,17 +286,17 @@ RULES:
 - Chart types: Bar | Line | Pie | KPI | Scatter | Table | Area | HorizontalBar
 
 Respond ONLY with raw JSON (no markdown fences):
-{{
+{
   "insights": [
-    {{
+    {
       "question": "short natural question",
-      "result": {{
+      "result": {
         "dashboard_title": "short title",
         "summary": "one sentence",
         "is_followup": false,
         "cannot_answer": false,
         "cannot_answer_reason": "",
-        "panels": [{{
+        "panels": [{
           "title": "panel title",
           "chart_type": "Bar",
           "chart_reasoning": "why this chart",
@@ -304,19 +304,20 @@ Respond ONLY with raw JSON (no markdown fences):
           "x_axis": "col",
           "y_axis": "col",
           "insight": "one observation"
-        }}]
-      }}
-    }}
+        }]
+      }
+    }
   ]
-}}\
+}\
 """
 
 async def get_auto_analysis(columns: list[str], schema: str) -> list[dict]:
     """Called once after upload — returns 3 proactive insight dashboards."""
-    prompt = _AUTO_PROMPT.format(
-        schema=schema,
-        columns=", ".join(columns),
-    )
+    await asyncio.sleep(20)  # wait so user's first /ask always gets priority over auto-analyze
+    # Use replace() — schema may contain { } braces that break .format()
+    prompt = _AUTO_PROMPT \
+        .replace("{schema}",  schema) \
+        .replace("{columns}", ", ".join(columns))
     await _bucket.acquire()
     model = WORKING_MODEL
     for attempt in range(3):
@@ -342,11 +343,11 @@ async def get_auto_analysis(columns: list[str], schema: str) -> list[dict]:
             return valid[:3]
         except errors.ClientError as e:
             msg = str(e)
+            if "429" in msg:
+                print(f"[auto-analysis] rate limited — skipping, user can still ask questions")
+                return []   # silently skip, don't retry, don't block
             if ("404" in msg or "not found" in msg.lower()) and model != FALLBACK_MODEL:
                 model = FALLBACK_MODEL; continue
-            if "429" in msg and attempt < 2:
-                await asyncio.sleep(45 * (attempt+1))
-                await _bucket.acquire(); continue
             raise
         except Exception as e:
             print(f"[auto-analysis] error: {e}")
@@ -388,14 +389,15 @@ async def get_why_explanation(
 ) -> str:
     import json as _json
     sample_str = _json.dumps(data_sample[:8], indent=2)
-    prompt = _WHY_PROMPT.format(
-        panel_title  = panel_title or "Chart",
-        chart_type   = chart_type  or "Bar",
-        sql          = sql         or "(none)",
-        insight      = insight     or "(none)",
-        data_sample  = sample_str,
-        schema       = schema,
-    )
+
+    # Use replace() instead of .format() — schema may contain { } braces that break format
+    prompt = _WHY_PROMPT \
+        .replace("{panel_title}", panel_title or "Chart") \
+        .replace("{chart_type}",  chart_type  or "Bar") \
+        .replace("{sql}",         sql         or "(none)") \
+        .replace("{insight}",     insight     or "(none)") \
+        .replace("{data_sample}", sample_str) \
+        .replace("{schema}",      schema      or "(none)")
     await _bucket.acquire()
     model = WORKING_MODEL
     for attempt in range(3):

@@ -73,7 +73,8 @@ export default function InputBar({ onAsk, onPin, onTyping, loading, columns, has
         </div>
         {/* Voice input */}
         <VoiceInput
-          onTranscript={t => { if (inputRef.current) inputRef.current.value = t }}
+          onTranscript={t => { if (inputRef.current) inputRef.current.value = t; onTyping?.() }}
+          onStart={() => onTyping?.()}
           disabled={loading}
         />
         {/* Pin button */}

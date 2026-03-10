@@ -28,7 +28,7 @@ const WaveformBars = () => (
   </div>
 )
 
-export default function VoiceInput({ onTranscript, disabled }) {
+export default function VoiceInput({ onTranscript, onStart, disabled }) {
   const [listening, setListening] = useState(false)
   const [supported, setSupported] = useState(false)
   const recogRef = useRef(null)
@@ -68,7 +68,7 @@ export default function VoiceInput({ onTranscript, disabled }) {
   return (
     <button
       title={listening ? 'Stop — click to cancel' : 'Speak your question'}
-      onClick={listening ? stop : start}
+      onClick={listening ? stop : () => { onStart?.(); start() }}
       disabled={disabled}
       style={{ ...s.btn, ...(listening ? s.active : {}), opacity: disabled ? .35 : 1 }}
     >

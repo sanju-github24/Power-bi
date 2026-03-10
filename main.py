@@ -6,7 +6,7 @@ Bonus 10pts : /ask stores rich SQL context per session for follow-up questions
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import pandas as pd, uvicorn, io, os, json
+import pandas as pd, uvicorn, io, os, json, asyncio
 
 import database as db
 from database import engine
@@ -26,28 +26,122 @@ DEFAULT_CSV = os.getenv("CSV_PATH", "/Users/sanjays/Downloads/data-insight-api/N
 chat_histories: dict[str, list[dict]] = {}
 
 
-# ── Startup: auto-load default CSV if it exists ───────────────────────────────
+# ── Startup cache — persists insights + anomalies across page reloads ─────────
+startup_cache: dict = {
+    "insights":  [],
+    "anomalies": [],
+    "ready":     False,
+}
+
+# ── Startup: auto-load default CSV + run insights + anomalies ─────────────────
 @app.on_event("startup")
 async def startup():
     if os.path.exists(DEFAULT_CSV):
         cols = db.load_csv_to_db(DEFAULT_CSV)
         if cols:
             print(f"[startup] ✓ Auto-loaded '{DEFAULT_CSV}' — {db.get_row_count():,} rows, {len(cols)} cols.")
+            # Fire background task to pre-compute insights and anomalies
+            asyncio.create_task(_precompute_startup_cache())
         else:
             print(f"[startup] ✗ Failed to parse default CSV: '{DEFAULT_CSV}'")
     else:
         print(f"[startup] No default CSV at '{DEFAULT_CSV}'. Waiting for upload.")
 
 
-# ── Health ────────────────────────────────────────────────────────────────────
+async def _precompute_startup_cache():
+    """Runs in background after startup — computes insights + anomalies once and caches them."""
+    global startup_cache
+    print("[startup] Computing anomalies + auto-insights in background…")
+
+    # ── Anomalies first (pure math, fast, no API) ──────────────────────────────
+    try:
+        import numpy as np
+        from sqlalchemy import text
+        results = []
+        with engine.connect() as conn:
+            for col in db.current_columns:
+                try:
+                    rows = conn.execute(
+                        text(f'SELECT "{col}" FROM data_table WHERE "{col}" IS NOT NULL LIMIT 5000')
+                    ).fetchall()
+                    nums = []
+                    for r in rows:
+                        try: nums.append(float(r[0]))
+                        except: pass
+                    if len(nums) < 10: continue
+                    arr = np.array(nums)
+                    q1, q3 = np.percentile(arr, 25), np.percentile(arr, 75)
+                    iqr = q3 - q1
+                    if iqr == 0: continue
+                    lo, hi = q1 - 3.0 * iqr, q3 + 3.0 * iqr
+                    outliers = [v for v in nums if v < lo or v > hi]
+                    if not outliers: continue
+                    mean = float(np.mean(arr))
+                    std  = float(np.std(arr))
+                    pct  = round(len(outliers) / len(nums) * 100, 1)
+                    spikes = [v for v in outliers if v > mean + 3*std]
+                    drops  = [v for v in outliers if v < mean - 3*std]
+                    severity = "critical" if pct > 5 else "warning" if pct > 2 else "info"
+                    results.append({
+                        "column": col, "severity": severity,
+                        "outlier_count": len(outliers), "total_count": len(nums),
+                        "outlier_pct": pct, "mean": round(mean,2), "std": round(std,2),
+                        "lower_fence": round(lo,2), "upper_fence": round(hi,2),
+                        "spike_count": len(spikes), "drop_count": len(drops),
+                        "max_spike": round(max(spikes),2) if spikes else None,
+                        "max_drop":  round(min(drops),2)  if drops  else None,
+                        "type": "spike" if spikes and not drops else "drop" if drops and not spikes else "mixed",
+                        "sample_outliers": sorted(set(round(v,2) for v in outliers))[:5],
+                    })
+                except Exception: continue
+        results.sort(key=lambda x: ({"critical":0,"warning":1,"info":2}[x["severity"]], -x["outlier_pct"]))
+        startup_cache["anomalies"] = results[:10]
+        print(f"[startup] ✓ Anomalies ready — {len(results)} columns flagged")
+    except Exception as e:
+        print(f"[startup] Anomaly scan failed: {e}")
+
+    # ── Auto-insights (Gemini — waits for rate limiter) ────────────────────────
+    try:
+        from ai_engine import get_auto_analysis
+        insights = await get_auto_analysis(db.current_columns, db.current_schema)
+        out = []
+        for item in insights:
+            result = item.get("result", {})
+            panels_out = []
+            for panel in result.get("panels", []):
+                sql = panel.get("sql", "").strip()
+                if not sql:
+                    panel["data"] = []; panel["error"] = "No SQL."; panels_out.append(panel); continue
+                try:
+                    df_p = pd.read_sql(sql, engine)
+                    panel["data"]      = df_p.fillna("").to_dict(orient="records")
+                    panel["row_count"] = len(df_p)
+                    panel["insight"]   = _real_insight(df_p, panel)
+                except Exception as e:
+                    panel["data"] = []; panel["error"] = str(e)
+                panels_out.append(panel)
+            result["panels"] = panels_out
+            out.append({"question": item["question"], "result": result})
+        startup_cache["insights"] = out
+        startup_cache["ready"]    = True
+        print(f"[startup] ✓ Auto-insights ready — {len(out)} insights cached")
+    except Exception as e:
+        startup_cache["ready"] = True   # mark ready even if insights fail
+        print(f"[startup] Auto-insights failed: {e}")
+
+
+# ── Health — now includes cached insights + anomalies ─────────────────────────
 @app.get("/health")
 async def health():
     return {
-        "status":     "ok",
-        "csv_loaded": bool(db.current_columns),
-        "filename":   db.current_filename,
-        "columns":    db.current_columns,
-        "row_count":  db.get_row_count(),
+        "status":      "ok",
+        "csv_loaded":  bool(db.current_columns),
+        "filename":    db.current_filename,
+        "columns":     db.current_columns,
+        "row_count":   db.get_row_count(),
+        "cache_ready": startup_cache["ready"],
+        "insights":    startup_cache["insights"],
+        "anomalies":   startup_cache["anomalies"],
     }
 
 
@@ -95,6 +189,12 @@ async def upload(file: UploadFile = File(...)):
     # New dataset → wipe all session histories (old SQL context is now wrong)
     chat_histories.clear()
 
+    # Reset startup cache and recompute for new CSV
+    startup_cache["insights"]  = []
+    startup_cache["anomalies"] = []
+    startup_cache["ready"]     = False
+    asyncio.create_task(_precompute_startup_cache())
+
     return {
         "message":   f"✓ '{file.filename}' loaded — {len(df):,} rows, {len(cols)} columns.",
         "filename":  file.filename,
@@ -103,6 +203,82 @@ async def upload(file: UploadFile = File(...)):
         "schema":    db.current_schema,
         "sample":    df.head(3).fillna("").to_dict(orient="records"),
     }
+
+
+def _real_insight(df: pd.DataFrame, panel: dict) -> str:
+    """Generate a factually accurate insight from the actual query result."""
+    try:
+        if df.empty:
+            return "No data returned for this query."
+
+        cols      = df.columns.tolist()
+        num_cols  = [c for c in cols if pd.api.types.is_numeric_dtype(df[c])]
+        cat_cols  = [c for c in cols if not pd.api.types.is_numeric_dtype(df[c])]
+        ct        = (panel.get("chart_type") or "bar").lower()
+        x_col     = panel.get("x_axis") or (cat_cols[0] if cat_cols else cols[0])
+        y_col     = panel.get("y_axis") or (num_cols[0] if num_cols else cols[-1])
+
+        # ── KPI ───────────────────────────────────────────────────────────────
+        if ct == "kpi" or (len(df) == 1 and len(num_cols) >= 1):
+            val = df[y_col].iloc[0] if y_col in df.columns else df.iloc[0, -1]
+            return f"{y_col.replace('_',' ').title()} is {_fmt(val)}."
+
+        # ── Bar / Pie / HBar — ranking insight ────────────────────────────────
+        if ct in ("bar","pie","doughnut","horizontalbar","hbar") or (cat_cols and num_cols):
+            if x_col in df.columns and y_col in df.columns:
+                sorted_df = df.dropna(subset=[y_col]).copy()
+                sorted_df[y_col] = pd.to_numeric(sorted_df[y_col], errors="coerce")
+                sorted_df = sorted_df.sort_values(y_col, ascending=False)
+                if len(sorted_df) == 0:
+                    return "No numeric data to summarize."
+                top_row    = sorted_df.iloc[0]
+                bottom_row = sorted_df.iloc[-1]
+                top_name   = str(top_row[x_col])
+                top_val    = _fmt(top_row[y_col])
+                bot_name   = str(bottom_row[x_col])
+                bot_val    = _fmt(bottom_row[y_col])
+                metric     = y_col.replace("_"," ").title()
+                if len(sorted_df) >= 2:
+                    return (f"{top_name} leads with {metric} of {top_val}, "
+                            f"while {bot_name} has the lowest at {bot_val}.")
+                return f"{top_name} has {metric} of {top_val}."
+
+        # ── Line / Area — trend insight ───────────────────────────────────────
+        if ct in ("line","area") and num_cols:
+            series = pd.to_numeric(df[y_col], errors="coerce").dropna()
+            if len(series) >= 2:
+                first, last = series.iloc[0], series.iloc[-1]
+                pct   = ((last - first) / abs(first) * 100) if first != 0 else 0
+                trend = "increased" if last > first else "decreased"
+                return (f"{y_col.replace('_',' ').title()} {trend} by "
+                        f"{abs(pct):.1f}% from {_fmt(first)} to {_fmt(last)}.")
+
+        # ── Scatter — correlation insight ─────────────────────────────────────
+        if ct == "scatter" and len(num_cols) >= 2:
+            corr = df[num_cols[0]].corr(df[num_cols[1]])
+            if not pd.isna(corr):
+                strength = "strong" if abs(corr) > 0.7 else "moderate" if abs(corr) > 0.4 else "weak"
+                direction = "positive" if corr > 0 else "negative"
+                return (f"{strength.title()} {direction} correlation ({corr:.2f}) "
+                        f"between {num_cols[0].replace('_',' ')} and {num_cols[1].replace('_',' ')}.")
+
+        # ── Table — row count summary ─────────────────────────────────────────
+        return f"{len(df)} records returned across {len(cols)} columns."
+
+    except Exception:
+        return panel.get("insight", "")   # fallback to Gemini's original if anything fails
+
+
+def _fmt(val) -> str:
+    """Format a number cleanly for insight text."""
+    try:
+        n = float(val)
+        if n >= 1_000_000: return f"{n/1_000_000:.2f}M"
+        if n >= 1_000:     return f"{n:,.0f}"
+        if n == int(n):    return str(int(n))
+        return f"{n:.2f}"
+    except Exception:
+        return str(val)
 
 
 # ── Ask — Bonus: Follow-up Questions ─────────────────────────────────────────
@@ -162,13 +338,15 @@ async def ask(body: AskBody):
                 panel["data"]      = df.fillna("").to_dict(orient="records")
                 panel["row_count"] = len(df)
                 panel["columns"]   = df.columns.tolist()
-                # Confidence heuristic: penalise empty results, complex joins, wildcards
+                # Confidence heuristic
                 conf = 90
-                if len(df) == 0:           conf -= 40
-                if len(df) < 3:            conf -= 15
+                if len(df) == 0:              conf -= 40
+                if len(df) < 3:               conf -= 15
                 if "SELECT *" in sql.upper(): conf -= 10
-                if "LIKE" in sql.upper():  conf -= 5
+                if "LIKE"     in sql.upper(): conf -= 5
                 panel["confidence"] = max(10, min(99, conf))
+                # ── Override Gemini's guessed insight with real data insight ──
+                panel["insight"] = _real_insight(df, panel)
             except Exception as e:
                 panel["data"] = []; panel["error"] = f"SQL error: {e}"
                 panel["confidence"] = 0

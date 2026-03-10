@@ -40,6 +40,7 @@ export default function App() {
 
   const [autoInsights,  setAutoInsights]  = useState([])
   const [autoLoading,   setAutoLoading]   = useState(false)
+  const insightsDismissed = useRef(false)   // once dismissed, never restore from poll
   const [anomalies,     setAnomalies]     = useState([])
   const [anomLoading,   setAnomLoading]   = useState(false)
   const [pins,          setPins]          = useState([])
@@ -57,18 +58,40 @@ export default function App() {
       const d = await apiHealth()
       setServerStatus('online')
       setRowCount(d.row_count || 0)
-      if (d.csv_loaded && d.filename && !csvInfo) {
-        setCsvInfo({ filename: d.filename, rowCount: d.row_count, colCount: (d.columns||[]).length })
-        setColumns(d.columns || [])
+
+      // CSV already loaded (default Nykaa on backend start)
+      if (d.csv_loaded && d.filename) {
+        if (!csvInfo) {
+          setCsvInfo({ filename: d.filename, rowCount: d.row_count, colCount: (d.columns||[]).length })
+          setColumns(d.columns || [])
+        }
+        // Load cached insights + anomalies from health response
+        if (d.cache_ready) {
+          if (d.insights?.length > 0 && autoInsights.length === 0 && !insightsDismissed.current)
+            setAutoInsights(d.insights)
+          if (d.anomalies?.length > 0 && anomalies.length === 0) {
+            setAnomalies(d.anomalies)
+            window.__pulseAnomalies = d.anomalies
+          }
+          setAutoLoading(false)
+          setAnomLoading(false)
+        } else if (d.csv_loaded && autoInsights.length === 0) {
+          // Still computing — show loading spinners
+          setAutoLoading(true)
+          setAnomLoading(true)
+        }
       }
     } catch { setServerStatus('error') }
-  }, [csvInfo])
+  }, [csvInfo, autoInsights.length, anomalies.length])
 
   useEffect(() => {
     poll()
-    const t = setInterval(poll, 15000)
+    // Poll every 3s until insights load, then slow to 15s
+    const t = setInterval(() => {
+      poll()
+    }, autoInsights.length === 0 ? 3000 : 15000)
     return () => clearInterval(t)
-  }, [poll])
+  }, [poll, autoInsights.length])
 
   // ── Upload ──────────────────────────────────────────────────────────────────
   const handleFile = useCallback(async (file, setProgress) => {
@@ -79,6 +102,7 @@ export default function App() {
       setColumns(d.columns)
       setChatHistory([]); setQuestionLog([]); setActiveTurnIdx(null)
       setDashResult(null); setAutoInsights([]); setAnomalies([]); setQueryMs(null)
+      insightsDismissed.current = false   // reset for new CSV
       poll()
 
       // Fire both background tasks simultaneously
@@ -108,6 +132,7 @@ export default function App() {
   // ── Ask ─────────────────────────────────────────────────────────────────────
   const handleAsk = useCallback(async (question) => {
     setAutoInsights([])   // dismiss auto-analyst on first question
+    insightsDismissed.current = true
     setLoading(true)
     setServerStatus('busy')
     setQueryMs(null)
@@ -254,7 +279,7 @@ export default function App() {
           <InputBar
             onAsk={handleAsk}
             onPin={handlePin}
-            onTyping={() => setAutoInsights([])}
+            onTyping={() => { setAutoInsights([]); insightsDismissed.current = true }}
             loading={loading}
             columns={columns}
             hasDashboard={!!dashResult && !dashResult.cannot_answer}

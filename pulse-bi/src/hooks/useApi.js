@@ -1,4 +1,6 @@
-const BASE = '/api'
+// Use VITE_API_URL env var in production (set in Vercel dashboard)
+// Falls back to /api proxy for local development
+const BASE = import.meta.env.VITE_API_URL || '/api'
 
 export async function apiHealth() {
   const r = await fetch(`${BASE}/health`, { signal: AbortSignal.timeout(3000) })

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: pulse-bi-backend
+    runtime: python
+    buildCommand: pip install fastapi uvicorn sqlalchemy pandas python-dotenv google-genai python-multipart
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY_2
+        sync: false
+      - key: CSV_PATH
+        sync: false

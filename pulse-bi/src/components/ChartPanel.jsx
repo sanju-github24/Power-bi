@@ -75,10 +75,11 @@ export default function ChartPanel({ panel, idx, isFollowup, queryMs, sessionId 
         </div>
       )}
 
-      {/* ── Chart reasoning — subtle, not a block ──────────────────────── */}
+      {/* ── Chart reasoning — analyst voice, subtle ────────────────────── */}
       {panel.chart_reasoning && (
         <div style={s.reasoning} title={panel.chart_reasoning}>
-          {panel.chart_reasoning}
+          <span style={s.reasoningIcon}>💡</span>
+          <span>{panel.chart_reasoning}</span>
         </div>
       )}
 
@@ -421,14 +422,17 @@ const s = {
 
   // Reasoning
   reasoning: {
+    display:'flex', alignItems:'flex-start', gap:'.4rem',
     padding:'.3rem .95rem',
-    fontSize:'.75rem',
-    color:'rgba(160,180,210,.8)',
-    fontFamily:"'JetBrains Mono',monospace",
+    fontSize:'.78rem',
+    color:'rgba(180,200,230,.75)',
+    fontFamily:"'Figtree',sans-serif",
     fontStyle:'italic',
     borderBottom:'1px solid rgba(255,255,255,.04)',
-    whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
-    cursor:'help',
+    lineHeight:1.5,
+  },
+  reasoningIcon: {
+    fontSize:'.72rem', flexShrink:0, marginTop:'.1rem', opacity:.7,
   },
 
   body: { padding:'.85rem .95rem' },

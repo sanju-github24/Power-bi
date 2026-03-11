@@ -2589,7 +2589,35 @@
         "sql": "SELECT Campaign_ID, Revenue FROM data_table ORDER BY Revenue DESC LIMIT 5",
         "x_axis": "Campaign_ID",
         "y_axis": "Revenue",
-        "insight": "The top 5 campaigns by revenue are listed, indicating their significant contribution to overall revenue."
+        "insight": "NY-CMP-13007 leads with Revenue of 4.58M, while NY-CMP-56543 has the lowest at 4.12M.",
+        "data": [
+          {
+            "Campaign_ID": "NY-CMP-13007",
+            "Revenue": 4579910
+          },
+          {
+            "Campaign_ID": "NY-CMP-44157",
+            "Revenue": 4412709
+          },
+          {
+            "Campaign_ID": "NY-CMP-38379",
+            "Revenue": 4326120
+          },
+          {
+            "Campaign_ID": "NY-CMP-6741",
+            "Revenue": 4264178
+          },
+          {
+            "Campaign_ID": "NY-CMP-56543",
+            "Revenue": 4119654
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_ID",
+          "Revenue"
+        ],
+        "confidence": 90
       }
     ],
     "tldr": [
@@ -2613,7 +2641,31 @@
         "sql": "SELECT Language, ROUND(AVG(ROI), 2) AS Average_ROI FROM data_table GROUP BY Language ORDER BY Average_ROI DESC;",
         "x_axis": "Language",
         "y_axis": "Average_ROI",
-        "insight": "Hindi campaigns show the highest average ROI, while Bengali campaigns have the lowest."
+        "insight": "Hindi leads with 2.76 in average roi, 2% ahead of English (2.71).",
+        "data": [
+          {
+            "Language": "Hindi",
+            "Average_ROI": 2.76
+          },
+          {
+            "Language": "English",
+            "Average_ROI": 2.71
+          },
+          {
+            "Language": "Bengali",
+            "Average_ROI": 2.71
+          },
+          {
+            "Language": "Tamil",
+            "Average_ROI": 2.68
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Language",
+          "Average_ROI"
+        ],
+        "confidence": 90
       }
     ],
     "tldr": [
@@ -2637,7 +2689,639 @@
         "sql": "SELECT Channel_Used, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Channel_Used ORDER BY TotalRevenue DESC",
         "x_axis": "Channel_Used",
         "y_axis": "TotalRevenue",
-        "insight": "The channel 'Google' appears to generate the highest revenue, while 'Email' generates the least."
+        "insight": "Instagram leads with \u20b9163.95Cr in total revenue, 1% ahead of WhatsApp (\u20b9161.54Cr).",
+        "data": [
+          {
+            "Channel_Used": "Instagram",
+            "TotalRevenue": 1639493563.0
+          },
+          {
+            "Channel_Used": "WhatsApp",
+            "TotalRevenue": 1615380939.0
+          },
+          {
+            "Channel_Used": "YouTube",
+            "TotalRevenue": 1597611646.0
+          },
+          {
+            "Channel_Used": "Email",
+            "TotalRevenue": 1587734385.0
+          },
+          {
+            "Channel_Used": "Google",
+            "TotalRevenue": 1586013727.0
+          },
+          {
+            "Channel_Used": "Facebook",
+            "TotalRevenue": 1569289158.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Google",
+            "TotalRevenue": 358536574.0
+          },
+          {
+            "Channel_Used": "Email, YouTube",
+            "TotalRevenue": 353128673.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Facebook",
+            "TotalRevenue": 334318714.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Email",
+            "TotalRevenue": 329884354.0
+          },
+          {
+            "Channel_Used": "Facebook, YouTube",
+            "TotalRevenue": 329695997.0
+          },
+          {
+            "Channel_Used": "YouTube, Facebook",
+            "TotalRevenue": 328890941.0
+          },
+          {
+            "Channel_Used": "Google, Instagram",
+            "TotalRevenue": 327796127.0
+          },
+          {
+            "Channel_Used": "Facebook, Email",
+            "TotalRevenue": 324385396.0
+          },
+          {
+            "Channel_Used": "YouTube, Email",
+            "TotalRevenue": 324067204.0
+          },
+          {
+            "Channel_Used": "Instagram, YouTube",
+            "TotalRevenue": 324018797.0
+          },
+          {
+            "Channel_Used": "Google, Email",
+            "TotalRevenue": 323419463.0
+          },
+          {
+            "Channel_Used": "Google, YouTube",
+            "TotalRevenue": 323170371.0
+          },
+          {
+            "Channel_Used": "YouTube, WhatsApp",
+            "TotalRevenue": 323118578.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Instagram",
+            "TotalRevenue": 320331686.0
+          },
+          {
+            "Channel_Used": "Instagram, Email",
+            "TotalRevenue": 320121206.0
+          },
+          {
+            "Channel_Used": "Email, Facebook",
+            "TotalRevenue": 319600893.0
+          },
+          {
+            "Channel_Used": "Google, Facebook",
+            "TotalRevenue": 317249276.0
+          },
+          {
+            "Channel_Used": "YouTube, Google",
+            "TotalRevenue": 316304421.0
+          },
+          {
+            "Channel_Used": "Instagram, Facebook",
+            "TotalRevenue": 316244306.0
+          },
+          {
+            "Channel_Used": "YouTube, Instagram",
+            "TotalRevenue": 316126109.0
+          },
+          {
+            "Channel_Used": "Facebook, WhatsApp",
+            "TotalRevenue": 315361123.0
+          },
+          {
+            "Channel_Used": "Instagram, Google",
+            "TotalRevenue": 314871854.0
+          },
+          {
+            "Channel_Used": "Email, Google",
+            "TotalRevenue": 314862527.0
+          },
+          {
+            "Channel_Used": "Email, WhatsApp",
+            "TotalRevenue": 309436109.0
+          },
+          {
+            "Channel_Used": "Instagram, WhatsApp",
+            "TotalRevenue": 308764078.0
+          },
+          {
+            "Channel_Used": "Email, Instagram",
+            "TotalRevenue": 296621796.0
+          },
+          {
+            "Channel_Used": "WhatsApp, YouTube",
+            "TotalRevenue": 294697959.0
+          },
+          {
+            "Channel_Used": "Facebook, Google",
+            "TotalRevenue": 294123292.0
+          },
+          {
+            "Channel_Used": "Google, WhatsApp",
+            "TotalRevenue": 291412359.0
+          },
+          {
+            "Channel_Used": "Facebook, Instagram",
+            "TotalRevenue": 264472858.0
+          },
+          {
+            "Channel_Used": "Google, Email, Instagram",
+            "TotalRevenue": 105973628.0
+          },
+          {
+            "Channel_Used": "Email, WhatsApp, Instagram",
+            "TotalRevenue": 102487930.0
+          },
+          {
+            "Channel_Used": "Google, YouTube, WhatsApp",
+            "TotalRevenue": 97986375.0
+          },
+          {
+            "Channel_Used": "Instagram, Google, WhatsApp",
+            "TotalRevenue": 94429662.0
+          },
+          {
+            "Channel_Used": "YouTube, Email, WhatsApp",
+            "TotalRevenue": 94215280.0
+          },
+          {
+            "Channel_Used": "YouTube, Google, Instagram",
+            "TotalRevenue": 94174214.0
+          },
+          {
+            "Channel_Used": "YouTube, Facebook, Instagram",
+            "TotalRevenue": 93716114.0
+          },
+          {
+            "Channel_Used": "Email, WhatsApp, Facebook",
+            "TotalRevenue": 92965505.0
+          },
+          {
+            "Channel_Used": "YouTube, Google, Email",
+            "TotalRevenue": 91618963.0
+          },
+          {
+            "Channel_Used": "Instagram, WhatsApp, Google",
+            "TotalRevenue": 91465465.0
+          },
+          {
+            "Channel_Used": "Email, WhatsApp, YouTube",
+            "TotalRevenue": 91303444.0
+          },
+          {
+            "Channel_Used": "YouTube, Email, Google",
+            "TotalRevenue": 91302039.0
+          },
+          {
+            "Channel_Used": "Instagram, Google, Email",
+            "TotalRevenue": 90384447.0
+          },
+          {
+            "Channel_Used": "Facebook, Email, WhatsApp",
+            "TotalRevenue": 90287586.0
+          },
+          {
+            "Channel_Used": "Google, YouTube, Instagram",
+            "TotalRevenue": 90120248.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Instagram, YouTube",
+            "TotalRevenue": 90081876.0
+          },
+          {
+            "Channel_Used": "Google, Email, YouTube",
+            "TotalRevenue": 89882696.0
+          },
+          {
+            "Channel_Used": "Google, WhatsApp, Instagram",
+            "TotalRevenue": 88933811.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Google, Facebook",
+            "TotalRevenue": 88828497.0
+          },
+          {
+            "Channel_Used": "Email, Facebook, WhatsApp",
+            "TotalRevenue": 88557163.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Facebook, Instagram",
+            "TotalRevenue": 87483344.0
+          },
+          {
+            "Channel_Used": "Instagram, YouTube, Google",
+            "TotalRevenue": 87278809.0
+          },
+          {
+            "Channel_Used": "Instagram, Facebook, WhatsApp",
+            "TotalRevenue": 87174515.0
+          },
+          {
+            "Channel_Used": "YouTube, Instagram, WhatsApp",
+            "TotalRevenue": 86991150.0
+          },
+          {
+            "Channel_Used": "Facebook, Instagram, WhatsApp",
+            "TotalRevenue": 86752302.0
+          },
+          {
+            "Channel_Used": "Facebook, WhatsApp, Instagram",
+            "TotalRevenue": 86529736.0
+          },
+          {
+            "Channel_Used": "Email, Google, WhatsApp",
+            "TotalRevenue": 86467047.0
+          },
+          {
+            "Channel_Used": "YouTube, Facebook, Google",
+            "TotalRevenue": 86103094.0
+          },
+          {
+            "Channel_Used": "YouTube, Google, WhatsApp",
+            "TotalRevenue": 86063261.0
+          },
+          {
+            "Channel_Used": "YouTube, Facebook, Email",
+            "TotalRevenue": 85580330.0
+          },
+          {
+            "Channel_Used": "Instagram, Facebook, Google",
+            "TotalRevenue": 85467525.0
+          },
+          {
+            "Channel_Used": "YouTube, Instagram, Facebook",
+            "TotalRevenue": 85421888.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Facebook, Email",
+            "TotalRevenue": 85283591.0
+          },
+          {
+            "Channel_Used": "Google, Instagram, Email",
+            "TotalRevenue": 85190256.0
+          },
+          {
+            "Channel_Used": "Facebook, YouTube, Instagram",
+            "TotalRevenue": 84608785.0
+          },
+          {
+            "Channel_Used": "Instagram, YouTube, Email",
+            "TotalRevenue": 84469208.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Email, Instagram",
+            "TotalRevenue": 84421226.0
+          },
+          {
+            "Channel_Used": "Facebook, YouTube, Email",
+            "TotalRevenue": 84065729.0
+          },
+          {
+            "Channel_Used": "Facebook, WhatsApp, Email",
+            "TotalRevenue": 83958371.0
+          },
+          {
+            "Channel_Used": "Instagram, WhatsApp, YouTube",
+            "TotalRevenue": 83913032.0
+          },
+          {
+            "Channel_Used": "Facebook, Google, YouTube",
+            "TotalRevenue": 83224582.0
+          },
+          {
+            "Channel_Used": "Instagram, Google, Facebook",
+            "TotalRevenue": 82686196.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Facebook, Google",
+            "TotalRevenue": 82614265.0
+          },
+          {
+            "Channel_Used": "Facebook, Instagram, Google",
+            "TotalRevenue": 82550963.0
+          },
+          {
+            "Channel_Used": "Facebook, Google, Email",
+            "TotalRevenue": 82385322.0
+          },
+          {
+            "Channel_Used": "Google, Facebook, Email",
+            "TotalRevenue": 82342567.0
+          },
+          {
+            "Channel_Used": "YouTube, Instagram, Email",
+            "TotalRevenue": 82238682.0
+          },
+          {
+            "Channel_Used": "Email, Instagram, YouTube",
+            "TotalRevenue": 82110175.0
+          },
+          {
+            "Channel_Used": "Google, Instagram, YouTube",
+            "TotalRevenue": 81882993.0
+          },
+          {
+            "Channel_Used": "Email, Google, Facebook",
+            "TotalRevenue": 81579201.0
+          },
+          {
+            "Channel_Used": "Instagram, YouTube, WhatsApp",
+            "TotalRevenue": 81211098.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Instagram, Facebook",
+            "TotalRevenue": 81064658.0
+          },
+          {
+            "Channel_Used": "Facebook, Email, YouTube",
+            "TotalRevenue": 81028236.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Instagram, Google",
+            "TotalRevenue": 80957690.0
+          },
+          {
+            "Channel_Used": "Facebook, WhatsApp, Google",
+            "TotalRevenue": 80881253.0
+          },
+          {
+            "Channel_Used": "Instagram, Email, WhatsApp",
+            "TotalRevenue": 80358213.0
+          },
+          {
+            "Channel_Used": "Email, Facebook, Instagram",
+            "TotalRevenue": 80350060.0
+          },
+          {
+            "Channel_Used": "Google, Facebook, YouTube",
+            "TotalRevenue": 80265762.0
+          },
+          {
+            "Channel_Used": "Google, YouTube, Facebook",
+            "TotalRevenue": 80218355.0
+          },
+          {
+            "Channel_Used": "Instagram, YouTube, Facebook",
+            "TotalRevenue": 80190724.0
+          },
+          {
+            "Channel_Used": "Facebook, Google, Instagram",
+            "TotalRevenue": 79843603.0
+          },
+          {
+            "Channel_Used": "Google, YouTube, Email",
+            "TotalRevenue": 79652909.0
+          },
+          {
+            "Channel_Used": "YouTube, Instagram, Google",
+            "TotalRevenue": 79033841.0
+          },
+          {
+            "Channel_Used": "Instagram, Email, YouTube",
+            "TotalRevenue": 78610394.0
+          },
+          {
+            "Channel_Used": "Google, WhatsApp, YouTube",
+            "TotalRevenue": 78525156.0
+          },
+          {
+            "Channel_Used": "Google, Facebook, WhatsApp",
+            "TotalRevenue": 78438987.0
+          },
+          {
+            "Channel_Used": "Email, Facebook, Google",
+            "TotalRevenue": 78353666.0
+          },
+          {
+            "Channel_Used": "Facebook, Google, WhatsApp",
+            "TotalRevenue": 78296030.0
+          },
+          {
+            "Channel_Used": "WhatsApp, YouTube, Instagram",
+            "TotalRevenue": 77841796.0
+          },
+          {
+            "Channel_Used": "Facebook, Instagram, YouTube",
+            "TotalRevenue": 77700857.0
+          },
+          {
+            "Channel_Used": "YouTube, Email, Facebook",
+            "TotalRevenue": 77584618.0
+          },
+          {
+            "Channel_Used": "Facebook, WhatsApp, YouTube",
+            "TotalRevenue": 77254453.0
+          },
+          {
+            "Channel_Used": "Instagram, Google, YouTube",
+            "TotalRevenue": 77230932.0
+          },
+          {
+            "Channel_Used": "Email, YouTube, Google",
+            "TotalRevenue": 77183911.0
+          },
+          {
+            "Channel_Used": "Google, Email, WhatsApp",
+            "TotalRevenue": 77140897.0
+          },
+          {
+            "Channel_Used": "YouTube, Google, Facebook",
+            "TotalRevenue": 76996345.0
+          },
+          {
+            "Channel_Used": "Instagram, Facebook, YouTube",
+            "TotalRevenue": 76985528.0
+          },
+          {
+            "Channel_Used": "Google, WhatsApp, Facebook",
+            "TotalRevenue": 76739040.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Google, YouTube",
+            "TotalRevenue": 76687449.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Facebook, YouTube",
+            "TotalRevenue": 76285124.0
+          },
+          {
+            "Channel_Used": "Instagram, WhatsApp, Email",
+            "TotalRevenue": 76037417.0
+          },
+          {
+            "Channel_Used": "Google, Instagram, WhatsApp",
+            "TotalRevenue": 75961433.0
+          },
+          {
+            "Channel_Used": "Facebook, YouTube, Google",
+            "TotalRevenue": 75578607.0
+          },
+          {
+            "Channel_Used": "Email, Google, Instagram",
+            "TotalRevenue": 75152595.0
+          },
+          {
+            "Channel_Used": "Instagram, Email, Facebook",
+            "TotalRevenue": 74879788.0
+          },
+          {
+            "Channel_Used": "Facebook, Email, Google",
+            "TotalRevenue": 74420529.0
+          },
+          {
+            "Channel_Used": "Instagram, WhatsApp, Facebook",
+            "TotalRevenue": 74419321.0
+          },
+          {
+            "Channel_Used": "Email, WhatsApp, Google",
+            "TotalRevenue": 74115125.0
+          },
+          {
+            "Channel_Used": "Google, Email, Facebook",
+            "TotalRevenue": 73979791.0
+          },
+          {
+            "Channel_Used": "Email, YouTube, WhatsApp",
+            "TotalRevenue": 73113788.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Email, Facebook",
+            "TotalRevenue": 73060833.0
+          },
+          {
+            "Channel_Used": "YouTube, Email, Instagram",
+            "TotalRevenue": 72242899.0
+          },
+          {
+            "Channel_Used": "YouTube, WhatsApp, Google",
+            "TotalRevenue": 72135377.0
+          },
+          {
+            "Channel_Used": "Instagram, Facebook, Email",
+            "TotalRevenue": 72084571.0
+          },
+          {
+            "Channel_Used": "WhatsApp, YouTube, Facebook",
+            "TotalRevenue": 72055891.0
+          },
+          {
+            "Channel_Used": "Email, Facebook, YouTube",
+            "TotalRevenue": 71733734.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Google, Email",
+            "TotalRevenue": 71496772.0
+          },
+          {
+            "Channel_Used": "Email, Instagram, Facebook",
+            "TotalRevenue": 71074127.0
+          },
+          {
+            "Channel_Used": "Email, Instagram, Google",
+            "TotalRevenue": 70001606.0
+          },
+          {
+            "Channel_Used": "Instagram, Email, Google",
+            "TotalRevenue": 69899631.0
+          },
+          {
+            "Channel_Used": "Facebook, Email, Instagram",
+            "TotalRevenue": 69898408.0
+          },
+          {
+            "Channel_Used": "Google, WhatsApp, Email",
+            "TotalRevenue": 68979286.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Email, Google",
+            "TotalRevenue": 68625264.0
+          },
+          {
+            "Channel_Used": "Email, Google, YouTube",
+            "TotalRevenue": 68297305.0
+          },
+          {
+            "Channel_Used": "YouTube, Facebook, WhatsApp",
+            "TotalRevenue": 68183035.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Instagram, Email",
+            "TotalRevenue": 67687593.0
+          },
+          {
+            "Channel_Used": "Facebook, YouTube, WhatsApp",
+            "TotalRevenue": 67568443.0
+          },
+          {
+            "Channel_Used": "Email, Instagram, WhatsApp",
+            "TotalRevenue": 67566933.0
+          },
+          {
+            "Channel_Used": "YouTube, WhatsApp, Email",
+            "TotalRevenue": 67166035.0
+          },
+          {
+            "Channel_Used": "Google, Facebook, Instagram",
+            "TotalRevenue": 66696455.0
+          },
+          {
+            "Channel_Used": "Facebook, Instagram, Email",
+            "TotalRevenue": 66422359.0
+          },
+          {
+            "Channel_Used": "YouTube, WhatsApp, Facebook",
+            "TotalRevenue": 65304479.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Email, YouTube",
+            "TotalRevenue": 65282827.0
+          },
+          {
+            "Channel_Used": "Email, YouTube, Instagram",
+            "TotalRevenue": 62924299.0
+          },
+          {
+            "Channel_Used": "WhatsApp, YouTube, Email",
+            "TotalRevenue": 62911590.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Google, Instagram",
+            "TotalRevenue": 62816889.0
+          },
+          {
+            "Channel_Used": "YouTube, WhatsApp, Instagram",
+            "TotalRevenue": 61106820.0
+          },
+          {
+            "Channel_Used": "WhatsApp, YouTube, Google",
+            "TotalRevenue": 60253318.0
+          },
+          {
+            "Channel_Used": "Email, YouTube, Facebook",
+            "TotalRevenue": 58148065.0
+          },
+          {
+            "Channel_Used": "Google, Instagram, Facebook",
+            "TotalRevenue": 58059912.0
+          }
+        ],
+        "row_count": 156,
+        "columns": [
+          "Channel_Used",
+          "TotalRevenue"
+        ],
+        "confidence": 90
       }
     ],
     "tldr": [
@@ -2885,6 +3569,479 @@
       {
         "emoji": "\ud83d\udca1",
         "text": "Channels such as 'Email, Google' and 'Email, Facebook, Google' show a strong positive ROI, indicating good performance relative to their costs."
+      }
+    ]
+  },
+  "3944145da23098bec9dfcd067b5d2375": {
+    "dashboard_title": "Campaign Performance Overview",
+    "summary": "This dashboard displays key metrics for various marketing campaigns.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Highest Campaign by Revenue",
+        "chart_type": "Bar",
+        "chart_reasoning": "The user asked to show the single highest campaign, and a Bar chart is suitable for displaying a single top result. It directly builds upon the previous request for the top 5.",
+        "sql": "SELECT Campaign_ID, Revenue FROM data_table ORDER BY Revenue DESC LIMIT 1",
+        "x_axis": "Campaign_ID",
+        "y_axis": "Revenue",
+        "insight": "Revenue is 4.58M.",
+        "data": [
+          {
+            "Campaign_ID": "NY-CMP-13007",
+            "Revenue": 4579910
+          }
+        ],
+        "row_count": 1,
+        "columns": [
+          "Campaign_ID",
+          "Revenue"
+        ],
+        "confidence": 75
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "The highest performing campaign by revenue is identified."
+      }
+    ]
+  },
+  "a98ef773be39b05d3e163ccb71aeac82": {
+    "dashboard_title": "Campaign Performance Analysis",
+    "summary": "Displaying the campaign with the lowest revenue.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Lowest Campaign by Revenue",
+        "chart_type": "Bar",
+        "chart_reasoning": "This is a follow-up question to the previous ones about top and highest campaigns. A bar chart is suitable for comparing the revenue of individual campaigns, and since we are looking for the single lowest, it will show one bar.",
+        "sql": "SELECT Campaign_ID, Revenue FROM data_table ORDER BY Revenue ASC LIMIT 1",
+        "x_axis": "Campaign_ID",
+        "y_axis": "Revenue",
+        "insight": "The campaign with the lowest revenue has been identified."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "The campaign with the lowest revenue has been identified."
+      }
+    ]
+  },
+  "1de3aa1dd2a3e1c7263ef0d83b14a14c": {
+    "dashboard_title": "Top & Bottom Performing Campaigns",
+    "summary": "This dashboard highlights the campaigns with the highest and lowest revenue generation to inform strategic decisions.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Highest Revenue Campaign",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart makes it easy to quickly identify the campaign with the highest revenue.",
+        "sql": "SELECT Campaign_ID, Revenue FROM data_table ORDER BY Revenue DESC LIMIT 1",
+        "x_axis": "Campaign_ID",
+        "y_axis": "Revenue",
+        "insight": "The highest revenue generating campaign brought in over 4.5 million."
+      },
+      {
+        "title": "Lowest Revenue Campaign",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart is effective for pinpointing the campaign with the lowest revenue.",
+        "sql": "SELECT Campaign_ID, Revenue FROM data_table ORDER BY Revenue ASC LIMIT 1",
+        "x_axis": "Campaign_ID",
+        "y_axis": "Revenue",
+        "insight": "The lowest revenue generating campaign earned just over 6000."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "The highest revenue generating campaign brought in over 4.5 million."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "The lowest revenue generating campaign earned just over 6000."
+      }
+    ]
+  },
+  "6bc1faeeb80e1a64a0c212c8358aca6d": {
+    "dashboard_title": "Campaign Type Revenue Leaders",
+    "summary": "This analysis reveals that 'Paid Ads' campaigns are currently generating the highest revenue.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart makes it easy to spot which campaign types are bringing in the most revenue at a glance.",
+        "sql": "SELECT Campaign_Type, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC;",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Paid Ads campaigns are generating significantly more revenue than other types."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads campaigns are generating significantly more revenue than other types."
+      }
+    ]
+  },
+  "ea852bee81d0b0bbc8332fd6eb952036": {
+    "dashboard_title": "Total Revenue by Campaign Type",
+    "summary": "This view clearly shows the revenue generated by each campaign type, highlighting top performers.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Total Revenue by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bars make it easy to quickly compare the revenue generated by each campaign type.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Influencer leads with \u20b95769.1M in totalrevenue \u2014 1% ahead of Email (\u20b95685.2M).",
+        "data": [
+          {
+            "Campaign_Type": "Influencer",
+            "TotalRevenue": 5769064044.0
+          },
+          {
+            "Campaign_Type": "Social Media",
+            "TotalRevenue": 5751837620.0
+          },
+          {
+            "Campaign_Type": "Paid Ads",
+            "TotalRevenue": 5751468983.0
+          },
+          {
+            "Campaign_Type": "SEO",
+            "TotalRevenue": 5698831847.0
+          },
+          {
+            "Campaign_Type": "Email",
+            "TotalRevenue": 5685161788.0
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_Type",
+          "TotalRevenue"
+        ],
+        "confidence": 90
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads campaigns are generating the highest total revenue, significantly outperforming other types."
+      }
+    ]
+  },
+  "fc0490b27433ea68e91eab61b13b7218": {
+    "dashboard_title": "ROI by Language Comparison",
+    "summary": "English campaigns are significantly outperforming other languages in terms of ROI, highlighting a key area for potential growth.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "panels": [
+      {
+        "title": "Average ROI by Language",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart makes it easy to directly compare the average ROI across different languages.",
+        "sql": "SELECT Language, ROUND(AVG(ROI), 2) AS AverageROI FROM data_table GROUP BY Language ORDER BY AverageROI DESC",
+        "x_axis": "Language",
+        "y_axis": "AverageROI",
+        "insight": "English campaigns boast an impressive average ROI of 3.74, substantially higher than other languages."
+      }
+    ],
+    "cannot_answer_reason": "",
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "English campaigns boast an impressive average ROI of 3.74, substantially higher than other languages."
+      }
+    ]
+  },
+  "19ca55739319f4f1045e6c741f473f3b": {
+    "dashboard_title": "Top 10 Campaigns by ROI",
+    "summary": "We're highlighting the campaigns that are delivering the most value relative to their investment.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top 10 Campaigns by ROI",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart makes it easy to quickly compare the ROI across campaigns and identify the top performers.",
+        "sql": "SELECT Campaign_ID, ROUND(ROI, 2) AS ROI FROM data_table ORDER BY ROI DESC LIMIT 10",
+        "x_axis": "Campaign_ID",
+        "y_axis": "ROI",
+        "insight": "NY-CMP-13007 leads with 74.42 in roi \u2014 42% ahead of NY-CMP-24042 (52.45).",
+        "data": [
+          {
+            "Campaign_ID": "NY-CMP-13007",
+            "ROI": 74.42
+          },
+          {
+            "Campaign_ID": "NY-CMP-22689",
+            "ROI": 66.32
+          },
+          {
+            "Campaign_ID": "NY-CMP-49715",
+            "ROI": 65.0
+          },
+          {
+            "Campaign_ID": "NY-CMP-26356",
+            "ROI": 64.14
+          },
+          {
+            "Campaign_ID": "NY-CMP-39329",
+            "ROI": 59.64
+          },
+          {
+            "Campaign_ID": "NY-CMP-2174",
+            "ROI": 55.27
+          },
+          {
+            "Campaign_ID": "NY-CMP-51204",
+            "ROI": 54.74
+          },
+          {
+            "Campaign_ID": "NY-CMP-5736",
+            "ROI": 53.7
+          },
+          {
+            "Campaign_ID": "NY-CMP-35197",
+            "ROI": 52.53
+          },
+          {
+            "Campaign_ID": "NY-CMP-24042",
+            "ROI": 52.45
+          }
+        ],
+        "row_count": 10,
+        "columns": [
+          "Campaign_ID",
+          "ROI"
+        ],
+        "confidence": 90
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Campaign NY-CMP-1029 stands out with an exceptional ROI of 74.42."
+      }
+    ]
+  },
+  "4215b865c41a56e446b1d35fa079174b": {
+    "dashboard_title": "Top 5 Campaigns by ROI",
+    "summary": "We've refined the view to highlight the top 5 performing campaigns based on ROI.",
+    "is_followup": true,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top 5 Campaigns by ROI",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to spot which campaigns are pulling ahead at a glance.",
+        "sql": "SELECT Campaign_ID, ROUND(ROI, 2) AS ROI FROM data_table ORDER BY ROI DESC LIMIT 5",
+        "x_axis": "Campaign_ID",
+        "y_axis": "ROI",
+        "insight": "NY-CMP-13007 leads with 74.42 in roi \u2014 25% ahead of NY-CMP-39329 (59.64).",
+        "data": [
+          {
+            "Campaign_ID": "NY-CMP-13007",
+            "ROI": 74.42
+          },
+          {
+            "Campaign_ID": "NY-CMP-22689",
+            "ROI": 66.32
+          },
+          {
+            "Campaign_ID": "NY-CMP-49715",
+            "ROI": 65.0
+          },
+          {
+            "Campaign_ID": "NY-CMP-26356",
+            "ROI": 64.14
+          },
+          {
+            "Campaign_ID": "NY-CMP-39329",
+            "ROI": 59.64
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_ID",
+          "ROI"
+        ],
+        "confidence": 90
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Campaign NY-CMP-30616 is leading with an impressive ROI of 74.42."
+      }
+    ]
+  },
+  "3138030c2644e31d2f7f5920564e8379": {
+    "dashboard_title": "Revenue by Channel",
+    "summary": "Email is the top-performing channel in terms of revenue, significantly outpacing others.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "panels": [
+      {
+        "title": "Revenue by Channel Used",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar charts make it easy to quickly compare revenue generated by each individual channel.",
+        "sql": "SELECT Channel_Used, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Channel_Used ORDER BY TotalRevenue DESC LIMIT 50",
+        "x_axis": "Channel_Used",
+        "y_axis": "TotalRevenue",
+        "insight": "Email campaigns alone generated over $1.5 billion in revenue."
+      }
+    ],
+    "cannot_answer_reason": "",
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Email campaigns alone generated over $1.5 billion in revenue."
+      }
+    ]
+  },
+  "ed5ef8ea5dfa9a23f279ce2c76aafbcd": {
+    "dashboard_title": "Monthly Revenue Trend",
+    "summary": "We're seeing a consistent upward trend in revenue month over month, indicating strong campaign performance.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "panels": [
+      {
+        "title": "Monthly Revenue Trend Over Time",
+        "chart_type": "Line",
+        "chart_reasoning": "A line chart is ideal for visualizing trends over time, making it easy to spot patterns and growth in monthly revenue.",
+        "sql": "SELECT strftime('%Y-%m', Date) AS Month, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Month ORDER BY Month",
+        "x_axis": "Month",
+        "y_axis": "TotalRevenue",
+        "insight": "2024-07 leads with \u20b9263.02Cr in total revenue, 1% ahead of 2024-08 (\u20b9259.79Cr).",
+        "data": [
+          {
+            "Month": "2024-07",
+            "TotalRevenue": 2630226313
+          },
+          {
+            "Month": "2024-08",
+            "TotalRevenue": 2597876736
+          },
+          {
+            "Month": "2024-09",
+            "TotalRevenue": 2390680030
+          },
+          {
+            "Month": "2024-10",
+            "TotalRevenue": 2583203421
+          },
+          {
+            "Month": "2024-11",
+            "TotalRevenue": 2523763004
+          },
+          {
+            "Month": "2024-12",
+            "TotalRevenue": 2586353806
+          },
+          {
+            "Month": "2025-01",
+            "TotalRevenue": 2521812438
+          },
+          {
+            "Month": "2025-02",
+            "TotalRevenue": 2333105678
+          },
+          {
+            "Month": "2025-03",
+            "TotalRevenue": 2570717938
+          },
+          {
+            "Month": "2025-04",
+            "TotalRevenue": 2439364737
+          },
+          {
+            "Month": "2025-05",
+            "TotalRevenue": 2572782370
+          },
+          {
+            "Month": "2025-06",
+            "TotalRevenue": 906477811
+          }
+        ],
+        "row_count": 12,
+        "columns": [
+          "Month",
+          "TotalRevenue"
+        ],
+        "confidence": 90
+      }
+    ],
+    "cannot_answer_reason": "",
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Revenue has shown a positive trend, with the latest month showing a significant jump."
+      }
+    ]
+  },
+  "a54d7bce041c12237ba32fe499bcbc28": {
+    "dashboard_title": "ROI by Language",
+    "summary": "English campaigns are currently delivering the highest average ROI, though there's significant variation within each language group.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "panels": [
+      {
+        "title": "Average ROI by Language",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart makes it easy to directly compare the average ROI across different languages.",
+        "sql": "SELECT Language, ROUND(AVG(ROI), 2) AS AverageROI FROM data_table GROUP BY Language ORDER BY AverageROI DESC",
+        "x_axis": "Language",
+        "y_axis": "AverageROI",
+        "insight": "English campaigns boast an average ROI of 3.18, outperforming other languages."
+      }
+    ],
+    "cannot_answer_reason": "",
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "English campaigns boast an average ROI of 3.18, outperforming other languages."
+      }
+    ]
+  },
+  "5eeabce4b245fa8dcc8324a45f7248d8": {
+    "dashboard_title": "Revenue by Channel Used",
+    "summary": "This view highlights the channels generating the most revenue, with WhatsApp, YouTube, and Google leading the pack.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Channel Used",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to spot which channels are pulling ahead in revenue at a glance.",
+        "sql": "SELECT Channel_Used, SUM(Revenue) AS Total_Revenue FROM data_table GROUP BY Channel_Used ORDER BY Total_Revenue DESC LIMIT 10;",
+        "x_axis": "Channel_Used",
+        "y_axis": "Total_Revenue",
+        "insight": "WhatsApp, YouTube, and Google combined contribute over $750M in revenue."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "WhatsApp, YouTube, and Google combined contribute over $750M in revenue."
       }
     ]
   }

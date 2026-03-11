@@ -79,9 +79,16 @@ async def plan_query(question: str, schema: str, client, model: str, bucket) -> 
     await bucket.acquire()
     for attempt in range(3):
         try:
+            # Import rotation here to use same pool as ai_engine
+            try:
+                from ai_engine import _next_client
+                active_client = _next_client()
+            except Exception:
+                active_client = client
+
             print(f"[agent] planning query: '{question[:50]}'")
             response = await asyncio.to_thread(
-                client.models.generate_content, model=model, contents=prompt
+                active_client.models.generate_content, model=model, contents=prompt
             )
             raw   = response.text.strip()
             clean = re.sub(r"```(?:json)?|```", "", raw).strip()

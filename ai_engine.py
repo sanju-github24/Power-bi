@@ -1,9 +1,9 @@
 """
 ai_engine.py
-Model  : gemini-2.5-flash-lite-preview-06-17  (fallback: gemini-2.0-flash)
-Extras : persistent disk cache · non-blocking token-bucket · follow-up SQL patching
+Model  : gemini-2.5-flash-lite
+Extras : persistent disk cache · dual API key rotation · non-blocking token-bucket · follow-up SQL patching
 """
-import os, time, json, re, hashlib, asyncio, threading
+import os, time, json, re, hashlib, asyncio, threading, itertools
 from pathlib import Path
 from google import genai
 from google.genai import errors
@@ -11,11 +11,33 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-_api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY_1")
-if not _api_key:
+# ── Dual API key rotation ─────────────────────────────────────────────────────
+# Load both keys — effectively doubles RPM from 3 → 6
+_key1 = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY_1")
+_key2 = os.getenv("GEMINI_API_KEY_2")
+
+if not _key1:
     raise EnvironmentError("GEMINI_API_KEY not set in .env")
 
-client        = genai.Client(api_key=_api_key)
+# Build client pool — 2 clients if both keys exist, else 1
+_clients = [genai.Client(api_key=_key1)]
+if _key2 and _key2 != _key1:
+    _clients.append(genai.Client(api_key=_key2))
+    print(f"[ai_engine] ✓ Dual API key rotation enabled — {len(_clients)} keys loaded")
+else:
+    print(f"[ai_engine] ℹ Single API key mode — add GEMINI_API_KEY_2 to .env for 2x speed")
+
+# Round-robin iterator — alternates between key1 and key2 on every call
+_client_cycle = itertools.cycle(_clients)
+_client_lock  = threading.Lock()
+
+def _next_client():
+    """Get next client in round-robin rotation."""
+    with _client_lock:
+        return next(_client_cycle)
+
+# Expose a single `client` for agent.py compatibility (uses key1)
+client        = _clients[0]
 WORKING_MODEL = "gemini-2.5-flash-lite"
 FALLBACK_MODEL= "gemini-2.5-flash-lite"
 FORBIDDEN_SQL = ("INSERT","UPDATE","DELETE","DROP","ALTER","CREATE","ATTACH","PRAGMA")
@@ -68,7 +90,7 @@ class _Bucket:
                 print(f"[limiter] waiting {wait:.1f}s …")
                 await asyncio.sleep(wait)
 
-_bucket = _Bucket(rpm=3)   # gemini-2.5-flash-lite free tier = 5 RPM, stay safe at 3
+_bucket = _Bucket(rpm=10 if len(_clients) > 1 else 5)   # be more aggressive — retry handles 429s
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
 _PROMPT = """\
@@ -130,6 +152,23 @@ Step 4 — Hard guards (always apply):
   Medium (compare 2 things)        → 2 panels
   Complex / "full overview"        → 3 panels max
   Follow-up question               → 1 panel (the changed chart)
+
+━━━ TONE & LANGUAGE RULES ━━━
+Write like a sharp, friendly senior analyst talking to a CEO — not like a robot describing a chart.
+  • chart_reasoning: 1 short sentence explaining WHY this chart helps the user understand THEIR data.
+    BAD:  "A bar chart is suitable for comparing the revenue of individual campaigns."
+    GOOD: "Bar makes it easy to spot which campaigns are pulling ahead at a glance."
+    BAD:  "Line chart is appropriate for time-series data."
+    GOOD: "Line shows you exactly where revenue spiked or dipped across the year."
+  • insight: 1 punchy sentence with a real number from the data — a finding, not a description.
+    BAD:  "The chart shows revenue by campaign type."
+    GOOD: "Paid Ads is driving 38% more revenue than any other campaign type."
+  • summary: 1 sentence telling the user what the dashboard reveals — make it feel like a discovery.
+    BAD:  "This dashboard shows revenue broken down by various dimensions."
+    GOOD: "Instagram campaigns are your top revenue driver — but Email has the highest ROI per rupee spent."
+  • dashboard_title: punchy, specific, 4-6 words. Not generic.
+    BAD:  "Revenue Analysis Dashboard"
+    GOOD: "Which Channels Drive the Most?"
 
 ━━━ OUTPUT — raw JSON only, no markdown ━━━
 {
@@ -202,10 +241,13 @@ async def get_ai_dashboard(
 
     for attempt in range(3):
         try:
-            print(f"[gemini] {model} attempt {attempt+1} — '{question[:50]}'")
+            # Round-robin between API keys on every attempt
+            active_client = _next_client()
+            key_idx = _clients.index(active_client) + 1
+            print(f"[gemini] key{key_idx} · {model} · attempt {attempt+1} — '{question[:50]}'")
 
             response = await asyncio.to_thread(
-                client.models.generate_content,
+                active_client.models.generate_content,
                 model=model,
                 contents=prompt,
             )
@@ -268,9 +310,14 @@ async def get_ai_dashboard(
                 print(f"[gemini] switching to {FALLBACK_MODEL}")
                 model = FALLBACK_MODEL; continue
             if "429" in msg and attempt < 2:
-                wait = 65 * (attempt + 1)
-                print(f"[gemini] 429 — waiting {wait}s …")
-                await asyncio.sleep(wait)
+                # Switch to other key immediately on 429 instead of waiting 65s
+                if len(_clients) > 1:
+                    print(f"[gemini] 429 on key{_clients.index(active_client)+1} — switching key immediately")
+                    await asyncio.sleep(3)   # tiny pause then retry with other key
+                else:
+                    wait = 20 * (attempt + 1)   # shorter wait: 20s, 40s
+                    print(f"[gemini] 429 — waiting {wait}s …")
+                    await asyncio.sleep(wait)
                 await _bucket.acquire(); continue
             raise
 

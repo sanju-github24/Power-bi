@@ -206,78 +206,139 @@ async def upload(file: UploadFile = File(...)):
     }
 
 
+def _clean_col(col: str) -> str:
+    """Turn raw column name or SQL alias into a human readable label."""
+    import re
+    # First replace underscores with spaces
+    s = col.replace("_", " ")
+    # Split camelCase and lowercase run-ons e.g. "averageroi" → "average roi"
+    s = re.sub(r'([a-z])([A-Z])', r'\1 \2', s)          # camelCase
+    s = re.sub(r'(avg|average|total|sum|count|max|min)',  # common SQL prefixes
+               lambda m: m.group(0) + ' ', s, flags=re.IGNORECASE)
+    # Known abbreviations → proper labels
+    s = re.sub(r'\broi\b', 'ROI', s, flags=re.IGNORECASE)
+    s = re.sub(r'\bkpi\b', 'KPI', s, flags=re.IGNORECASE)
+    s = re.sub(r'\bctr\b', 'CTR', s, flags=re.IGNORECASE)
+    # Clean up double spaces and title case
+    s = ' '.join(s.split()).strip().title()
+    # Fix title-cased abbreviations back to upper
+    s = re.sub(r'\bRoi\b', 'ROI', s)
+    s = re.sub(r'\bKpi\b', 'KPI', s)
+    s = re.sub(r'\bCtr\b', 'CTR', s)
+    return s
+
+
 def _real_insight(df: pd.DataFrame, panel: dict) -> str:
-    """Generate a factually accurate insight from the actual query result."""
+    """Generate a factually accurate, human-sounding insight from actual query results."""
     try:
         if df.empty:
-            return "No data returned for this query."
+            return "No data matched this query — try broadening your filters."
 
-        cols      = df.columns.tolist()
-        num_cols  = [c for c in cols if pd.api.types.is_numeric_dtype(df[c])]
-        cat_cols  = [c for c in cols if not pd.api.types.is_numeric_dtype(df[c])]
-        ct        = (panel.get("chart_type") or "bar").lower()
-        x_col     = panel.get("x_axis") or (cat_cols[0] if cat_cols else cols[0])
-        y_col     = panel.get("y_axis") or (num_cols[0] if num_cols else cols[-1])
+        cols     = df.columns.tolist()
+        num_cols = [c for c in cols if pd.api.types.is_numeric_dtype(df[c])]
+        cat_cols = [c for c in cols if not pd.api.types.is_numeric_dtype(df[c])]
+        ct       = (panel.get("chart_type") or "bar").lower()
+
+        # Resolve x and y columns — prefer exact match then fallback
+        x_col = panel.get("x_axis", "")
+        y_col = panel.get("y_axis", "")
+        if x_col not in df.columns: x_col = cat_cols[0] if cat_cols else cols[0]
+        if y_col not in df.columns: y_col = num_cols[0] if num_cols else cols[-1]
+
+        metric = _clean_col(y_col)
 
         # ── KPI ───────────────────────────────────────────────────────────────
         if ct == "kpi" or (len(df) == 1 and len(num_cols) >= 1):
             val = df[y_col].iloc[0] if y_col in df.columns else df.iloc[0, -1]
-            return f"{y_col.replace('_',' ').title()} is {_fmt(val)}."
+            return f"The total {metric.lower()} stands at {_fmt(val)}."
 
-        # ── Bar / Pie / HBar — ranking insight ────────────────────────────────
-        if ct in ("bar","pie","doughnut","horizontalbar","hbar") or (cat_cols and num_cols):
+        # ── Bar / Pie / Doughnut / HBar — ranking insight ─────────────────────
+        if ct in ("bar", "pie", "doughnut", "horizontalbar", "hbar") or (cat_cols and num_cols):
             if x_col in df.columns and y_col in df.columns:
                 sorted_df = df.dropna(subset=[y_col]).copy()
                 sorted_df[y_col] = pd.to_numeric(sorted_df[y_col], errors="coerce")
+                sorted_df = sorted_df.dropna(subset=[y_col])
                 sorted_df = sorted_df.sort_values(y_col, ascending=False)
                 if len(sorted_df) == 0:
-                    return "No numeric data to summarize."
-                top_row    = sorted_df.iloc[0]
-                bottom_row = sorted_df.iloc[-1]
-                top_name   = str(top_row[x_col])
-                top_val    = _fmt(top_row[y_col])
-                bot_name   = str(bottom_row[x_col])
-                bot_val    = _fmt(bottom_row[y_col])
-                metric     = y_col.replace("_"," ").title()
+                    return "No numeric data available for this query."
+
+                top  = sorted_df.iloc[0]
+                top_name = str(top[x_col])
+                # Truncate long combo names like "Facebook, Email, WhatsApp"
+                if len(top_name) > 20:
+                    top_name = top_name[:18] + "…"
+
+                top_v = float(top[y_col])
+
+                # Compare against 2nd place (more meaningful than last place)
                 if len(sorted_df) >= 2:
-                    return (f"{top_name} leads with {metric} of {top_val}, "
-                            f"while {bot_name} has the lowest at {bot_val}.")
-                return f"{top_name} has {metric} of {top_val}."
+                    second     = sorted_df.iloc[1]
+                    sec_name   = str(second[x_col])
+                    if len(sec_name) > 20: sec_name = sec_name[:18] + "…"
+                    sec_v      = float(second[y_col])
+                    if sec_v != 0:
+                        gap_pct = ((top_v - sec_v) / abs(sec_v)) * 100
+                        # Only show % if it's a reasonable number
+                        if gap_pct < 200:
+                            gap_str = f", {gap_pct:.0f}% ahead of {sec_name} ({_fmt(sec_v)})"
+                        else:
+                            gap_str = f", well ahead of {sec_name} at {_fmt(sec_v)}"
+                    else:
+                        gap_str = f", followed by {sec_name}"
+                else:
+                    gap_str = ""
+
+                return f"{top_name} leads with {_fmt(top_v)} in {metric.lower()}{gap_str}."
 
         # ── Line / Area — trend insight ───────────────────────────────────────
-        if ct in ("line","area") and num_cols:
+        if ct in ("line", "area") and num_cols:
             series = pd.to_numeric(df[y_col], errors="coerce").dropna()
             if len(series) >= 2:
                 first, last = series.iloc[0], series.iloc[-1]
+                peak_idx = series.idxmax()
+                peak_val = _fmt(series.max())
                 pct   = ((last - first) / abs(first) * 100) if first != 0 else 0
-                trend = "increased" if last > first else "decreased"
-                return (f"{y_col.replace('_',' ').title()} {trend} by "
-                        f"{abs(pct):.1f}% from {_fmt(first)} to {_fmt(last)}.")
+                trend = "grew" if last > first else "declined"
+                # Include peak if x_col available
+                if x_col in df.columns:
+                    peak_label = str(df[x_col].iloc[peak_idx])
+                    return (f"{metric} {trend} by {abs(pct):.1f}% overall, "
+                            f"peaking at {peak_val} in {peak_label}.")
+                return (f"{metric} {trend} by {abs(pct):.1f}% "
+                        f"from {_fmt(first)} to {_fmt(last)}.")
 
         # ── Scatter — correlation insight ─────────────────────────────────────
         if ct == "scatter" and len(num_cols) >= 2:
             corr = df[num_cols[0]].corr(df[num_cols[1]])
             if not pd.isna(corr):
-                strength = "strong" if abs(corr) > 0.7 else "moderate" if abs(corr) > 0.4 else "weak"
+                strength  = "strong" if abs(corr) > 0.7 else "moderate" if abs(corr) > 0.4 else "weak"
                 direction = "positive" if corr > 0 else "negative"
-                return (f"{strength.title()} {direction} correlation ({corr:.2f}) "
-                        f"between {num_cols[0].replace('_',' ')} and {num_cols[1].replace('_',' ')}.")
+                col_a = _clean_col(num_cols[0])
+                col_b = _clean_col(num_cols[1])
+                return (f"There's a {strength} {direction} relationship (r={corr:.2f}) "
+                        f"between {col_a} and {col_b}.")
 
-        # ── Table — row count summary ─────────────────────────────────────────
-        return f"{len(df)} records returned across {len(cols)} columns."
+        # ── Table ─────────────────────────────────────────────────────────────
+        return f"Showing {len(df):,} records across {len(cols)} columns."
 
     except Exception:
-        return panel.get("insight", "")   # fallback to Gemini's original if anything fails
+        return panel.get("insight", "")   # fallback to Gemini's original
 
 
 def _fmt(val) -> str:
-    """Format a number cleanly for insight text."""
+    """Format a number cleanly — rupee-aware, no floating point noise."""
     try:
         n = float(val)
-        if n >= 1_000_000: return f"{n/1_000_000:.2f}M"
-        if n >= 1_000:     return f"{n:,.0f}"
-        if n == int(n):    return str(int(n))
-        return f"{n:.2f}"
+        # Crore range (10M+)
+        if n >= 10_000_000: return f"₹{n/10_000_000:.2f}Cr"
+        # Lakh range (100K+)
+        if n >= 100_000:    return f"₹{n/100_000:.2f}L"
+        # Thousands
+        if n >= 1_000:      return f"₹{n:,.0f}"
+        # Small whole number
+        if n == int(n):     return str(int(n))
+        # Small decimal — strip trailing zeros
+        return f"{n:.2f}".rstrip('0').rstrip('.')
     except Exception:
         return str(val)
 
@@ -368,12 +429,22 @@ async def ask(body: AskBody):
                 panel["confidence"] = 0
             panels_out.append(panel)
 
+        # ── Build real summary from actual data (prevents contradiction) ─────
+        real_insights = [p.get("insight","") for p in panels_out if p.get("insight")]
+        if real_insights:
+            real_summary = real_insights[0]  # use top panel's real insight as summary
+        else:
+            real_summary = result.get("summary", "")
+
         return {
             "question":             body.question,
             "dashboard_title":      result.get("dashboard_title", "Dashboard"),
-            "summary":              result.get("summary", ""),
+            "summary":              real_summary,
             "is_followup":          result.get("is_followup", False),
+            "is_agentic":           result.get("is_agentic", False),
+            "sub_questions":        result.get("sub_questions", []),
             "panels":               panels_out,
+            "tldr":                 result.get("tldr", []),
             "cannot_answer":        False,
             "cannot_answer_reason": "",
         }

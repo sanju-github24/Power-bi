@@ -1,8 +1,9 @@
-// AutoAnalystPanel.jsx — Proactive AI insights shown after CSV upload
+// AutoAnalystPanel.jsx — Proactive AI insights shown after CSV upload (compact strip)
 import React, { useState } from 'react'
 
 export default function AutoAnalystPanel({ insights, onLoadDashboard, loading }) {
-  const [expanded, setExpanded] = useState(null)
+  const [dismissed, setDismissed] = useState(false)
+  if (dismissed) return null
 
   if (loading) return (
     <div style={s.wrap}>
@@ -11,7 +12,9 @@ export default function AutoAnalystPanel({ insights, onLoadDashboard, loading })
         <span style={s.title}>AI Analyst is scanning your data…</span>
         <div style={s.shimmer} />
       </div>
-      {[0,1,2].map(i => <div key={i} style={{...s.skeleton, animationDelay:`${i*0.15}s`}} />)}
+      <div style={s.row}>
+        {[0,1,2].map(i => <div key={i} style={{...s.skeleton, animationDelay:`${i*0.15}s`}} />)}
+      </div>
     </div>
   )
 
@@ -20,45 +23,36 @@ export default function AutoAnalystPanel({ insights, onLoadDashboard, loading })
   return (
     <div style={s.wrap}>
       <div style={s.header}>
-        <span style={s.sparkle}>✦</span>
-        <div>
-          <div style={s.title}>AI found {insights.length} insights in your data</div>
-          <div style={s.sub}>Click any to load the dashboard instantly</div>
+        <div style={s.headerLeft}>
+          <span style={s.sparkle}>✦</span>
+          <div>
+            <span style={s.title}>AI found {insights.length} insights</span>
+            <span style={s.sub}> — click any to load instantly</span>
+          </div>
         </div>
+        <button style={s.dismissBtn} onClick={() => setDismissed(true)} title="Dismiss">✕</button>
       </div>
-      <div style={s.grid}>
+
+      {/* Compact horizontal cards */}
+      <div style={s.row}>
         {insights.map((item, i) => {
-          const panel  = item.result?.panels?.[0]
-          const isOpen = expanded === i
+          const panel = item.result?.panels?.[0]
           return (
-            <div key={i} style={{...s.card, ...(isOpen ? s.cardOpen : {})}}>
-              <div style={s.cardTop} onClick={() => setExpanded(isOpen ? null : i)}>
-                <div style={s.cardLeft}>
-                  <div style={{...s.num, background: COLORS[i%COLORS.length]}}>{i+1}</div>
-                  <div>
-                    <div style={s.question}>{item.question}</div>
-                    {panel?.insight && <div style={s.insight}>💡 {panel.insight}</div>}
-                  </div>
-                </div>
-                <div style={s.cardRight}>
-                  <span style={s.typeTag}>{panel?.chart_type || 'Chart'}</span>
-                  <span style={s.chevron}>{isOpen ? '▲' : '▼'}</span>
+            <div
+              key={i}
+              style={{...s.card, borderColor: COLORS[i % COLORS.length].border}}
+              onClick={() => onLoadDashboard(item)}
+            >
+              <div style={s.cardNum(i)}>{i + 1}</div>
+              <div style={s.cardContent}>
+                <div style={s.question}>{item.question}</div>
+                <div style={s.cardMeta}>
+                  <span style={{...s.typeTag, color: COLORS[i%COLORS.length].text, borderColor: COLORS[i%COLORS.length].border}}>
+                    {panel?.chart_type || 'Chart'}
+                  </span>
+                  <span style={s.loadHint}>Load →</span>
                 </div>
               </div>
-              {isOpen && (
-                <div style={s.cardBody}>
-                  <div style={s.sqlBox}>
-                    <span style={s.sqlLabel}>SQL</span>
-                    <code style={s.sqlCode}>{panel?.sql}</code>
-                  </div>
-                  {panel?.chart_reasoning && (
-                    <div style={s.reasoning}>🧠 {panel.chart_reasoning}</div>
-                  )}
-                </div>
-              )}
-              <button style={s.loadBtn} onClick={() => onLoadDashboard(item)}>
-                Load Dashboard →
-              </button>
             </div>
           )
         })}
@@ -67,31 +61,52 @@ export default function AutoAnalystPanel({ insights, onLoadDashboard, loading })
   )
 }
 
-const COLORS = ['rgba(232,255,71,.8)', 'rgba(0,212,255,.8)', 'rgba(180,142,255,.8)']
+const COLORS = [
+  { text:'#e8ff47', border:'rgba(232,255,71,.25)' },
+  { text:'#00d4ff', border:'rgba(0,212,255,.25)' },
+  { text:'#b48eff', border:'rgba(180,142,255,.25)' },
+]
 
 const s = {
-  wrap:     { marginBottom: '1.2rem', animation: 'fadeUp .5s ease both' },
-  header:   { display: 'flex', alignItems: 'flex-start', gap: '.75rem', marginBottom: '.85rem' },
-  sparkle:  { fontSize: '1.1rem', color: 'var(--accent)', flexShrink: 0, marginTop: '.1rem' },
-  title:    { fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.88rem', color: 'var(--text)' },
-  sub:      { fontSize: '.8rem', color: 'var(--muted2)', marginTop: '.1rem' },
-  shimmer:  { height: 2, background: 'linear-gradient(90deg,var(--accent),var(--accent2),var(--accent4),var(--accent))', backgroundSize: '300%', animation: 'sweep 1.4s linear infinite', borderRadius: 1, marginTop: '.4rem', width: 180 },
-  skeleton: { height: 60, background: 'var(--s2)', borderRadius: 10, marginBottom: '.5rem', border: '1px solid var(--border)', animation: 'blink 1.2s ease infinite' },
-  grid:     { display: 'flex', flexDirection: 'column', gap: '.72rem' },
-  card:     { background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 11, overflow: 'hidden', transition: 'border-color .2s' },
-  cardOpen: { borderColor: 'rgba(232,255,71,.35)' },
-  cardTop:  { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '.7rem .85rem', cursor: 'pointer', gap: '.5rem' },
-  cardLeft: { display: 'flex', alignItems: 'flex-start', gap: '.72rem', flex: 1 },
-  num:      { width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.76rem', fontWeight: 700, color: '#000', flexShrink: 0, marginTop: '.1rem' },
-  question: { fontSize: '.78rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.4 },
-  insight:  { fontSize: '.78rem', color: 'var(--muted2)', marginTop: '.18rem', fontStyle: 'italic' },
-  cardRight:{ display: 'flex', alignItems: 'center', gap: '.5rem', flexShrink: 0 },
-  typeTag:  { fontSize: '.72rem', fontFamily: "'JetBrains Mono',monospace", background: 'rgba(232,255,71,.07)', color: 'var(--accent)', border: '1px solid rgba(232,255,71,.18)', borderRadius: 4, padding: '.1rem .38rem' },
-  chevron:  { fontSize: '.75rem', color: 'var(--muted)', fontFamily: "'JetBrains Mono',monospace" },
-  cardBody: { padding: '.0 .85rem .76rem', display: 'flex', flexDirection: 'column', gap: '.4rem' },
-  sqlBox:   { background: 'var(--s3)', border: '1px solid var(--border2)', borderRadius: 7, padding: '.45rem .76rem' },
-  sqlLabel: { fontSize: '.72rem', fontFamily: "'JetBrains Mono',monospace", color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.1em', display: 'block', marginBottom: '.25rem' },
-  sqlCode:  { fontSize: '.78rem', fontFamily: "'JetBrains Mono',monospace", color: 'var(--accent2)', wordBreak: 'break-all', lineHeight: 1.5 },
-  reasoning:{ fontSize: '.78rem', color: 'var(--muted)', fontFamily: "'JetBrains Mono',monospace", fontStyle: 'italic' },
-  loadBtn:  { width: '100%', background: 'rgba(232,255,71,.06)', border: 'none', borderTop: '1px solid var(--border)', color: 'var(--accent)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.72rem', letterSpacing: '.06em', padding: '.5rem', cursor: 'pointer', transition: 'background .15s' },
+  wrap:       { marginBottom: '1rem', animation: 'fadeUp .5s ease both' },
+  header:     { display: 'flex', alignItems: 'center', justifyContent:'space-between', gap: '.75rem', marginBottom: '.6rem' },
+  headerLeft: { display:'flex', alignItems:'center', gap:'.5rem' },
+  sparkle:    { fontSize: '.95rem', color: 'var(--accent)', flexShrink: 0 },
+  title:      { fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.82rem', color: 'var(--text)' },
+  sub:        { fontSize: '.78rem', color: 'var(--muted2)' },
+  shimmer:    { height: 2, background: 'linear-gradient(90deg,var(--accent),var(--accent2),var(--accent4),var(--accent))', backgroundSize: '300%', animation: 'sweep 1.4s linear infinite', borderRadius: 1, marginTop: '.4rem', width: 140 },
+  dismissBtn: { background:'transparent', border:'none', color:'var(--muted)', cursor:'pointer', fontSize:'.8rem', padding:'.2rem .4rem', borderRadius:4, flexShrink:0 },
+
+  // Horizontal row of compact cards
+  row:        { display: 'flex', gap: '.6rem' },
+  skeleton:   { flex:1, height: 70, background: 'var(--s2)', borderRadius: 8, border: '1px solid var(--border)', animation: 'blink 1.2s ease infinite' },
+
+  card: {
+    flex: 1,
+    background: 'var(--s2)',
+    border: '1px solid',
+    borderRadius: 9,
+    padding: '.65rem .75rem',
+    cursor: 'pointer',
+    transition: 'all .18s',
+    display:'flex', flexDirection:'column', gap:'.4rem',
+    minWidth: 0,
+  },
+  cardNum:    (i) => ({
+    width: 20, height: 20, borderRadius: '50%',
+    background: [
+      'rgba(232,255,71,.15)',
+      'rgba(0,212,255,.15)',
+      'rgba(180,142,255,.15)',
+    ][i],
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontSize:'.7rem', fontWeight:700,
+    color: ['#e8ff47','#00d4ff','#b48eff'][i],
+    flexShrink:0,
+  }),
+  cardContent:{ display:'flex', flexDirection:'column', gap:'.35rem', minWidth:0 },
+  question:   { fontSize: '.74rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.35, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' },
+  cardMeta:   { display:'flex', alignItems:'center', justifyContent:'space-between', gap:'.3rem' },
+  typeTag:    { fontSize: '.65rem', fontFamily: "'JetBrains Mono',monospace", border: '1px solid', borderRadius: 3, padding: '.08rem .32rem' },
+  loadHint:   { fontSize:'.68rem', fontFamily:"'JetBrains Mono',monospace", color:'var(--muted)', opacity:.7 },
 }

@@ -21,6 +21,7 @@ export default function ChartPanel({ panel, idx, isFollowup, queryMs, sessionId 
   const panelRef = useRef()
   const ct = (panel.chart_type||'bar').toLowerCase()
   const confidence = panel.confidence ?? null   // 0-100 from backend
+  const ragGrounded = panel.sql && panel.sql.length > 10  // any panel with real SQL = RAG grounded
 
   function downloadPNG() {
     const canvas = panelRef.current?.querySelector('canvas')
@@ -49,6 +50,12 @@ export default function ChartPanel({ panel, idx, isFollowup, queryMs, sessionId 
           <span style={s.tag}>{panel.chart_type || 'Bar'}</span>
         </div>
         <div style={s.headActions}>
+          {/* RAG grounded badge */}
+          {ragGrounded && (
+            <span style={s.ragBadge} title="This answer is RAG-grounded — built from actual data values">
+              🧠 RAG
+            </span>
+          )}
           {/* Confidence score */}
           {confidence !== null && <ConfidenceBadge score={confidence} />}
           {ct !== 'table' && ct !== 'kpi' && (
@@ -356,6 +363,16 @@ const s = {
     border:'1px solid', borderRadius:5, padding:'.1rem .38rem', flexShrink:0,
   },
   confDot: { width:5, height:5, borderRadius:'50%', flexShrink:0 },
+  ragBadge: {
+    display:'inline-flex', alignItems:'center', gap:'.22rem',
+    fontSize:'.68rem', fontFamily:"'JetBrains Mono',monospace",
+    background:'rgba(0,212,255,.07)',
+    color:'rgba(0,212,255,.85)',
+    border:'1px solid rgba(0,212,255,.22)',
+    borderRadius:5, padding:'.1rem .38rem', flexShrink:0,
+    letterSpacing:'.02em',
+    cursor:'default',
+  },
   speed: { fontSize:'.8rem', fontFamily:"'JetBrains Mono',monospace", color:'rgba(74,222,128,.9)' },
   title: {
     fontFamily:"'Syne',sans-serif",

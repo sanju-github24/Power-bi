@@ -247,32 +247,46 @@ export default function App() {
           <UploadZone onFile={handleFile} csvInfo={csvInfo} />
           <ColumnPills columns={columns} />
 
-          <AlertThresholds
-            onAskAlert={q => handleAsk(q)}
-          />
+          {/* Section: Smart Alerts */}
+          <div style={s.sideSection}>
+            <div style={s.sideSectionLabel}>🔔 SMART ALERTS</div>
+            <AlertThresholds onAskAlert={q => handleAsk(q)} />
+          </div>
 
+          {/* Section: Anomaly Detection */}
           {(anomalies.length > 0 || anomLoading) && (
-            <AnomalyPanel
-              anomalies={anomalies}
-              loading={anomLoading}
-              onAskAnomaly={q => handleAsk(q)}
-            />
+            <div style={s.sideSection}>
+              <div style={s.sideSectionLabel}>🔍 ANOMALY DETECTION</div>
+              <AnomalyPanel
+                anomalies={anomalies}
+                loading={anomLoading}
+                onAskAnomaly={q => handleAsk(q)}
+              />
+            </div>
           )}
 
+          {/* Section: Pinned Dashboards */}
           {pins.length > 0 && (
-            <PinnedDashboards
-              pins={pins}
-              onLoad={p => setDashResult(p.result)}
-              onDelete={id => setPins(prev => prev.filter(p => p.id !== id))}
-            />
+            <div style={s.sideSection}>
+              <div style={s.sideSectionLabel}>📌 PINNED DASHBOARDS</div>
+              <PinnedDashboards
+                pins={pins}
+                onLoad={p => setDashResult(p.result)}
+                onDelete={id => setPins(prev => prev.filter(p => p.id !== id))}
+              />
+            </div>
           )}
 
-          <ChatHistory
-            history={chatHistory}
-            activeTurnIdx={activeTurnIdx}
-            onReplay={handleReplay}
-            onClear={handleClear}
-          />
+          {/* Section: Chat History */}
+          <div style={s.sideSection}>
+            <div style={s.sideSectionLabel}>💬 CHAT HISTORY</div>
+            <ChatHistory
+              history={chatHistory}
+              activeTurnIdx={activeTurnIdx}
+              onReplay={handleReplay}
+              onClear={handleClear}
+            />
+          </div>
         </aside>
 
         {/* ── Main ─────────────────────────────────────────────────────── */}
@@ -333,6 +347,13 @@ const s = {
   sidebar:   { width:285, flexShrink:0, background:'var(--s1)', borderRight:'1px solid var(--border)', display:'flex', flexDirection:'column', overflow:'hidden', overflowY:'auto' },
   main:      { flex:1, display:'flex', flexDirection:'column', overflow:'hidden' },
   dashScroll:{ flex:1, overflowY:'auto', padding:'1.1rem' },
+  sideSection: { borderTop:'1px solid var(--border)' },
+  sideSectionLabel: {
+    fontSize:'.62rem', fontFamily:"'JetBrains Mono',monospace",
+    fontWeight:700, letterSpacing:'.1em',
+    color:'var(--muted2)', padding:'.5rem .85rem .2rem',
+    opacity:.7,
+  },
   toast: {
     position:'fixed', bottom:'5.5rem', left:'50%', transform:'translateX(-50%)',
     background:'var(--s2)', border:'1px solid var(--border)',

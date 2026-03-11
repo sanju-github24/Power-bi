@@ -122,14 +122,15 @@ export default function InputBar({ onAsk, onPin, onTyping, loading, columns, has
 function buildChips(columns) {
   const lower = (columns || []).join(',').toLowerCase()
   const base  = []
-  if (/channel|platform|medium/.test(lower))    base.push(['By channel',    'Show revenue by channel used',      false])
-  if (/date|month|year/.test(lower))            base.push(['Monthly trend',  'Monthly revenue trend over time',   false])
-  if (/category|segment|type/.test(lower))      base.push(['By category',    'Revenue breakdown by category',     false])
-  if (/region|area|zone|language/.test(lower))  base.push(['By language',    'Compare ROI across languages',      false])
-  if (/roi|return|profit/.test(lower))          base.push(['Top ROI',        'Top 10 campaigns by ROI',           false])
+  if (/channel|platform|medium/.test(lower))    base.push(['By channel',    'Show revenue by channel used',              false])
+  if (/date|month|year/.test(lower))            base.push(['Monthly trend',  'Monthly revenue trend over time',           false])
+  if (/category|segment|type/.test(lower))      base.push(['By category',    'Revenue breakdown by category',             false])
+  if (/region|area|zone|language/.test(lower))  base.push(['By language',    'Compare ROI across languages',              false])
+  if (/roi|return|profit/.test(lower))          base.push(['Top ROI',        'Top 10 campaigns by ROI',                   false])
+  // 🤖 Agentic chip — always shown
+  base.push(['🤖 Full Analysis', 'Give me a complete marketing performance analysis', false])
   if (!base.length) {
     base.push(['Overview', 'Give me a full overview of the data', false])
-    base.push(['Summary',  'Show me a summary of the data',       false])
   }
   FU_CHIPS.forEach(([l,q]) => base.push([l, q, true]))
   return base.slice(0, 7)

@@ -11,6 +11,7 @@ import pandas as pd, uvicorn, io, os, json, asyncio
 import database as db
 from database import engine
 from ai_engine import get_ai_dashboard
+from agent import is_agentic_query, run_agentic_workflow
 
 app = FastAPI(title="Pulse BI")
 
@@ -297,12 +298,27 @@ async def ask(body: AskBody):
     history = chat_histories.setdefault(body.session_id, [])
 
     try:
-        result = await get_ai_dashboard(
-            body.question,
-            db.current_columns,
-            db.current_schema,
-            history,
-        )
+        # ── Detect if this needs agentic multi-step reasoning ─────────────────
+        if is_agentic_query(body.question):
+            print(f"[ask] 🤖 Agentic query detected: '{body.question[:50]}'")
+            from ai_engine import client, WORKING_MODEL, _bucket
+            result = await run_agentic_workflow(
+                question   = body.question,
+                columns    = db.current_columns,
+                schema     = db.current_schema,
+                history    = history,
+                client     = client,
+                model      = WORKING_MODEL,
+                bucket     = _bucket,
+                execute_fn = get_ai_dashboard,
+            )
+        else:
+            result = await get_ai_dashboard(
+                body.question,
+                db.current_columns,
+                db.current_schema,
+                history,
+            )
 
         # ── Store rich SQL context for follow-ups ─────────────────────────────
         # We save the actual SQL queries so the next follow-up question can

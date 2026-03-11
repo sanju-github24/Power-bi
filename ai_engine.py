@@ -78,6 +78,8 @@ SQLite table: data_table
 Schema:
 {schema}
 
+{rag_block}
+
 {history_block}
 ━━━ CURRENT QUESTION ━━━
 "{question}"
@@ -167,6 +169,15 @@ async def get_ai_dashboard(
             print(f"[cache] HIT: '{question[:55]}'")
             return _cache[key]
 
+    # ── RAG: retrieve actual column values from DB ─────────────────────────────
+    try:
+        from rag import build_rag_context
+        rag_block = build_rag_context(question, columns)
+        print(f"[rag] context built for: '{question[:50]}'")
+    except Exception as e:
+        rag_block = ""
+        print(f"[rag] skipped: {e}")
+
     # Build history block — include last 6 messages (3 turns) with SQL context
     history_block = ""
     if history:
@@ -180,6 +191,7 @@ async def get_ai_dashboard(
     # Use replace() — schema/history may contain { } braces that break .format()
     prompt = _PROMPT \
         .replace("{schema}",        schema) \
+        .replace("{rag_block}",     rag_block) \
         .replace("{history_block}", history_block) \
         .replace("{question}",      question)
 

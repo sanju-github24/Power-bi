@@ -49,6 +49,13 @@ export default function Dashboard({ result, onPresent, onShare, csvInfo, queryMs
         <div style={s.fuBanner}>↩ follow-up — dashboard updated</div>
       )}
 
+      {/* Agentic badge */}
+      {result.is_agentic && (
+        <div style={s.agenticBanner}>
+          🤖 Agentic Analysis — AI planned {result.sub_questions?.length || 3} sub-queries and synthesized this dashboard automatically
+        </div>
+      )}
+
       {/* Header */}
       <div style={s.headerRow}>
         <div style={s.headerText}>
@@ -118,6 +125,7 @@ const s = {
   caTitle:      { fontFamily:"'Syne',sans-serif", fontWeight:700, color:'var(--accent3)', marginBottom:'.25rem' },
   caReason:     { fontSize:'.78rem', color:'var(--muted2)', lineHeight:1.55 },
   fuBanner:     { display:'inline-flex', alignItems:'center', gap:'.45rem', marginBottom:'.8rem', fontSize:'.78rem', fontFamily:"'JetBrains Mono',monospace", background:'rgba(180,142,255,.07)', color:'var(--accent4)', border:'1px solid rgba(180,142,255,.18)', borderRadius:999, padding:'.26rem .72rem' },
+  agenticBanner:{ display:'flex', alignItems:'center', gap:'.5rem', marginBottom:'.8rem', fontSize:'.8rem', fontFamily:"'Syne',sans-serif", fontWeight:600, background:'rgba(0,212,255,.06)', color:'#00d4ff', border:'1px solid rgba(0,212,255,.2)', borderRadius:10, padding:'.5rem 1rem' },
   wrap:         { animation:'fadeUp .4s ease both' },
   headerRow:    { display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:'1rem', gap:'1rem', flexWrap:'wrap' },
   headerText:   { flex:1, minWidth:0 },

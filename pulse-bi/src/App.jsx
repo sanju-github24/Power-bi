@@ -14,6 +14,7 @@ import AnomalyPanel       from './components/AnomalyPanel.jsx'
 import PinnedDashboards   from './components/PinnedDashboards.jsx'
 import PresentationMode   from './components/PresentationMode.jsx'
 import AlertThresholds    from './components/AlertThresholds.jsx'
+import SuggestedQuestions from './components/SuggestedQuestions.jsx'
 import { useShareableUrl } from './hooks/useShareableUrl.js'
 import {
   apiHealth, apiUpload, apiAsk,
@@ -299,6 +300,11 @@ export default function App() {
               csvInfo={csvInfo}
               queryMs={queryMs}
               sessionId={SESSION_ID}
+            />
+            <SuggestedQuestions
+              result={dashResult}
+              onAsk={q => { insightsDismissed.current = true; handleAsk(q) }}
+              loading={loading}
             />
           </div>
         </main>

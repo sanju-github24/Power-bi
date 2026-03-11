@@ -12,7 +12,7 @@ export default function Topbar({ status, rowCount, filename }) {
 
   return (
     <header style={styles.bar}>
-      <div style={styles.brand}>Pulse BI</div>
+      <img src="/logo.svg" alt="Pulse BI" style={{ height: 67 }} />
       <div style={styles.right}>
         {filename && (
           <div style={styles.pill}>

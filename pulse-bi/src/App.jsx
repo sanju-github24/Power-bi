@@ -132,8 +132,7 @@ export default function App() {
 
   // ── Ask ─────────────────────────────────────────────────────────────────────
   const handleAsk = useCallback(async (question) => {
-    setAutoInsights([])   // dismiss auto-analyst on first question
-    insightsDismissed.current = true
+    insightsDismissed.current = true      // dismiss auto-analyst when first real question asked
     setLoading(true)
     setServerStatus('busy')
     setQueryMs(null)
@@ -182,6 +181,8 @@ export default function App() {
   // ── Load auto-insight as dashboard ──────────────────────────────────────────
   const handleLoadAutoInsight = useCallback((item) => {
     setDashResult(item.result)
+    setAutoInsights([])                    // hide auto-analyst once user clicks one
+    insightsDismissed.current = true
     const newLog = [...questionLog, { question: item.question, response: item.result }]
     setQuestionLog(newLog)
     setActiveTurnIdx(newLog.length - 1)
@@ -294,13 +295,14 @@ export default function App() {
           <InputBar
             onAsk={handleAsk}
             onPin={handlePin}
-            onTyping={() => { setAutoInsights([]); insightsDismissed.current = true }}
+            onTyping={() => {}}
             loading={loading}
             columns={columns}
             hasDashboard={!!dashResult && !dashResult.cannot_answer}
           />
           <div style={s.dashScroll}>
-            {(autoInsights.length > 0 || autoLoading) && (
+            {/* Show auto-insights on startup + after new CSV upload — hide once user gets a dashboard */}
+            {(autoInsights.length > 0 || autoLoading) && !insightsDismissed.current && (
               <AutoAnalystPanel
                 insights={autoInsights}
                 loading={autoLoading}

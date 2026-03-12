@@ -356,6 +356,50 @@ async def ask(body: AskBody):
     if not db.current_columns:
         raise HTTPException(400, "No data loaded. Upload a CSV first.")
 
+    # ── Smart off-topic guard — runs before Gemini ────────────────────────────
+    def is_data_question(q: str, columns: list) -> bool:
+        q_lower = q.lower().strip()
+
+        # Always allow these data analysis keywords
+        DATA_KEYWORDS = [
+            "show", "give", "get", "find", "list", "display", "fetch",
+            "compare", "versus", "vs", "top", "bottom", "best", "worst",
+            "highest", "lowest", "most", "least", "average", "avg", "mean",
+            "total", "sum", "count", "trend", "over time", "monthly", "weekly",
+            "daily", "yearly", "annual", "breakdown", "distribution", "split",
+            "analysis", "analyze", "analyse", "revenue", "roi", "sales",
+            "campaign", "channel", "language", "audience", "filter", "only",
+            "where", "which", "what is the", "how many", "how much",
+            "correlation", "relationship", "pattern", "insight", "performance",
+            "ranking", "rank", "sort", "order", "group", "segment",
+        ]
+
+        # Check if any column name appears in question
+        col_match = any(col.lower().replace("_", " ") in q_lower
+                       or col.lower() in q_lower
+                       for col in columns)
+        if col_match:
+            return True
+
+        # Check if any data keyword appears
+        keyword_match = any(kw in q_lower for kw in DATA_KEYWORDS)
+        if keyword_match:
+            return True
+
+        return False
+
+    if not is_data_question(body.question, db.current_columns):
+        return {
+            "question":             body.question,
+            "dashboard_title":      "",
+            "summary":              "",
+            "is_followup":          False,
+            "panels":               [],
+            "tldr":                 [],
+            "cannot_answer":        True,
+            "cannot_answer_reason": "I only answer questions about your data. Try: 'Show revenue by campaign type' or 'Which channel has the highest ROI?'",
+        }
+
     history = chat_histories.setdefault(body.session_id, [])
 
     try:

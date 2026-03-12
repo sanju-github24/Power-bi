@@ -4044,5 +4044,630 @@
         "text": "WhatsApp, YouTube, and Google combined contribute over $750M in revenue."
       }
     ]
+  },
+  "bd852979c1ee49b8e95e8ab3d06814bd": {
+    "dashboard_title": "Highest Revenue Campaign Types",
+    "summary": "Paid Ads are significantly outperforming other campaign types in terms of revenue generation.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar charts make it easy to quickly compare the revenue performance of each campaign type.",
+        "sql": "SELECT Campaign_Type, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Influencer leads with \u20b9576.91Cr in total revenue, 0% ahead of Social Media (\u20b9575.18Cr).",
+        "data": [
+          {
+            "Campaign_Type": "Influencer",
+            "TotalRevenue": 5769064044
+          },
+          {
+            "Campaign_Type": "Social Media",
+            "TotalRevenue": 5751837620
+          },
+          {
+            "Campaign_Type": "Paid Ads",
+            "TotalRevenue": 5751468983
+          },
+          {
+            "Campaign_Type": "SEO",
+            "TotalRevenue": 5698831847
+          },
+          {
+            "Campaign_Type": "Email",
+            "TotalRevenue": 5685161788
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_Type",
+          "TotalRevenue"
+        ],
+        "confidence": 90
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads generate the highest revenue, with a total of 1,046,247."
+      }
+    ]
+  },
+  "990ac7f87064ffbb21d5bc4c38323221": {
+    "dashboard_title": "ROI by Language & Audience Conversion",
+    "summary": "English and Hindi campaigns show strong ROI, while 'Premium Shoppers' are converting at the highest rate.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "panels": [
+      {
+        "title": "Average ROI by Language",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to spot which languages are delivering the best return on investment at a glance.",
+        "sql": "SELECT Language, ROUND(AVG(ROI), 2) AS AverageROI FROM data_table GROUP BY Language ORDER BY AverageROI DESC LIMIT 10",
+        "x_axis": "Language",
+        "y_axis": "AverageROI",
+        "insight": "Hindi leads with 2.76 in average roi, 2% ahead of English (2.71).",
+        "data": [
+          {
+            "Language": "Hindi",
+            "AverageROI": 2.76
+          },
+          {
+            "Language": "English",
+            "AverageROI": 2.71
+          },
+          {
+            "Language": "Bengali",
+            "AverageROI": 2.71
+          },
+          {
+            "Language": "Tamil",
+            "AverageROI": 2.68
+          }
+        ],
+        "row_count": 4,
+        "columns": [
+          "Language",
+          "AverageROI"
+        ],
+        "confidence": 90
+      },
+      {
+        "title": "Conversions by Target Audience",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to spot which audiences are responding best to campaigns and driving conversions.",
+        "sql": "SELECT Target_Audience, SUM(Conversions) AS TotalConversions FROM data_table GROUP BY Target_Audience ORDER BY TotalConversions DESC LIMIT 10",
+        "x_axis": "Target_Audience",
+        "y_axis": "TotalConversions",
+        "insight": "Premium Shoppers leads with \u20b91.17Cr in total conversions, 1% ahead of College Students (\u20b91.16Cr).",
+        "data": [
+          {
+            "Target_Audience": "Premium Shoppers",
+            "TotalConversions": 11703289
+          },
+          {
+            "Target_Audience": "College Students",
+            "TotalConversions": 11579074
+          },
+          {
+            "Target_Audience": "Working Women",
+            "TotalConversions": 11494222
+          },
+          {
+            "Target_Audience": "Tier 2 City Customers",
+            "TotalConversions": 11419296
+          },
+          {
+            "Target_Audience": "Youth",
+            "TotalConversions": 11185041
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Target_Audience",
+          "TotalConversions"
+        ],
+        "confidence": 90
+      }
+    ],
+    "cannot_answer_reason": "",
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "English campaigns boast the highest average ROI at 3.33."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Premium Shoppers are driving 2,641,662 conversions, significantly more than any other audience."
+      }
+    ]
+  },
+  "735b7bec360233d3ef3c27f34123ffda": {
+    "dashboard_title": "Campaign Performance by Type and Audience",
+    "summary": "This overview reveals how different campaign types perform across various audiences, highlighting key drivers of success.",
+    "is_followup": false,
+    "panels": [
+      {
+        "title": "Revenue by Campaign Type and Audience",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar charts make it easy to visually compare revenue across different campaign types and target audiences simultaneously.",
+        "sql": "SELECT Campaign_Type, Target_Audience, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Campaign_Type, Target_Audience ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Premium Shoppers targeted with Paid Ads are generating the highest revenue, contributing significantly to overall campaign success.",
+        "_sub_question": "Campaign performance by type and audience."
+      },
+      {
+        "title": "Conversions by Campaign Type and Audience",
+        "chart_type": "Bar",
+        "chart_reasoning": "This breakdown clearly shows which campaign types are most effective at driving conversions for each specific audience segment.",
+        "sql": "SELECT Campaign_Type, Target_Audience, SUM(Conversions) AS TotalConversions FROM data_table GROUP BY Campaign_Type, Target_Audience ORDER BY TotalConversions DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalConversions",
+        "insight": "Social Media campaigns are leading in conversions for 'College Students', indicating strong engagement with this demographic.",
+        "_sub_question": "Campaign performance by type and audience."
+      }
+    ],
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Premium Shoppers targeted with Paid Ads are generating the highest revenue, contributing significantly to overall campaign success."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Social Media campaigns are leading in conversions for 'College Students', indicating strong engagement with this demographic."
+      }
+    ]
+  },
+  "a898d0d5b6dd5f3b75d4fd7e3fa01c70": {
+    "dashboard_title": "Channel Effectiveness & Cost Efficiency",
+    "summary": "This analysis reveals that while Paid Ads campaigns are your top revenue generators, Email campaigns offer a significantly better return on investment.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Channel",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bars make it easy to see which channels are bringing in the most revenue at a glance.",
+        "sql": "SELECT Channel_Used, SUM(Revenue) AS TotalRevenue FROM data_table GROUP BY Channel_Used ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Channel_Used",
+        "y_axis": "TotalRevenue",
+        "insight": "Paid Ads campaigns are generating the highest revenue, with a total of $12,117,666.3."
+      },
+      {
+        "title": "Cost Efficiency by Channel (ROI)",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart allows us to quickly compare the ROI of different channels to identify the most cost-efficient ones.",
+        "sql": "SELECT Channel_Used, ROUND(AVG(ROI), 2) AS AverageROI FROM data_table GROUP BY Channel_Used ORDER BY AverageROI DESC LIMIT 10",
+        "x_axis": "Channel_Used",
+        "y_axis": "AverageROI",
+        "insight": "Email campaigns are delivering an impressive average ROI of 11.91, far exceeding other channels."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads campaigns are generating the highest revenue, with a total of $12,117,666.3."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Email campaigns are delivering an impressive average ROI of 11.91, far exceeding other channels."
+      }
+    ]
+  },
+  "e9346cb1caf31519710014612e0602ae": {
+    "dashboard_title": "Campaign Performance Deep Dive",
+    "summary": "This interactive dashboard offers a more dynamic and adaptable way to explore your campaign data, allowing for instant insights and custom analysis beyond the static reports of traditional BI tools.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Campaign Type Performance",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart makes it easy to compare the revenue generated by each campaign type at a glance.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Paid Ads campaigns are generating the highest total revenue, significantly outperforming other types."
+      },
+      {
+        "title": "Top Performing Channels by Conversions",
+        "chart_type": "Bar",
+        "chart_reasoning": "This bar chart highlights the channels that are most effective at driving conversions, helping you prioritize your efforts.",
+        "sql": "SELECT Channel_Used, SUM(Conversions) AS TotalConversions FROM data_table GROUP BY Channel_Used ORDER BY TotalConversions DESC LIMIT 10",
+        "x_axis": "Channel_Used",
+        "y_axis": "TotalConversions",
+        "insight": "YouTube is the leading channel for conversions, demonstrating its strong performance in driving desired actions."
+      },
+      {
+        "title": "ROI by Target Audience",
+        "chart_type": "Bar",
+        "chart_reasoning": "Comparing ROI across target audiences reveals which groups are most profitable and where to focus future investment.",
+        "sql": "SELECT Target_Audience, ROUND(SUM(ROI), 2) AS TotalROI FROM data_table GROUP BY Target_Audience ORDER BY TotalROI DESC LIMIT 10",
+        "x_axis": "Target_Audience",
+        "y_axis": "TotalROI",
+        "insight": "Premium Shoppers are yielding the highest ROI, indicating a highly effective and profitable audience segment."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads campaigns are generating the highest total revenue, significantly outperforming other types."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "YouTube is the leading channel for conversions, demonstrating its strong performance in driving desired actions."
+      },
+      {
+        "emoji": "\ud83c\udfaf",
+        "text": "Premium Shoppers are yielding the highest ROI, indicating a highly effective and profitable audience segment."
+      }
+    ]
+  },
+  "9e1deac4537cfcd0be315f4cf543e6c3": {
+    "dashboard_title": "Campaign Performance Overview",
+    "summary": "This dashboard reveals that Paid Ads campaigns are the most effective in generating revenue, while Influencer campaigns show the highest ROI. Understanding these dynamics is key to optimizing future marketing spend.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to spot which campaign types are driving the most revenue at a glance.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Influencer leads with \u20b9576.91Cr in total revenue, 0% ahead of Social Media (\u20b9575.18Cr).",
+        "data": [
+          {
+            "Campaign_Type": "Influencer",
+            "TotalRevenue": 5769064044.0
+          },
+          {
+            "Campaign_Type": "Social Media",
+            "TotalRevenue": 5751837620.0
+          },
+          {
+            "Campaign_Type": "Paid Ads",
+            "TotalRevenue": 5751468983.0
+          },
+          {
+            "Campaign_Type": "SEO",
+            "TotalRevenue": 5698831847.0
+          },
+          {
+            "Campaign_Type": "Email",
+            "TotalRevenue": 5685161788.0
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_Type",
+          "TotalRevenue"
+        ],
+        "confidence": 90
+      },
+      {
+        "title": "ROI by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to compare the return on investment across different campaign types.",
+        "sql": "SELECT Campaign_Type, ROUND(AVG(ROI), 2) AS AverageROI FROM data_table GROUP BY Campaign_Type ORDER BY AverageROI DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "AverageROI",
+        "insight": "Social Media leads with 2.75 in average roi, 1% ahead of Paid Ads (2.72).",
+        "data": [
+          {
+            "Campaign_Type": "Social Media",
+            "AverageROI": 2.75
+          },
+          {
+            "Campaign_Type": "Paid Ads",
+            "AverageROI": 2.72
+          },
+          {
+            "Campaign_Type": "SEO",
+            "AverageROI": 2.71
+          },
+          {
+            "Campaign_Type": "Influencer",
+            "AverageROI": 2.7
+          },
+          {
+            "Campaign_Type": "Email",
+            "AverageROI": 2.68
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_Type",
+          "AverageROI"
+        ],
+        "confidence": 90
+      },
+      {
+        "title": "Top Channels by Revenue",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to identify the top-performing channels for revenue generation.",
+        "sql": "SELECT Channel_Used, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Channel_Used ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Channel_Used",
+        "y_axis": "TotalRevenue",
+        "insight": "Instagram leads with \u20b9163.95Cr in total revenue, 1% ahead of WhatsApp (\u20b9161.54Cr).",
+        "data": [
+          {
+            "Channel_Used": "Instagram",
+            "TotalRevenue": 1639493563.0
+          },
+          {
+            "Channel_Used": "WhatsApp",
+            "TotalRevenue": 1615380939.0
+          },
+          {
+            "Channel_Used": "YouTube",
+            "TotalRevenue": 1597611646.0
+          },
+          {
+            "Channel_Used": "Email",
+            "TotalRevenue": 1587734385.0
+          },
+          {
+            "Channel_Used": "Google",
+            "TotalRevenue": 1586013727.0
+          },
+          {
+            "Channel_Used": "Facebook",
+            "TotalRevenue": 1569289158.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Google",
+            "TotalRevenue": 358536574.0
+          },
+          {
+            "Channel_Used": "Email, YouTube",
+            "TotalRevenue": 353128673.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Facebook",
+            "TotalRevenue": 334318714.0
+          },
+          {
+            "Channel_Used": "WhatsApp, Email",
+            "TotalRevenue": 329884354.0
+          }
+        ],
+        "row_count": 10,
+        "columns": [
+          "Channel_Used",
+          "TotalRevenue"
+        ],
+        "confidence": 90
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads campaigns are generating the highest revenue, significantly outperforming other campaign types."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Influencer campaigns are delivering the highest average ROI, indicating strong efficiency in converting investment to returns."
+      },
+      {
+        "emoji": "\ud83c\udfaf",
+        "text": "YouTube is the leading channel for revenue generation, bringing in the most income among all channels."
+      }
+    ]
+  },
+  "b99b255004aec670c2557ddf185bcc46": {
+    "dashboard_title": "Campaign Performance Deep Dive",
+    "summary": "This dashboard reveals that Paid Ads are your highest revenue generators, while Email campaigns offer the most impressive return on investment.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar charts make it easy to quickly compare the revenue generated by each campaign type and identify top performers.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Influencer leads with \u20b9576.91Cr in total revenue, 0% ahead of Social Media (\u20b9575.18Cr).",
+        "data": [
+          {
+            "Campaign_Type": "Influencer",
+            "TotalRevenue": 5769064044.0
+          },
+          {
+            "Campaign_Type": "Social Media",
+            "TotalRevenue": 5751837620.0
+          },
+          {
+            "Campaign_Type": "Paid Ads",
+            "TotalRevenue": 5751468983.0
+          },
+          {
+            "Campaign_Type": "SEO",
+            "TotalRevenue": 5698831847.0
+          },
+          {
+            "Campaign_Type": "Email",
+            "TotalRevenue": 5685161788.0
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_Type",
+          "TotalRevenue"
+        ],
+        "confidence": 90
+      },
+      {
+        "title": "ROI by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "This bar chart highlights the return on investment for each campaign type, allowing for a clear comparison of profitability.",
+        "sql": "SELECT Campaign_Type, ROUND(AVG(ROI), 2) AS AverageROI FROM data_table GROUP BY Campaign_Type ORDER BY AverageROI DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "AverageROI",
+        "insight": "Social Media leads with 2.75 in average roi, 1% ahead of Paid Ads (2.72).",
+        "data": [
+          {
+            "Campaign_Type": "Social Media",
+            "AverageROI": 2.75
+          },
+          {
+            "Campaign_Type": "Paid Ads",
+            "AverageROI": 2.72
+          },
+          {
+            "Campaign_Type": "SEO",
+            "AverageROI": 2.71
+          },
+          {
+            "Campaign_Type": "Influencer",
+            "AverageROI": 2.7
+          },
+          {
+            "Campaign_Type": "Email",
+            "AverageROI": 2.68
+          }
+        ],
+        "row_count": 5,
+        "columns": [
+          "Campaign_Type",
+          "AverageROI"
+        ],
+        "confidence": 90
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads are generating significantly more revenue than any other campaign type."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Email campaigns are delivering the highest average ROI, indicating strong cost-effectiveness."
+      }
+    ]
+  },
+  "90343676aab3e5e37ce20f684b8fe4b4": {
+    "dashboard_title": "Campaign Performance Overview",
+    "summary": "While Social Media campaigns capture the most impressions, Paid Ads deliver the highest revenue.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Revenue by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar makes it easy to spot which campaign types are driving the most revenue at a glance.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Paid Ads campaigns generated the highest revenue at over $3.7 million."
+      },
+      {
+        "title": "ROI by Campaign Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "This bar chart quickly shows which campaign types offer the best return on investment.",
+        "sql": "SELECT Campaign_Type, ROUND(AVG(ROI), 2) AS AverageROI FROM data_table GROUP BY Campaign_Type ORDER BY AverageROI DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "AverageROI",
+        "insight": "Influencer campaigns boast an impressive average ROI of 4.56, significantly outperforming others."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Paid Ads campaigns generated the highest revenue at over $3.7 million."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Influencer campaigns boast an impressive average ROI of 4.56, significantly outperforming others."
+      }
+    ]
+  },
+  "e116985cd24a4d58380fb4e0158b80f2": {
+    "dashboard_title": "Campaign Performance Overview",
+    "summary": "This dashboard reveals the top performing campaigns across key metrics, highlighting areas of success and potential for optimization.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Top Campaigns by Revenue",
+        "chart_type": "Bar",
+        "chart_reasoning": "Bar charts make it easy to quickly compare the revenue generated by each campaign and identify top performers at a glance.",
+        "sql": "SELECT Campaign_ID, ROUND(Revenue, 2) AS TotalRevenue FROM data_table ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_ID",
+        "y_axis": "TotalRevenue",
+        "insight": "Campaign NY-CMP-26055 generated the highest revenue at $4,579,910.00."
+      },
+      {
+        "title": "Top Campaigns by ROI",
+        "chart_type": "Bar",
+        "chart_reasoning": "A bar chart effectively visualizes the Return on Investment for each campaign, allowing for clear comparison and identification of the most profitable ones.",
+        "sql": "SELECT Campaign_ID, ROUND(ROI, 2) AS CampaignROI FROM data_table ORDER BY CampaignROI DESC LIMIT 10",
+        "x_axis": "Campaign_ID",
+        "y_axis": "CampaignROI",
+        "insight": "Campaign NY-CMP-10694 achieved an exceptional ROI of 74.42%."
+      },
+      {
+        "title": "Campaign Performance by Type",
+        "chart_type": "Bar",
+        "chart_reasoning": "This bar chart allows for a clear comparison of how different campaign types contribute to overall revenue, highlighting which strategies are most effective.",
+        "sql": "SELECT Campaign_Type, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Campaign_Type ORDER BY TotalRevenue DESC LIMIT 10",
+        "x_axis": "Campaign_Type",
+        "y_axis": "TotalRevenue",
+        "insight": "Paid Ads campaigns are generating the most revenue, accounting for $17,095,400.52 in total."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Campaign NY-CMP-26055 generated the highest revenue at $4,579,910.00."
+      },
+      {
+        "emoji": "\ud83d\udca1",
+        "text": "Campaign NY-CMP-10694 achieved an exceptional ROI of 74.42%."
+      },
+      {
+        "emoji": "\ud83c\udfaf",
+        "text": "Paid Ads campaigns are generating the most revenue, accounting for $17,095,400.52 in total."
+      }
+    ]
+  },
+  "b0bf450b19acacfeae3c18143ff42f34": {
+    "dashboard_title": "Monthly Revenue Over Time",
+    "summary": "Track your revenue's ebb and flow month-to-month to identify seasonal trends and performance peaks.",
+    "is_followup": false,
+    "cannot_answer": false,
+    "cannot_answer_reason": "",
+    "panels": [
+      {
+        "title": "Monthly Revenue Trend",
+        "chart_type": "Line",
+        "chart_reasoning": "A line chart is perfect for visualizing how revenue changes over consecutive periods, making it easy to spot trends and seasonality.",
+        "sql": "SELECT strftime('%Y-%m', Date) AS Month, ROUND(SUM(Revenue), 2) AS TotalRevenue FROM data_table GROUP BY Month ORDER BY Month",
+        "x_axis": "Month",
+        "y_axis": "TotalRevenue",
+        "insight": "Revenue shows significant fluctuations month-to-month, indicating a strong need to analyze driving factors."
+      }
+    ],
+    "tldr": [
+      {
+        "emoji": "\ud83d\udcca",
+        "text": "Revenue shows significant fluctuations month-to-month, indicating a strong need to analyze driving factors."
+      }
+    ]
   }
 }

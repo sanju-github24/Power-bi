@@ -24,11 +24,12 @@ export default function Dashboard({ result, onPresent, onShare, csvInfo, queryMs
   }
 
   if (result.cannot_answer) {
+    const isOffTopic = (result.cannot_answer_reason || '').toLowerCase().includes('only answer questions about your data')
     return (
       <div style={s.cannotAnswer}>
-        <span style={{fontSize:'1.1rem'}}>🤔</span>
+        <span style={{fontSize:'1.4rem'}}>{isOffTopic ? '💬' : '🤔'}</span>
         <div>
-          <div style={s.caTitle}>Cannot answer with available data</div>
+          <div style={s.caTitle}>{isOffTopic ? 'I only work with your data' : 'Cannot answer with available data'}</div>
           <div style={s.caReason}>{result.cannot_answer_reason}</div>
         </div>
       </div>

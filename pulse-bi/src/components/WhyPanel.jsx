@@ -1,6 +1,8 @@
 // WhyPanel.jsx — Root cause explanation via Gemini
 import React, { useState } from 'react'
 
+const BASE = import.meta.env.VITE_API_URL || '/api'
+
 const SparkleIcon = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
     <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"
@@ -18,7 +20,7 @@ export default function WhyPanel({ panel, sessionId }) {
     setOpen(true)
     setLoading(true)
     try {
-      const r = await fetch('/api/why', {
+      const r = await fetch(`${BASE}/why`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

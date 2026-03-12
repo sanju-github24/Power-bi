@@ -429,12 +429,20 @@ async def ask(body: AskBody):
                 panel["confidence"] = 0
             panels_out.append(panel)
 
-        # ── Build real summary from actual data (prevents contradiction) ─────
+        # ── Build real summary + tldr from actual data (prevents contradiction) ─────
         real_insights = [p.get("insight","") for p in panels_out if p.get("insight")]
         if real_insights:
-            real_summary = real_insights[0]  # use top panel's real insight as summary
+            real_summary = real_insights[0]
         else:
             real_summary = result.get("summary", "")
+
+        # Build TL;DR from REAL insights — not Gemini's pre-execution guesses
+        emojis = ["📊","💡","🎯","📈","⚡"]
+        real_tldr = [
+            {"emoji": emojis[i % len(emojis)], "text": insight}
+            for i, insight in enumerate(real_insights)
+            if insight
+        ]
 
         return {
             "question":             body.question,
@@ -444,7 +452,7 @@ async def ask(body: AskBody):
             "is_agentic":           result.get("is_agentic", False),
             "sub_questions":        result.get("sub_questions", []),
             "panels":               panels_out,
-            "tldr":                 result.get("tldr", []),
+            "tldr":                 real_tldr,
             "cannot_answer":        False,
             "cannot_answer_reason": "",
         }

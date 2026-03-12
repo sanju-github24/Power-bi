@@ -123,6 +123,9 @@ specific values visible in prior SQL), THEN:
   • Filters: WHERE col = 'value'  or  WHERE col IN ('a','b','c').
   • Date filters: WHERE strftime('%Y',date_col) = '2023'.
   • If required column is not in schema → set cannot_answer: true.
+  • ALWAYS add LIMIT 10 for Bar/Pie charts — never return more than 10 groups.
+  • If a column contains combination values (e.g. "Instagram, Facebook") use exact single values from RAG context only — never GROUP BY combination columns without a LIMIT.
+  • For channel/category columns always ORDER BY the metric DESC LIMIT 10 to show top results only.
 
 ━━━ VISUALIZATION DECISION TREE ━━━
 Step 1 — User names chart explicitly → use exactly that.
@@ -461,8 +464,9 @@ async def get_why_explanation(
     model = WORKING_MODEL
     for attempt in range(3):
         try:
+            active_client = _next_client()
             response = await asyncio.to_thread(
-                client.models.generate_content, model=model, contents=prompt,
+                active_client.models.generate_content, model=model, contents=prompt,
             )
             return response.text.strip()
         except errors.ClientError as e:
@@ -470,7 +474,11 @@ async def get_why_explanation(
             if ("404" in msg or "not found" in msg.lower()) and model != FALLBACK_MODEL:
                 model = FALLBACK_MODEL; continue
             if "429" in msg and attempt < 2:
-                await asyncio.sleep(30 * (attempt + 1))
+                if len(_clients) > 1:
+                    print(f"[why] 429 — switching key immediately")
+                    await asyncio.sleep(3)
+                else:
+                    await asyncio.sleep(20 * (attempt + 1))
                 await _bucket.acquire(); continue
             raise
         except Exception as e:
